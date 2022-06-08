@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres:14.3
+    env_file:
+      - ./dotenv/db.env
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: api
+    image: saapie-api:latest
+    env_file:
+      - ./dotenv/api.env
+    command: development
+    volumes:
+      - ./api:/home/node/saapie/api
+    ports:
+      - "4000:4000"
+      - "5555:5555" # Prisma studio
+    depends_on:
+      - db
