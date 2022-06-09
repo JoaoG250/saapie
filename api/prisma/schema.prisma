@@ -7,11 +7,97 @@ generator client {
     provider = "prisma-client-js"
 }
 
+enum ProcessRequestStatus {
+    OPEN
+    PENDING_CHANGE
+    CLOSED
+}
+
+enum ProcessRequestAttachmentType {
+    IMAGE
+    PDF
+}
+
 model User {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name      String
-    email     String   @unique
-    password  String
+    id                            String                        @id @default(cuid())
+    createdAt                     DateTime                      @default(now())
+    updatedAt                     DateTime                      @updatedAt
+    firstName                     String
+    lastName                      String
+    email                         String                        @unique
+    password                      String
+    isActive                      Boolean                       @default(false)
+    isVerified                    Boolean                       @default(false)
+    groups                        Group[]
+    processRequests               ProcessRequest[]
+    processRequestsChangeRequests ProcessRequestChangeRequest[]
+}
+
+model Group {
+    id                 String    @id @default(cuid())
+    createdAt          DateTime  @default(now())
+    updatedAt          DateTime  @updatedAt
+    name               String    @unique
+    users              User[]
+    processes          Process[] @relation("GroupProcesses")
+    forwardedProcesses Process[] @relation("GroupForwardedProcesses")
+}
+
+model Process {
+    id               String           @id @default(cuid())
+    createdAt        DateTime         @default(now())
+    updatedAt        DateTime         @updatedAt
+    name             String
+    form             ProcessForm?
+    requests         ProcessRequest[]
+    targetGroup      Group            @relation("GroupProcesses", fields: [targetGroupId], references: [id])
+    targetGroupId    String
+    forwardToGroup   Group?           @relation("GroupForwardedProcesses", fields: [forwardToGroupId], references: [id])
+    forwardToGroupId String?
+}
+
+model ProcessForm {
+    id          String   @id @default(cuid())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    name        String
+    description String
+    definition  Json
+    process     Process  @relation(fields: [processId], references: [id])
+    processId   String   @unique
+}
+
+model ProcessRequest {
+    id             String                        @id @default(cuid())
+    createdAt      DateTime                      @default(now())
+    updatedAt      DateTime                      @updatedAt
+    status         ProcessRequestStatus          @default(OPEN)
+    process        Process                       @relation(fields: [processId], references: [id])
+    processId      String
+    user           User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId         String
+    attachments    ProcessRequestAttachment[]
+    changeRequests ProcessRequestChangeRequest[]
+}
+
+model ProcessRequestChangeRequest {
+    id               String         @id @default(cuid())
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+    message          String
+    processRequest   ProcessRequest @relation(fields: [processRequestId], references: [id], onDelete: Cascade)
+    processRequestId String
+    user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId           String
+}
+
+model ProcessRequestAttachment {
+    id               String                       @id @default(cuid())
+    createdAt        DateTime                     @default(now())
+    updatedAt        DateTime                     @updatedAt
+    name             String
+    type             ProcessRequestAttachmentType
+    url              String
+    processRequest   ProcessRequest               @relation(fields: [processRequestId], references: [id], onDelete: Cascade)
+    processRequestId String
 }
