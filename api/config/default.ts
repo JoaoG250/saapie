@@ -12,4 +12,7 @@ export default {
     protocol: getEnvironmentVariable("PROTOCOL"),
     port: 4000,
   },
+  jwt: {
+    accessTokenSecret: getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET"),
+  },
 };
