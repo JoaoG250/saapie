@@ -1,10 +1,11 @@
 import { User } from "@prisma/client";
+import { ValidationError } from "yup";
 import { IntegrityError } from "../src/errors";
 import { UserSignupDto } from "../src/interfaces";
 import { AuthService } from "../src/services/auth";
 
 describe("UserSignup", () => {
-  it("should check if all fields are within assigned constraints", () => {
+  it("should check if all fields are within assigned constraints", async () => {
     const data: UserSignupDto = {
       firstName: "John",
       lastName: "Doe",
@@ -14,18 +15,26 @@ describe("UserSignup", () => {
     let testData = { ...data };
     const authService = new AuthService();
 
-    expect(authService.validateSignupData(testData)).toBeTruthy();
+    await expect(
+      authService.validateSignupData(testData)
+    ).resolves.toBeTruthy();
 
     testData.firstName = "";
-    expect(authService.validateSignupData(testData)).toBeFalsy();
+    await expect(authService.validateSignupData(testData)).rejects.toThrow(
+      ValidationError
+    );
 
     testData = { ...data };
     testData.email = "test.com";
-    expect(authService.validateSignupData(testData)).toBeFalsy();
+    await expect(authService.validateSignupData(testData)).rejects.toThrow(
+      ValidationError
+    );
 
     testData = { ...data };
     testData.password = "12";
-    expect(authService.validateSignupData(testData)).toBeFalsy();
+    await expect(authService.validateSignupData(testData)).rejects.toThrow(
+      ValidationError
+    );
   });
   it("should check if user unique fields are not in use", () => {
     const users: User[] = [
