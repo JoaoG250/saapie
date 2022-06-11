@@ -14,11 +14,12 @@ export const schema = makeSchema({
     output: true,
   },
   outputs: {
-    typegen: join(__dirname, "/generated/nexus-typegen.ts"),
+    typegen: join(__dirname, "/generated/nexusTypes.gen.ts"),
     schema: join(__dirname, "../schema.graphql"),
   },
   contextType: {
     module: join(__dirname, "types/index.d.ts"),
     export: "GraphQLContext",
   },
+  shouldExitAfterGenerateArtifacts: process.argv.includes("--nexus-exit"),
 });
