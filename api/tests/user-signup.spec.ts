@@ -1,39 +1,7 @@
 import { User } from "@prisma/client";
-import * as yup from "yup";
-
-interface UserSignupDto {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-class IntegrityError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "IntegrityError";
-  }
-}
-
-class AuthService {
-  validateSignupData(data: UserSignupDto): boolean {
-    const userSignupDataConstraints = yup.object().shape({
-      firstName: yup.string().required().min(3).max(25).trim(),
-      lastName: yup.string().required().min(3).max(25).trim(),
-      email: yup.string().required().email().lowercase().trim(),
-      password: yup.string().required().min(6).max(50),
-    });
-    return userSignupDataConstraints.isValidSync(data);
-  }
-  checkUserUniqueFields(data: UserSignupDto, users: User[]): true {
-    users.forEach((user) => {
-      if (user.email === data.email) {
-        throw new IntegrityError("Email already exists");
-      }
-    });
-    return true;
-  }
-}
+import { IntegrityError } from "../src/errors";
+import { UserSignupDto } from "../src/interfaces";
+import { AuthService } from "../src/services/auth";
 
 describe("UserSignup", () => {
   it("should check if all fields are within assigned constraints", () => {
