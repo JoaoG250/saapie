@@ -1,38 +1,31 @@
+import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import * as yup from "yup";
 import { IntegrityError } from "../errors";
 import { UserSignupDto } from "../interfaces";
+import { UserRepository } from "../repositories/user";
 
 export class AuthService {
-  async validateSignupData(data: UserSignupDto): Promise<true> {
+  constructor(private readonly userRepository: UserRepository) {}
+
+  async validateSignupData(data: UserSignupDto): Promise<UserSignupDto> {
     const userSignupDataConstraints = yup.object().shape({
-      firstName: yup
-        .string()
-        .required("Nome é um campo obrigatório")
-        .min(3, "Nome deve ter no mínimo 3 caracteres")
-        .max(30, "Nome deve ter no máximo 30 caracteres")
-        .trim(),
-      lastName: yup
-        .string()
-        .required("Sobrenome é um campo obrigatório")
-        .min(3, "Sobrenome deve ter no mínimo 3 caracteres")
-        .max(50, "Sobrenome deve ter no máximo 50 caracteres")
-        .trim(),
-      email: yup
-        .string()
-        .required("Email é um campo obrigatório")
-        .email("Email inválido")
-        .lowercase()
-        .trim(),
-      password: yup
-        .string()
-        .required("Senha é um campo obrigatório")
-        .min(6, "Senha deve ter no mínimo 6 caracteres")
-        .max(50, "Senha deve ter no máximo 50 caracteres"),
+      firstName: yup.string().required().min(3).max(30).trim(),
+      lastName: yup.string().required().min(3).max(50).trim(),
+      email: yup.string().required().email().lowercase().trim(),
+      password: yup.string().required().min(6).max(50),
     });
-    await userSignupDataConstraints.validate(data);
-    return true;
+    return userSignupDataConstraints.validate(data);
   }
+
+  async findUsersMatchingUniqueFields(data: UserSignupDto): Promise<User[]> {
+    return this.userRepository.findMany({
+      where: {
+        OR: { email: data.email },
+      },
+    });
+  }
+
   checkUserUniqueFields(data: UserSignupDto, users: User[]): true {
     users.forEach((user) => {
       if (user.email === data.email) {
@@ -40,5 +33,22 @@ export class AuthService {
       }
     });
     return true;
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 12);
+  }
+
+  async registerUser(data: UserSignupDto): Promise<User> {
+    const validatedData = await this.validateSignupData(data);
+
+    const users = await this.findUsersMatchingUniqueFields(validatedData);
+    this.checkUserUniqueFields(validatedData, users);
+
+    const passwordHash = await this.hashPassword(validatedData.password);
+    return this.userRepository.create({
+      ...validatedData,
+      password: passwordHash,
+    });
   }
 }

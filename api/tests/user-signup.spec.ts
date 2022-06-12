@@ -2,7 +2,9 @@ import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../src/errors";
 import { UserSignupDto } from "../src/interfaces";
+import { UserRepository } from "../src/repositories/user";
 import { AuthService } from "../src/services/auth";
+import { prismaMock } from "./mock/prisma";
 
 describe("UserSignup", () => {
   it("should check if all fields are within assigned constraints", async () => {
@@ -13,7 +15,8 @@ describe("UserSignup", () => {
       password: "123456",
     };
     let testData = { ...data };
-    const authService = new AuthService();
+    const userRepository = new UserRepository(prismaMock);
+    const authService = new AuthService(userRepository);
 
     await expect(
       authService.validateSignupData(testData)
@@ -67,7 +70,8 @@ describe("UserSignup", () => {
       email: "johndoe@gmail.com",
       password: "123456",
     };
-    const authService = new AuthService();
+    const userRepository = new UserRepository(prismaMock);
+    const authService = new AuthService(userRepository);
 
     expect(authService.checkUserUniqueFields(data, users)).toBeTruthy();
 
@@ -75,5 +79,19 @@ describe("UserSignup", () => {
     expect(() => authService.checkUserUniqueFields(data, users)).toThrow(
       IntegrityError
     );
+  });
+  it("should hash the password before saving the user", async () => {
+    const data: UserSignupDto = {
+      firstName: "John",
+      lastName: "Doe",
+      email: "john@gmail.com",
+      password: "123456",
+    };
+    const userRepository = new UserRepository(prismaMock);
+    const authService = new AuthService(userRepository);
+
+    const hash = await authService.hashPassword(data.password);
+    expect(hash).toBeTruthy();
+    expect(hash).not.toEqual(data.password);
   });
 });
