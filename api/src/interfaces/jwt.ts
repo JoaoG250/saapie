@@ -17,6 +17,7 @@ export interface IJwtService {
 }
 
 export interface IJwtRepository {
+  getRefreshToken(subject: string): Promise<string | null>;
   setRefreshToken(
     subject: string,
     jwid: string,
