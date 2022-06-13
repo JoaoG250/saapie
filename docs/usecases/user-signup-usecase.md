@@ -1,4 +1,4 @@
-# UserSignup UseCase
+# UserSignup Use Case
 
 ## Data
 * First Name

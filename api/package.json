@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest -i",
-    "test:watch": "jest -i --watch --silent=false",
+    "test:watch": "jest -i --watchAll --silent=false",
     "lint": "eslint src/",
     "nexus:typegen": "ts-node --transpile-only src/schema.ts --nexus-exit",
     "dev": "ts-node-dev --transpile-only --no-notify src/index.ts",

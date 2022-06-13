@@ -21,3 +21,8 @@ export interface UserSignupDto {
   email: string;
   password: string;
 }
+
+export interface UserSigninDto {
+  email: string;
+  password: string;
+}
