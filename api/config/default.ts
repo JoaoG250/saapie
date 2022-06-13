@@ -27,4 +27,9 @@ export default {
     refreshTokenSecret: getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET"),
     refreshTokenExpiresIn: 60 * 60 * 24 * 1,
   },
+  redis: {
+    port: 6379,
+    host: "redis",
+    family: 4,
+  },
 };
