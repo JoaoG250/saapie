@@ -3,6 +3,8 @@ import { User } from "@prisma/client";
 import * as yup from "yup";
 import { IntegrityError } from "../errors";
 import {
+  AuthTokens,
+  IJwtService,
   IMailProvider,
   IUserRepository,
   UserSigninDto,
@@ -12,7 +14,8 @@ import {
 export class AuthService {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly mailProvider: IMailProvider
+    private readonly mailProvider: IMailProvider,
+    private readonly jwtService: IJwtService
   ) {}
 
   async validateSignupData(data: UserSignupDto): Promise<UserSignupDto> {
@@ -119,5 +122,13 @@ export class AuthService {
 
     const { password: secret, ...result } = user;
     return result;
+  }
+
+  async userSignin(user: Omit<User, "password">): Promise<AuthTokens> {
+    const payload = { id: user.id };
+    return {
+      accessToken: this.jwtService.signAcessToken(payload, user.id),
+      refreshToken: await this.jwtService.signRefreshToken(payload, user.id),
+    };
   }
 }
