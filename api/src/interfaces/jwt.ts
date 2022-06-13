@@ -1,6 +1,6 @@
 import { JwtPayload } from "jsonwebtoken";
 
-interface SignJwtArgs {
+export interface SignJwtArgs {
   payload: JwtPayload;
   subject: string;
   secret: string;
@@ -13,5 +13,14 @@ export interface IJwtService {
   verifyJwt(token: string, secret: string): JwtPayload | string;
   signAcessToken(payload: JwtPayload, subject: string): string;
   signRefreshToken(payload: JwtPayload, subject: string): Promise<string>;
-  verifyRefreshToken(token: string, secret: string): JwtPayload | string;
+  verifyRefreshToken(token: string): JwtPayload | string;
+}
+
+export interface IJwtRepository {
+  setRefreshToken(
+    subject: string,
+    jwid: string,
+    expiresIn: number
+  ): Promise<true>;
+  deleteRefreshToken(subject: string): Promise<true>;
 }

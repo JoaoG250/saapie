@@ -23,5 +23,8 @@ export default {
   },
   jwt: {
     accessTokenSecret: getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET"),
+    accessTokenExpiresIn: 60 * 2,
+    refreshTokenSecret: getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET"),
+    refreshTokenExpiresIn: 60 * 60 * 24 * 1,
   },
 };
