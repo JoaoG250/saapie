@@ -39,16 +39,17 @@ export class AuthService {
     return bcrypt.hash(password, 12);
   }
 
-  async registerUser(data: UserSignupDto): Promise<User> {
+  async registerUser(data: UserSignupDto): Promise<true> {
     const validatedData = await this.validateSignupData(data);
 
     const users = await this.findUsersMatchingUniqueFields(validatedData);
     this.checkUserUniqueFields(validatedData, users);
 
     const passwordHash = await this.hashPassword(validatedData.password);
-    return this.userRepository.create({
+    await this.userRepository.create({
       ...validatedData,
       password: passwordHash,
     });
+    return true;
   }
 }

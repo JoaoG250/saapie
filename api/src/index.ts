@@ -1,18 +1,21 @@
 import config from "config";
 import cors from "cors";
+import morgan from "morgan";
 import express, { NextFunction, Request, Response } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { expressjwt, UnauthorizedError } from "express-jwt";
-import { GraphQLContext, ExpressJwtContext } from "./types";
 import { schema } from "./schema";
+import { buildContext } from "./context";
 
 const domain: string = config.get("server.domain");
 const protocol: string = config.get("server.protocol");
 const port: number = config.get("server.port");
 const accessTokenSecret: string = config.get("jwt.accessTokenSecret");
 
-async function startServer() {
+async function startServer(): Promise<void> {
   const app = express();
+
+  app.use(morgan("dev"));
 
   app.use(
     cors({
@@ -41,11 +44,7 @@ async function startServer() {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }: ExpressJwtContext): GraphQLContext => {
-      return {
-        user: req.auth,
-      };
-    },
+    context: buildContext,
   });
 
   await apolloServer.start();
