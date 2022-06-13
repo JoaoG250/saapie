@@ -2,10 +2,13 @@ import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import * as yup from "yup";
 import { IntegrityError } from "../errors";
-import { IUserRepository, UserSignupDto } from "../interfaces";
+import { IMailProvider, IUserRepository, UserSignupDto } from "../interfaces";
 
 export class AuthService {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly mailProvider: IMailProvider
+  ) {}
 
   async validateSignupData(data: UserSignupDto): Promise<UserSignupDto> {
     const userSignupDataConstraints = yup.object().shape({
@@ -38,6 +41,17 @@ export class AuthService {
     return bcrypt.hash(password, 12);
   }
 
+  async sendRegisterEmail(data: UserSignupDto): Promise<void> {
+    return this.mailProvider.sendMail({
+      to: {
+        name: data.firstName,
+        address: data.email,
+      },
+      subject: "Confirmação de cadastro",
+      body: "<h1>Confirmação de cadastro</h1>",
+    });
+  }
+
   async registerUser(data: UserSignupDto): Promise<true> {
     const validatedData = await this.validateSignupData(data);
 
@@ -49,6 +63,8 @@ export class AuthService {
       ...validatedData,
       password: passwordHash,
     });
+
+    await this.sendRegisterEmail(validatedData);
     return true;
   }
 }

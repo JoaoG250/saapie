@@ -1,4 +1,5 @@
 export * from "./user";
+export * from "./mail";
 
 export interface IRepository<T> {
   findOne(where: unknown): Promise<T | null>;

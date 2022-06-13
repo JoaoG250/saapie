@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../src/errors";
 import { UserSignupDto } from "../src/interfaces";
+import { GmailMailProvider } from "../src/providers/mail";
 import { UserRepository } from "../src/repositories/user";
 import { AuthService } from "../src/services/auth";
 import { prismaMock } from "./mock/prisma";
@@ -10,8 +11,9 @@ const buildSUT = (): {
   authService: AuthService;
   userRepository: UserRepository;
 } => {
+  const mailProvider = new GmailMailProvider();
   const userRepository = new UserRepository(prismaMock);
-  const authService = new AuthService(userRepository);
+  const authService = new AuthService(userRepository, mailProvider);
   return { authService, userRepository };
 };
 
