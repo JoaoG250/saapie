@@ -28,5 +28,21 @@ export const authMutations = extendType({
         }
       },
     });
+    t.field("signin", {
+      type: "AuthTokens",
+      args: {
+        email: stringArg(),
+        password: stringArg(),
+      },
+      async resolve(_root, args, ctx) {
+        const user = await ctx.authService.validateUser(args);
+
+        if (!user) {
+          throw new UserInputError("Invalid credentials");
+        }
+
+        return ctx.authService.userSignin(user);
+      },
+    });
   },
 });

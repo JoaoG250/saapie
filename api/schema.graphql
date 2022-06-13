@@ -2,7 +2,13 @@
 ### Do not make changes to this file directly
 
 
+type AuthTokens {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type Mutation {
+  signin(email: String!, password: String!): AuthTokens!
   signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
 }
 
