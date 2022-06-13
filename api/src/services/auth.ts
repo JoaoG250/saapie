@@ -41,7 +41,7 @@ export class AuthService {
     return bcrypt.hash(password, 12);
   }
 
-  async sendRegisterEmail(data: UserSignupDto): Promise<void> {
+  async sendSignupEmail(data: UserSignupDto): Promise<void> {
     return this.mailProvider.sendMail({
       to: {
         name: data.firstName,
@@ -52,7 +52,7 @@ export class AuthService {
     });
   }
 
-  async registerUser(data: UserSignupDto): Promise<true> {
+  async userSignup(data: UserSignupDto): Promise<true> {
     const validatedData = await this.validateSignupData(data);
 
     const users = await this.findUsersMatchingUniqueFields(validatedData);
@@ -64,7 +64,7 @@ export class AuthService {
       password: passwordHash,
     });
 
-    await this.sendRegisterEmail(validatedData);
+    await this.sendSignupEmail(validatedData);
     return true;
   }
 }

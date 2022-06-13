@@ -6,7 +6,7 @@ import { IntegrityError } from "../../errors";
 export const authMutations = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("register", {
+    t.field("signup", {
       type: "Boolean",
       args: {
         firstName: stringArg(),
@@ -16,7 +16,7 @@ export const authMutations = extendType({
       },
       async resolve(_root, args, ctx) {
         try {
-          return await ctx.authService.registerUser(args);
+          return await ctx.authService.userSignup(args);
         } catch (err) {
           if (err instanceof IntegrityError) {
             throw new UserInputError(err.message);

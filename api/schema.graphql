@@ -3,7 +3,7 @@
 
 
 type Mutation {
-  register(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
+  signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
 }
 
 type Query {
