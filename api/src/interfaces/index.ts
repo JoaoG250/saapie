@@ -1,16 +1,9 @@
 export * from "./user";
 
-export interface IRepository<
-  T,
-  WhereInput,
-  WhereUniqueInput,
-  OrderByInput,
-  CreateInput,
-  UpdateInput
-> {
-  findOne(where: WhereUniqueInput): Promise<T | null>;
-  findMany(args: { where: WhereInput; orderBy?: OrderByInput }): Promise<T[]>;
-  create(data: CreateInput): Promise<T>;
-  update(where: WhereUniqueInput, data: UpdateInput): Promise<T>;
-  delete(where: WhereUniqueInput): Promise<T>;
+export interface IRepository<T> {
+  findOne(where: unknown): Promise<T | null>;
+  findMany(args: { where: unknown; orderBy?: unknown }): Promise<T[]>;
+  create(data: unknown): Promise<T>;
+  update(where: unknown, data: unknown): Promise<T>;
+  delete(where: unknown): Promise<T>;
 }

@@ -2,11 +2,10 @@ import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import * as yup from "yup";
 import { IntegrityError } from "../errors";
-import { UserSignupDto } from "../interfaces";
-import { UserRepository } from "../repositories/user";
+import { IUserRepository, UserSignupDto } from "../interfaces";
 
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async validateSignupData(data: UserSignupDto): Promise<UserSignupDto> {
     const userSignupDataConstraints = yup.object().shape({

@@ -1,17 +1,7 @@
 import { Prisma, PrismaClient, User } from "@prisma/client";
-import { IRepository } from "../interfaces";
+import { IUserRepository } from "../interfaces";
 
-export class UserRepository
-  implements
-    IRepository<
-      User,
-      Prisma.UserWhereInput,
-      Prisma.UserWhereUniqueInput,
-      Prisma.UserOrderByWithRelationInput,
-      Prisma.UserCreateInput,
-      Prisma.UserUpdateInput
-    >
-{
+export class UserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   async findOne(where: Prisma.UserWhereUniqueInput): Promise<User | null> {
