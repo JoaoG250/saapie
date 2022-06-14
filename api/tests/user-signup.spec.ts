@@ -1,3 +1,4 @@
+import RedisMock from "ioredis-mock";
 import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../src/errors";
@@ -6,14 +7,18 @@ import { GmailMailProvider } from "../src/providers/mail";
 import { UserRepository } from "../src/repositories/user";
 import { AuthService } from "../src/services/auth";
 import { prismaMock } from "./mock/prisma";
+import { JwtService } from "../src/services/jwt";
+import { JwtRepository } from "../src/repositories/jwt";
 
 const buildSUT = (): {
   authService: AuthService;
   userRepository: UserRepository;
 } => {
   const mailProvider = new GmailMailProvider();
+  const jwtRepository = new JwtRepository(new RedisMock());
+  const jwtService = new JwtService(jwtRepository);
   const userRepository = new UserRepository(prismaMock);
-  const authService = new AuthService(userRepository, mailProvider);
+  const authService = new AuthService(userRepository, mailProvider, jwtService);
   return { authService, userRepository };
 };
 
