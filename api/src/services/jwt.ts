@@ -1,6 +1,6 @@
 import cuid from "cuid";
 import config from "config";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { IJwtRepository, IJwtService, SignJwtArgs } from "../interfaces";
 
 const jwtConfig: {
@@ -61,5 +61,19 @@ export class JwtService implements IJwtService {
 
   verifyRefreshToken(token: string): string | jwt.JwtPayload {
     return this.verifyJwt(token, jwtConfig.refreshTokenSecret);
+  }
+
+  async validateRefreshToken(token: string): Promise<JwtPayload | false> {
+    const payload = this.verifyRefreshToken(token);
+    if (typeof payload === "string" || !payload.jti || !payload.sub) {
+      return false;
+    }
+
+    const storedValue = await this.jwtRepository.getRefreshToken(payload.sub);
+    if (storedValue === null || storedValue !== payload.jti) {
+      return false;
+    }
+
+    return payload;
   }
 }

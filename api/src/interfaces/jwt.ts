@@ -14,6 +14,7 @@ export interface IJwtService {
   signAcessToken(payload: JwtPayload, subject: string): string;
   signRefreshToken(payload: JwtPayload, subject: string): Promise<string>;
   verifyRefreshToken(token: string): JwtPayload | string;
+  validateRefreshToken(token: string): Promise<JwtPayload | false>;
 }
 
 export interface IJwtRepository {
