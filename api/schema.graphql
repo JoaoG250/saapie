@@ -8,6 +8,7 @@ type AuthTokens {
 }
 
 type Mutation {
+  refreshTokens(refreshToken: String!): AuthTokens!
   signin(email: String!, password: String!): AuthTokens!
   signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
 }

@@ -131,4 +131,32 @@ export class AuthService {
       refreshToken: await this.jwtService.signRefreshToken(payload, user.id),
     };
   }
+
+  async refreshTokens(refreshToken: string): Promise<AuthTokens> {
+    let payload;
+    try {
+      payload = await this.jwtService.validateRefreshToken(refreshToken);
+    } catch (err) {
+      throw new Error("Invalid refresh token");
+    }
+
+    if (!payload || typeof payload.id !== "string") {
+      throw new Error("Invalid refresh token");
+    }
+    const user = await this.userRepository.findOne({
+      id: payload.id,
+    });
+    if (!user || !this.checkUserStatus(user)) {
+      throw new Error("Invalid refresh token");
+    }
+
+    const signPayload = { id: user.id };
+    return {
+      accessToken: this.jwtService.signAcessToken(signPayload, user.id),
+      refreshToken: await this.jwtService.signRefreshToken(
+        signPayload,
+        user.id
+      ),
+    };
+  }
 }

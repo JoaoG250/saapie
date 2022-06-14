@@ -1,6 +1,6 @@
 import { ValidationError } from "yup";
 import { extendType, stringArg } from "nexus";
-import { UserInputError } from "apollo-server-express";
+import { ForbiddenError, UserInputError } from "apollo-server-express";
 import { IntegrityError } from "../../errors";
 
 export const authMutations = extendType({
@@ -35,13 +35,40 @@ export const authMutations = extendType({
         password: stringArg(),
       },
       async resolve(_root, args, ctx) {
-        const user = await ctx.authService.validateUser(args);
+        let user;
+
+        try {
+          user = await ctx.authService.validateUser(args);
+        } catch (err) {
+          if (err instanceof ValidationError) {
+            throw new UserInputError(err.message);
+          } else {
+            throw err;
+          }
+        }
 
         if (!user) {
           throw new UserInputError("Invalid credentials");
         }
 
         return ctx.authService.userSignin(user);
+      },
+    });
+    t.field("refreshTokens", {
+      type: "AuthTokens",
+      args: {
+        refreshToken: stringArg(),
+      },
+      async resolve(_root, args, ctx) {
+        try {
+          return await ctx.authService.refreshTokens(args.refreshToken);
+        } catch (err) {
+          if (err instanceof Error) {
+            throw new ForbiddenError(err.message);
+          } else {
+            throw err;
+          }
+        }
       },
     });
   },
