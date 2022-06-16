@@ -1,5 +1,15 @@
 import { User } from "@prisma/client";
-import { AuthTokens, UserSignupDto, UserSigninDto } from ".";
+import { UserSignupDto, UserSigninDto } from ".";
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthTokenPayload {
+  id: string;
+  groups: string[];
+}
 
 export interface IAuthService {
   userSignup(data: UserSignupDto): Promise<true>;

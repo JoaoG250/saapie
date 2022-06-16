@@ -127,7 +127,8 @@ export class AuthService implements IAuthService {
   }
 
   async userSignin(user: Omit<User, "password">): Promise<AuthTokens> {
-    const payload = { id: user.id };
+    const groups = await this.userRepository.getUserGroups({ id: user.id });
+    const payload = { id: user.id, groups: groups.map((group) => group.name) };
     return {
       accessToken: this.jwtService.signAcessToken(payload, user.id),
       refreshToken: await this.jwtService.signRefreshToken(payload, user.id),
@@ -145,14 +146,17 @@ export class AuthService implements IAuthService {
     if (!payload || typeof payload.id !== "string") {
       throw new Error("Invalid refresh token");
     }
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOneWithGroups({
       id: payload.id,
     });
     if (!user || !this.checkUserStatus(user)) {
       throw new Error("Invalid refresh token");
     }
 
-    const signPayload = { id: user.id };
+    const signPayload = {
+      id: user.id,
+      groups: user.groups.map((group) => group.name),
+    };
     return {
       accessToken: this.jwtService.signAcessToken(signPayload, user.id),
       refreshToken: await this.jwtService.signRefreshToken(

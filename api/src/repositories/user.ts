@@ -1,5 +1,5 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
-import { IUserRepository } from "../interfaces";
+import { Group, Prisma, PrismaClient, User } from "@prisma/client";
+import { IUserRepository, UserWithGroups } from "../interfaces";
 
 export class UserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -31,5 +31,18 @@ export class UserRepository implements IUserRepository {
 
   async delete(where: Prisma.UserWhereUniqueInput): Promise<User> {
     return this.prisma.user.delete({ where });
+  }
+
+  async findOneWithGroups(
+    where: Prisma.UserWhereUniqueInput
+  ): Promise<UserWithGroups | null> {
+    return this.prisma.user.findUnique({
+      where,
+      include: { groups: true },
+    });
+  }
+
+  async getUserGroups(where: Prisma.UserWhereUniqueInput): Promise<Group[]> {
+    return this.prisma.user.findUnique({ where }).groups();
   }
 }
