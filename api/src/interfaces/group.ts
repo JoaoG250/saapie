@@ -19,6 +19,16 @@ export interface IGroupRepository extends IRepository<Group> {
 }
 
 export interface IGroupService {
+  validateCreateGroupData(data: CreateGroupDto): Promise<CreateGroupDto>;
+  checkGroupUniqueFields(data: CreateGroupDto | UpdateGroupDto): Promise<true>;
   addUserToGroup(userId: string, groupId: string): Promise<void>;
   removeUserFromGroup(userId: string, groupId: string): Promise<void>;
+}
+
+export interface CreateGroupDto {
+  name: string;
+}
+
+export interface UpdateGroupDto {
+  name: string;
 }
