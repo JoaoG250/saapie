@@ -6,7 +6,7 @@ import { GmailMailProvider } from "../src/providers/mail";
 import { UserRepository } from "../src/repositories/user";
 import { AuthService } from "../src/services/auth";
 import { prismaMock } from "./mock/prisma";
-import { User } from "@prisma/client";
+import { UserWithGroups } from "../src/interfaces";
 
 const buildSUT = (): {
   jwtService: JwtService;
@@ -45,7 +45,7 @@ describe("TokenRefresh", () => {
   });
   it("should check if the user is active and verified", async () => {
     const { authService, jwtService } = buildSUT();
-    const user: User = {
+    const user: UserWithGroups = {
       id: "1",
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -55,6 +55,7 @@ describe("TokenRefresh", () => {
       password: "123456",
       isActive: true,
       isVerified: true,
+      groups: [],
     };
 
     prismaMock.user.findUnique.mockResolvedValue(user);

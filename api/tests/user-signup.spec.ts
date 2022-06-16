@@ -54,7 +54,7 @@ describe("UserSignup", () => {
       ValidationError
     );
   });
-  it("should check if user unique fields are not in use", () => {
+  it("should check if user unique fields are not in use", async () => {
     const users: User[] = [
       {
         id: "1",
@@ -87,10 +87,11 @@ describe("UserSignup", () => {
     };
     const { authService } = buildSUT();
 
-    expect(authService.checkUserUniqueFields(data, users)).toBeTruthy();
+    prismaMock.user.findMany.mockResolvedValue(users);
+    await expect(authService.checkUserUniqueFields(data)).resolves.toBeTruthy();
 
     data.email = "john@gmail.com";
-    expect(() => authService.checkUserUniqueFields(data, users)).toThrow(
+    await expect(() => authService.checkUserUniqueFields(data)).rejects.toThrow(
       IntegrityError
     );
   });

@@ -43,16 +43,13 @@ export class AuthService implements IAuthService {
     });
   }
 
-  async findUsersMatchingUniqueFields(data: UserSignupDto): Promise<User[]> {
-    return this.userRepository.findMany({
+  async checkUserUniqueFields(data: UserSignupDto): Promise<true> {
+    const matchingUsers = await this.userRepository.findMany({
       where: {
         OR: { email: data.email },
       },
     });
-  }
-
-  checkUserUniqueFields(data: UserSignupDto, users: User[]): true {
-    users.forEach((user) => {
+    matchingUsers.forEach((user) => {
       if (user.email === data.email) {
         throw new IntegrityError("Email already exists");
       }
@@ -86,8 +83,7 @@ export class AuthService implements IAuthService {
   async userSignup(data: UserSignupDto): Promise<true> {
     const validatedData = await this.validateSignupData(data);
 
-    const users = await this.findUsersMatchingUniqueFields(validatedData);
-    this.checkUserUniqueFields(validatedData, users);
+    await this.checkUserUniqueFields(validatedData);
 
     const passwordHash = await this.hashPassword(validatedData.password);
     await this.userRepository.create({
