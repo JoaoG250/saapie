@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { IntegrityError } from "../errors";
 import {
   AuthTokens,
+  IAuthService,
   IJwtService,
   IMailProvider,
   IUserRepository,
@@ -11,7 +12,7 @@ import {
   UserSignupDto,
 } from "../interfaces";
 
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly mailProvider: IMailProvider,
@@ -120,6 +121,7 @@ export class AuthService {
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: secret, ...result } = user;
     return result;
   }
