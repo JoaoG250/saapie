@@ -14,3 +14,8 @@ export interface IGroupRepository extends IRepository<Group> {
   ): Promise<Group>;
   delete(where: Prisma.GroupWhereUniqueInput): Promise<Group>;
 }
+
+export interface IGroupService {
+  addUserToGroup(userId: string, groupId: string): Promise<void>;
+  removeUserFromGroup(userId: string, groupId: string): Promise<void>;
+}
