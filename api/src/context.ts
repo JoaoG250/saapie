@@ -15,6 +15,7 @@ export function buildContext({ req }: ExpressJwtContext): GraphQLContext {
   const authService = new AuthService(userRepository, mailProvider, jwtService);
   return {
     user: req.auth,
+    userRepository,
     authService,
   };
 }

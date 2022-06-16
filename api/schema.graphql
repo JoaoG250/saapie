@@ -14,11 +14,12 @@ type Mutation {
 }
 
 type Query {
-  ok: Boolean!
+  user(id: ID!): User!
 }
 
 type User {
   email: String!
+  firstName: String!
   id: ID!
-  name: String!
+  lastName: String!
 }
