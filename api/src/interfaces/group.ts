@@ -4,7 +4,10 @@ import { IRepository } from ".";
 export interface IGroupRepository extends IRepository<Group> {
   findOne(where: Prisma.GroupWhereUniqueInput): Promise<Group | null>;
   findMany(args: {
-    where: Prisma.GroupWhereInput;
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.GroupWhereUniqueInput;
+    where?: Prisma.GroupWhereInput;
     orderBy?: Prisma.GroupOrderByWithRelationInput;
   }): Promise<Group[]>;
   create(data: Prisma.GroupCreateInput): Promise<Group>;

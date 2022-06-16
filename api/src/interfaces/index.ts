@@ -7,7 +7,13 @@ export * from "./group";
 
 export interface IRepository<T> {
   findOne(where: unknown): Promise<T | null>;
-  findMany(args: { where?: unknown; orderBy?: unknown }): Promise<T[]>;
+  findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: unknown;
+    where?: unknown;
+    orderBy?: unknown;
+  }): Promise<T[]>;
   create(data: unknown): Promise<T>;
   update(where: unknown, data: unknown): Promise<T>;
   delete(where: unknown): Promise<T>;

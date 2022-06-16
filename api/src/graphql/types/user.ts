@@ -7,5 +7,11 @@ export const User = objectType({
     t.string("firstName");
     t.string("lastName");
     t.string("email");
+    t.list.field("groups", {
+      type: "Group",
+      resolve(root, args, ctx) {
+        return ctx.userRepository.getUserGroups({ id: root.id });
+      },
+    });
   },
 });

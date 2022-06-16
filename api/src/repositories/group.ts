@@ -9,7 +9,10 @@ export class GroupRepository implements IGroupRepository {
   }
 
   async findMany(args: {
-    where: Prisma.GroupWhereInput;
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.GroupWhereUniqueInput;
+    where?: Prisma.GroupWhereInput;
     orderBy?: Prisma.GroupOrderByWithRelationInput | undefined;
   }): Promise<Group[]> {
     return this.prisma.group.findMany({
