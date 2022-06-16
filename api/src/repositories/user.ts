@@ -9,10 +9,16 @@ export class UserRepository implements IUserRepository {
   }
 
   async findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.UserWhereUniqueInput;
     where: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
     return this.prisma.user.findMany({
+      skip: args.skip,
+      take: args.take,
+      cursor: args.cursor,
       where: args.where,
       orderBy: args.orderBy,
     });

@@ -6,7 +6,10 @@ export type UserWithGroups = User & { groups: Group[] };
 export interface IUserRepository extends IRepository<User> {
   findOne(where: Prisma.UserWhereUniqueInput): Promise<User | null>;
   findMany(args: {
-    where: Prisma.UserWhereInput;
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.UserWhereUniqueInput;
+    where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]>;
   create(data: Prisma.UserCreateInput): Promise<User>;
