@@ -2,6 +2,7 @@ export * from "./jwt";
 export * from "./auth";
 export * from "./mail";
 export * from "./user";
+export * from "./group";
 
 export interface IRepository<T> {
   findOne(where: unknown): Promise<T | null>;
