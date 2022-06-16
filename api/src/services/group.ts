@@ -1,3 +1,4 @@
+import { Group } from "@prisma/client";
 import * as yup from "yup";
 import { IntegrityError } from "../errors";
 import {
@@ -43,6 +44,12 @@ export class GroupService implements IGroupService {
       }
     });
     return true;
+  }
+
+  async createGroup(data: CreateGroupDto): Promise<Group> {
+    const validatedData = await this.validateCreateGroupData(data);
+    await this.checkGroupUniqueFields(validatedData);
+    return this.groupRepository.create(validatedData);
   }
 
   async addUserToGroup(userId: string, groupId: string): Promise<void> {

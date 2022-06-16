@@ -7,6 +7,10 @@ type AuthTokens {
   refreshToken: String!
 }
 
+input CreateGroupInput {
+  name: String!
+}
+
 type Group {
   id: ID!
   name: String!
@@ -33,6 +37,7 @@ type GroupEdge {
 }
 
 type Mutation {
+  createGroup(data: CreateGroupInput!): Group!
   refreshTokens(refreshToken: String!): AuthTokens!
   signin(email: String!, password: String!): AuthTokens!
   signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
