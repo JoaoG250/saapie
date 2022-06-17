@@ -5,10 +5,12 @@ import { DeleteGroupUseCase } from "./deleteGroup/delete-group.usecase";
 import { GetGroupUseCase } from "./getGroup/get-group.usecase";
 import { GetGroupsUseCase } from "./getGroups/get-groups.usecase";
 import { RemoveUserFromGroupUseCase } from "./removeUserFromGroup/remove-user-from-group.usecase";
+import { UpdateGroupUseCase } from "./updateGroup/update-group.usecase";
 
 const getGroupUseCase = new GetGroupUseCase(groupRepository);
 const getGroupsUseCase = new GetGroupsUseCase(groupRepository);
 const createGroupUseCase = new CreateGroupUseCase(groupRepository);
+const updateGroupUseCase = new UpdateGroupUseCase(groupRepository);
 const deleteGroupUseCase = new DeleteGroupUseCase(groupRepository);
 const addUserToGroupUseCase = new AddUserToGroupUseCase(
   groupRepository,
@@ -23,6 +25,7 @@ export {
   getGroupUseCase,
   getGroupsUseCase,
   createGroupUseCase,
+  updateGroupUseCase,
   deleteGroupUseCase,
   addUserToGroupUseCase,
   removeUserFromGroupUseCase,

@@ -14,3 +14,10 @@ export const CreateGroupInput = inputObjectType({
     t.string("name");
   },
 });
+
+export const UpdateGroupInput = inputObjectType({
+  name: "UpdateGroupInput",
+  definition(t) {
+    t.string("name");
+  },
+});
