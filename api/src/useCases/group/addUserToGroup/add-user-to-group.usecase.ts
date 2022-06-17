@@ -3,16 +3,17 @@ import {
   IUseCase,
   IUserRepository,
 } from "../../../interfaces";
+import { AddUserToGroupDto } from "./add-user-to-group.dto";
 
 export class AddUserToGroupUseCase
-  implements IUseCase<{ userId: string; groupId: string }, true>
+  implements IUseCase<AddUserToGroupDto, true>
 {
   constructor(
     private readonly groupRepository: IGroupRepository,
     private readonly userRepository: IUserRepository
   ) {}
 
-  async execute(args: { userId: string; groupId: string }): Promise<true> {
+  async execute(args: AddUserToGroupDto): Promise<true> {
     const { userId, groupId } = args;
     const group = await this.groupRepository.findOne({
       id: groupId,
