@@ -1,11 +1,6 @@
 import { Request } from "express";
 import { ExpressContext } from "apollo-server-express";
-import {
-  IAuthService,
-  IGroupRepository,
-  IGroupService,
-  IUserRepository,
-} from "../interfaces";
+import { IAuthService, IGroupRepository, IUserRepository } from "../interfaces";
 
 interface UserFromRequest {
   id: string;
@@ -24,5 +19,4 @@ interface GraphQLContext {
   userRepository: IUserRepository;
   groupRepository: IGroupRepository;
   authService: IAuthService;
-  groupService: IGroupService;
 }

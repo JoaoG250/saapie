@@ -1,5 +1,6 @@
 import { UserInputError } from "apollo-server-express";
 import { arg, extendType } from "nexus";
+import { createGroupUseCase } from "../../useCases/group";
 
 export const groupMutations = extendType({
   type: "Mutation",
@@ -9,9 +10,9 @@ export const groupMutations = extendType({
       args: {
         data: arg({ type: "CreateGroupInput" }),
       },
-      async resolve(_root, { data }, ctx) {
+      async resolve(_root, { data }) {
         try {
-          return await ctx.groupService.createGroup(data);
+          return await createGroupUseCase.execute(data);
         } catch (err) {
           if (err instanceof Error) {
             throw new UserInputError(err.message);

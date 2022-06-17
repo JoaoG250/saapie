@@ -18,14 +18,6 @@ export interface IGroupRepository extends IRepository<Group> {
   delete(where: Prisma.GroupWhereUniqueInput): Promise<Group>;
 }
 
-export interface IGroupService {
-  validateCreateGroupData(data: CreateGroupDto): Promise<CreateGroupDto>;
-  checkGroupUniqueFields(data: CreateGroupDto | UpdateGroupDto): Promise<true>;
-  createGroup(data: CreateGroupDto): Promise<Group>;
-  addUserToGroup(userId: string, groupId: string): Promise<void>;
-  removeUserFromGroup(userId: string, groupId: string): Promise<void>;
-}
-
 export interface CreateGroupDto {
   name: string;
 }

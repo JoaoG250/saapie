@@ -18,3 +18,7 @@ export interface IRepository<T> {
   update(where: unknown, data: unknown): Promise<T>;
   delete(where: unknown): Promise<T>;
 }
+
+export interface IUseCase<IRequest, IResponse> {
+  execute(args: IRequest): Promise<IResponse> | IResponse;
+}

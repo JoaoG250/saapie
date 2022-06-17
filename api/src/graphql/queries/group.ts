@@ -1,5 +1,6 @@
 import { UserInputError } from "apollo-server-express";
 import { extendType, idArg } from "nexus";
+import { getGroupsUseCase, getGroupUseCase } from "../../useCases/group";
 import { parsePaginationArgs } from "../../utils/prisma";
 
 export const groupQueries = extendType({
@@ -10,8 +11,8 @@ export const groupQueries = extendType({
       args: {
         id: idArg(),
       },
-      async resolve(_root, args, ctx) {
-        const group = await ctx.groupRepository.findOne(args);
+      async resolve(_root, args) {
+        const group = await getGroupUseCase.execute(args);
         if (!group) {
           throw new UserInputError("Group not found");
         }
@@ -20,9 +21,9 @@ export const groupQueries = extendType({
     });
     t.connectionField("groups", {
       type: "Group",
-      nodes(_root, args, ctx) {
+      nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
-        return ctx.groupRepository.findMany({ ...pagination });
+        return getGroupsUseCase.execute({ ...pagination });
       },
     });
   },
