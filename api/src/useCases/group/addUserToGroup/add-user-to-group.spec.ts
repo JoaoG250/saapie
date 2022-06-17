@@ -6,9 +6,9 @@ import { AddUserToGroupDto } from "./add-user-to-group.dto";
 import { createFakeUser } from "../../../tests/fake/user";
 import { createFakeGroup } from "../../../tests/fake/group";
 
-const buildSUT = (): {
+function buildSUT(): {
   addUserToGroupUseCase: AddUserToGroupUseCase;
-} => {
+} {
   const groupRepository = new GroupRepository(prismaMock);
   const userRepository = new UserRepository(prismaMock);
   const addUserToGroupUseCase = new AddUserToGroupUseCase(
@@ -16,9 +16,9 @@ const buildSUT = (): {
     userRepository
   );
   return { addUserToGroupUseCase };
-};
+}
 
-describe("AddUserToGroup", () => {
+describe("AddUserToGroupUseCase", () => {
   it("should check if the user and group exists", async () => {
     const data: AddUserToGroupDto = {
       userId: "1",

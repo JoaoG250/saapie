@@ -8,16 +8,16 @@ import { createFakeUser } from "../../../tests/fake/user";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { UserSignupUseCase } from "./user-signup.usecase";
 
-const buildSUT = (): {
+function buildSUT(): {
   userSignupUseCase: UserSignupUseCase;
-} => {
+} {
   const mailProvider = new GmailMailProvider();
   const userRepository = new UserRepository(prismaMock);
   const userSignupUseCase = new UserSignupUseCase(userRepository, mailProvider);
   return { userSignupUseCase };
-};
+}
 
-describe("UserSignup", () => {
+describe("UserSignupUseCase", () => {
   it("should check if all fields are within assigned constraints", async () => {
     const data: UserSignupDto = {
       firstName: "John",

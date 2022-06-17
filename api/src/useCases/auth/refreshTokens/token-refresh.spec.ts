@@ -8,10 +8,10 @@ import { RefreshTokensUseCase } from "./refresh-tokens.usecase";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { createFakeUser } from "../../../tests/fake/user";
 
-const buildSUT = (): {
+function buildSUT(): {
   refreshTokensUseCase: RefreshTokensUseCase;
   jwtService: JwtService;
-} => {
+} {
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
   const userRepository = new UserRepository(prismaMock);
@@ -20,9 +20,9 @@ const buildSUT = (): {
     userRepository
   );
   return { refreshTokensUseCase, jwtService };
-};
+}
 
-describe("TokenRefresh", () => {
+describe("RefreshTokensUseCase", () => {
   it("should check if the refresh token is valid", async () => {
     const { jwtService } = buildSUT();
 

@@ -10,10 +10,10 @@ import { UserSignupUseCase } from "../userSignup/user-signup.usecase";
 import { GmailMailProvider } from "../../../providers/mail";
 import { createFakeUser } from "../../../tests/fake/user";
 
-const buildSUT = (): {
+function buildSUT(): {
   userSigninUseCase: UserSigninUseCase;
   userSignupUseCase: UserSignupUseCase;
-} => {
+} {
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
   const mailProvider = new GmailMailProvider();
@@ -21,9 +21,9 @@ const buildSUT = (): {
   const userSigninUseCase = new UserSigninUseCase(userRepository, jwtService);
   const userSignupUseCase = new UserSignupUseCase(userRepository, mailProvider);
   return { userSigninUseCase, userSignupUseCase };
-};
+}
 
-describe("UserSignin", () => {
+describe("UserSigninUseCase", () => {
   it("should check if all fields are within assigned constraints", async () => {
     const data: UserSigninDto = {
       email: "john@test.com",

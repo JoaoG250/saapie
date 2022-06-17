@@ -6,15 +6,15 @@ import { createFakeGroup } from "../../../tests/fake/group";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { CreateGroupUseCase } from "./create-group.usecase";
 
-const buildSUT = (): {
+function buildSUT(): {
   createGroupUseCase: CreateGroupUseCase;
-} => {
+} {
   const groupRepository = new GroupRepository(prismaMock);
   const createGroupUseCase = new CreateGroupUseCase(groupRepository);
   return { createGroupUseCase };
-};
+}
 
-describe("CreateGroup", () => {
+describe("CreateGroupUseCase", () => {
   it("should check if all fields are within assigned constraints", async () => {
     const data: CreateGroupDto = {
       name: "TEST_GROUP",
