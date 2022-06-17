@@ -10,7 +10,11 @@ export const User = objectType({
     t.list.field("groups", {
       type: "Group",
       resolve(root, args, ctx) {
-        return ctx.userRepository.getUserGroups({ id: root.id });
+        return ctx.prisma.user
+          .findUnique({
+            where: { id: root.id },
+          })
+          .groups();
       },
     });
   },

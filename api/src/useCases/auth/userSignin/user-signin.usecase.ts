@@ -9,13 +9,7 @@ import {
   UserSigninDto,
 } from "../../../interfaces";
 import { checkUserStatus } from "../domain/check-user-status";
-
-export class SigninError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "SigninError";
-  }
-}
+import { SigninError } from "../../../errors";
 
 export class UserSigninUseCase implements IUseCase<UserSigninDto, AuthTokens> {
   constructor(

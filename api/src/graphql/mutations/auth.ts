@@ -1,13 +1,12 @@
 import { ValidationError } from "yup";
 import { extendType, stringArg } from "nexus";
 import { ForbiddenError, UserInputError } from "apollo-server-express";
-import { IntegrityError } from "../../errors";
+import { IntegrityError, SigninError } from "../../errors";
 import {
   refreshTokensUseCase,
   userSigninUseCase,
   userSignupUseCase,
 } from "../../useCases/auth";
-import { SigninError } from "../../useCases/auth/userSignin/user-signin.usecase";
 
 export const authMutations = extendType({
   type: "Mutation",

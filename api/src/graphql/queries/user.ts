@@ -1,5 +1,6 @@
 import { UserInputError } from "apollo-server-express";
 import { extendType, idArg } from "nexus";
+import { getUsersUseCase, getUserUseCase } from "../../useCases/user";
 import { parsePaginationArgs } from "../../utils/prisma";
 
 export const userQueries = extendType({
@@ -10,8 +11,8 @@ export const userQueries = extendType({
       args: {
         id: idArg(),
       },
-      async resolve(_root, args, ctx) {
-        const user = await ctx.userRepository.findOne(args);
+      async resolve(_root, args) {
+        const user = await getUserUseCase.execute(args);
         if (!user) {
           throw new UserInputError("User not found");
         }
@@ -20,9 +21,9 @@ export const userQueries = extendType({
     });
     t.connectionField("users", {
       type: "User",
-      nodes(_root, args, ctx) {
+      nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
-        return ctx.userRepository.findMany({ ...pagination });
+        return getUsersUseCase.execute({ ...pagination });
       },
     });
   },

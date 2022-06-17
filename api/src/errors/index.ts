@@ -11,3 +11,10 @@ export class PaginationError extends Error {
     this.name = "PaginationError";
   }
 }
+
+export class SigninError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SigninError";
+  }
+}

@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { ExpressContext } from "apollo-server-express";
-import { IGroupRepository, IUserRepository } from "../interfaces";
+import { PrismaClient } from "@prisma/client";
+import Redis from "ioredis";
 
 interface UserFromRequest {
   id: string;
@@ -16,6 +17,6 @@ interface ExpressJwtContext extends ExpressContext {
 
 interface GraphQLContext {
   user?: UserFromRequest;
-  userRepository: IUserRepository;
-  groupRepository: IGroupRepository;
+  prisma: PrismaClient;
+  redis: Redis;
 }

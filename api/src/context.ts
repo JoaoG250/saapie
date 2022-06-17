@@ -1,14 +1,11 @@
 import { ExpressJwtContext, GraphQLContext } from "./types";
-import { UserRepository } from "./repositories/user";
 import prisma from "./db";
-import { GroupRepository } from "./repositories/group";
+import redis from "./redis";
 
 export function buildContext({ req }: ExpressJwtContext): GraphQLContext {
-  const userRepository = new UserRepository(prisma);
-  const groupRepository = new GroupRepository(prisma);
   return {
+    redis,
+    prisma,
     user: req.auth,
-    userRepository,
-    groupRepository,
   };
 }
