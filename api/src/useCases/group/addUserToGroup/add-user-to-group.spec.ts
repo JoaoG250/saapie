@@ -5,6 +5,7 @@ import { UserRepository } from "../../../repositories/user";
 import { AddUserToGroupDto } from "./add-user-to-group.dto";
 import { createFakeUser } from "../../../tests/fake/user";
 import { createFakeGroup } from "../../../tests/fake/group";
+import { GroupNotFoundError, UserNotFoundError } from "../../../errors";
 
 function buildSUT(): {
   addUserToGroupUseCase: AddUserToGroupUseCase;
@@ -28,10 +29,14 @@ describe("AddUserToGroupUseCase", () => {
     const group = createFakeGroup({ id: data.groupId }, 1);
     const { addUserToGroupUseCase } = buildSUT();
 
-    await expect(addUserToGroupUseCase.execute(data)).rejects.toThrow(Error);
+    await expect(addUserToGroupUseCase.execute(data)).rejects.toThrow(
+      GroupNotFoundError
+    );
     prismaMock.group.findUnique.mockResolvedValue(group);
 
-    await expect(addUserToGroupUseCase.execute(data)).rejects.toThrow(Error);
+    await expect(addUserToGroupUseCase.execute(data)).rejects.toThrow(
+      UserNotFoundError
+    );
     prismaMock.user.findUnique.mockResolvedValue(user);
 
     await expect(addUserToGroupUseCase.execute(data)).resolves.toBeTruthy();

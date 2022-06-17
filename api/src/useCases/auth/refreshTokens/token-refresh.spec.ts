@@ -7,6 +7,7 @@ import { UserWithGroups } from "../../../interfaces";
 import { RefreshTokensUseCase } from "./refresh-tokens.usecase";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { createFakeUser } from "../../../tests/fake/user";
+import { InvalidTokenError } from "../../../errors";
 
 function buildSUT(): {
   refreshTokensUseCase: RefreshTokensUseCase;
@@ -68,6 +69,6 @@ describe("RefreshTokensUseCase", () => {
     prismaMock.user.findUnique.mockResolvedValue(inactiveUser);
     await expect(
       refreshTokensUseCase.execute({ refreshToken })
-    ).rejects.toThrow(Error);
+    ).rejects.toThrow(InvalidTokenError);
   });
 });

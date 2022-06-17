@@ -1,3 +1,4 @@
+import { InvalidTokenError } from "../../../errors";
 import {
   AuthTokens,
   IJwtService,
@@ -20,17 +21,17 @@ export class RefreshTokensUseCase
     try {
       payload = await this.jwtService.validateRefreshToken(refreshToken);
     } catch (err) {
-      throw new Error("Invalid refresh token");
+      throw new InvalidTokenError("Invalid refresh token");
     }
 
     if (!payload || typeof payload.id !== "string") {
-      throw new Error("Invalid refresh token");
+      throw new InvalidTokenError("Invalid refresh token");
     }
     const user = await this.userRepository.findOneWithGroups({
       id: payload.id,
     });
     if (!user || !checkUserStatus(user)) {
-      throw new Error("Invalid refresh token");
+      throw new InvalidTokenError("Invalid refresh token");
     }
 
     const signPayload = {

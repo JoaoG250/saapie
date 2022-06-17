@@ -1,3 +1,4 @@
+import { GroupNotFoundError } from "../../../errors";
 import { GroupRepository } from "../../../repositories/group";
 import { createFakeGroup } from "../../../tests/fake/group";
 import { prismaMock } from "../../../tests/mock/prisma";
@@ -21,7 +22,9 @@ describe("DeleteGroupUseCase", () => {
     const { deleteGroupUseCase } = buildSUT();
 
     prismaMock.group.findUnique.mockResolvedValue(null);
-    await expect(deleteGroupUseCase.execute(data)).rejects.toThrow(Error);
+    await expect(deleteGroupUseCase.execute(data)).rejects.toThrow(
+      GroupNotFoundError
+    );
 
     prismaMock.group.findUnique.mockResolvedValue(group);
     prismaMock.group.delete.mockResolvedValue(group);

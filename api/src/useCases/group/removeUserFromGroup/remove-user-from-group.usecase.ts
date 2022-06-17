@@ -1,3 +1,4 @@
+import { GroupNotFoundError, UserNotFoundError } from "../../../errors";
 import {
   IGroupRepository,
   IUseCase,
@@ -19,13 +20,13 @@ export class RemoveUserFromGroupUseCase
       id: groupId,
     });
     if (!group) {
-      throw new Error("Group not found");
+      throw new GroupNotFoundError("Group not found");
     }
     const user = await this.userRepository.findOne({
       id: userId,
     });
     if (!user) {
-      throw new Error("User not found");
+      throw new UserNotFoundError("User not found");
     }
     await this.groupRepository.update(
       { id: groupId },

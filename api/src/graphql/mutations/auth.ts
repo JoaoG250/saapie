@@ -1,7 +1,7 @@
 import { ValidationError } from "yup";
 import { extendType, stringArg } from "nexus";
 import { ForbiddenError, UserInputError } from "apollo-server-express";
-import { IntegrityError, SigninError } from "../../errors";
+import { IntegrityError, InvalidTokenError, SigninError } from "../../errors";
 import {
   refreshTokensUseCase,
   userSigninUseCase,
@@ -23,10 +23,10 @@ export const authMutations = extendType({
         try {
           return await userSignupUseCase.execute(args);
         } catch (err) {
-          if (err instanceof IntegrityError) {
+          if (err instanceof ValidationError) {
             throw new UserInputError(err.message);
           }
-          if (err instanceof ValidationError) {
+          if (err instanceof IntegrityError) {
             throw new UserInputError(err.message);
           }
           throw err;
@@ -62,11 +62,10 @@ export const authMutations = extendType({
         try {
           return await refreshTokensUseCase.execute(args);
         } catch (err) {
-          if (err instanceof Error) {
+          if (err instanceof InvalidTokenError) {
             throw new ForbiddenError(err.message);
-          } else {
-            throw err;
           }
+          throw err;
         }
       },
     });
