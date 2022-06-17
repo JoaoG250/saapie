@@ -38,7 +38,7 @@ describe("CreateGroupUseCase", () => {
     ).rejects.toThrow(ValidationError);
   });
   it("should check if unique fields are not in use", async () => {
-    const groups = [createFakeGroup({ name: "GROUP_1" }, 1)];
+    const groups = [createFakeGroup({ name: "GROUP" }, 1)];
     const data: CreateGroupDto = {
       name: "TEST_GROUP",
     };
@@ -49,7 +49,7 @@ describe("CreateGroupUseCase", () => {
       createGroupUseCase.checkGroupUniqueFields(data)
     ).resolves.toBeTruthy();
 
-    data.name = "GROUP_1";
+    data.name = "GROUP";
     await expect(
       createGroupUseCase.checkGroupUniqueFields(data)
     ).rejects.toThrow(IntegrityError);
