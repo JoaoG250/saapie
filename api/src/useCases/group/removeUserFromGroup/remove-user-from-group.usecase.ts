@@ -3,16 +3,17 @@ import {
   IUseCase,
   IUserRepository,
 } from "../../../interfaces";
+import { RemoveUserFromGroupDto } from "./remove-user-from-group.dto";
 
 export class RemoveUserFromGroupUseCase
-  implements IUseCase<{ userId: string; groupId: string }, true>
+  implements IUseCase<RemoveUserFromGroupDto, true>
 {
   constructor(
     private readonly groupRepository: IGroupRepository,
     private readonly userRepository: IUserRepository
   ) {}
 
-  async execute(args: { userId: string; groupId: string }): Promise<true> {
+  async execute(args: RemoveUserFromGroupDto): Promise<true> {
     const { userId, groupId } = args;
     const group = await this.groupRepository.findOne({
       id: groupId,
