@@ -1,11 +1,11 @@
 import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../../../errors";
-import { UserSignupDto } from "../../../interfaces";
 import { GmailMailProvider } from "../../../providers/mail";
 import { UserRepository } from "../../../repositories/user";
 import { createFakeUser } from "../../../tests/fake/user";
 import { prismaMock } from "../../../tests/mock/prisma";
+import { UserSignupDto } from "./user-signup.dto";
 import { UserSignupUseCase } from "./user-signup.usecase";
 
 function buildSUT(): {

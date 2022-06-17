@@ -17,11 +17,3 @@ export interface IGroupRepository extends IRepository<Group> {
   ): Promise<Group>;
   delete(where: Prisma.GroupWhereUniqueInput): Promise<Group>;
 }
-
-export interface CreateGroupDto {
-  name: string;
-}
-
-export interface UpdateGroupDto {
-  name: string;
-}

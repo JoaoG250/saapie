@@ -1,9 +1,9 @@
 import { ValidationError } from "yup";
 import { IntegrityError } from "../../../errors";
-import { CreateGroupDto } from "../../../interfaces";
 import { GroupRepository } from "../../../repositories/group";
 import { createFakeGroup } from "../../../tests/fake/group";
 import { prismaMock } from "../../../tests/mock/prisma";
+import { CreateGroupDto } from "./create-group.dto";
 import { CreateGroupUseCase } from "./create-group.usecase";
 
 function buildSUT(): {

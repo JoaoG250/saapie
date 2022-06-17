@@ -1,6 +1,5 @@
 import RedisMock from "ioredis-mock";
 import { ValidationError } from "yup";
-import { UserSigninDto } from "../../../interfaces";
 import { JwtRepository } from "../../../repositories/jwt";
 import { UserRepository } from "../../../repositories/user";
 import { JwtService } from "../../../services/jwt";
@@ -9,6 +8,7 @@ import { UserSigninUseCase } from "./user-signin.usecase";
 import { UserSignupUseCase } from "../userSignup/user-signup.usecase";
 import { GmailMailProvider } from "../../../providers/mail";
 import { createFakeUser } from "../../../tests/fake/user";
+import { UserSigninDto } from "./user-signin.dto";
 
 function buildSUT(): {
   userSigninUseCase: UserSigninUseCase;

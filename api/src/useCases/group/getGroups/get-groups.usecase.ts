@@ -1,28 +1,11 @@
-import { Group, Prisma } from "@prisma/client";
+import { Group } from "@prisma/client";
 import { IGroupRepository, IUseCase } from "../../../interfaces";
+import { GetGroupsDto } from "./get-groups.dto";
 
-export class GetGroupsUseCase
-  implements
-    IUseCase<
-      {
-        skip?: number;
-        take?: number;
-        cursor?: Prisma.GroupWhereUniqueInput;
-        where?: Prisma.GroupWhereInput;
-        orderBy?: Prisma.GroupOrderByWithRelationInput;
-      },
-      Group[]
-    >
-{
+export class GetGroupsUseCase implements IUseCase<GetGroupsDto, Group[]> {
   constructor(private readonly groupRepository: IGroupRepository) {}
 
-  execute(args: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.GroupWhereUniqueInput;
-    where?: Prisma.GroupWhereInput;
-    orderBy?: Prisma.GroupOrderByWithRelationInput;
-  }): Promise<Group[]> {
+  execute(args: GetGroupsDto): Promise<Group[]> {
     return this.groupRepository.findMany(args);
   }
 }

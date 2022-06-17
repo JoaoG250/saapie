@@ -6,16 +6,17 @@ import {
   IUserRepository,
 } from "../../../interfaces";
 import { checkUserStatus } from "../domain/check-user-status";
+import { RefreshTokensDto } from "./refresh-tokens.dto";
 
 export class RefreshTokensUseCase
-  implements IUseCase<{ refreshToken: string }, AuthTokens>
+  implements IUseCase<RefreshTokensDto, AuthTokens>
 {
   constructor(
     private readonly jwtService: IJwtService,
     private readonly userRepository: IUserRepository
   ) {}
 
-  async execute(args: { refreshToken: string }): Promise<AuthTokens> {
+  async execute(args: RefreshTokensDto): Promise<AuthTokens> {
     const { refreshToken } = args;
     let payload;
     try {

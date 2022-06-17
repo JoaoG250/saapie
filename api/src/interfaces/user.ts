@@ -23,15 +23,3 @@ export interface IUserRepository extends IRepository<User> {
   ): Promise<UserWithGroups | null>;
   getUserGroups(where: Prisma.UserWhereUniqueInput): Promise<Group[]>;
 }
-
-export interface UserSignupDto {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export interface UserSigninDto {
-  email: string;
-  password: string;
-}

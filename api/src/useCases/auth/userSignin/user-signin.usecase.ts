@@ -6,10 +6,10 @@ import {
   IJwtService,
   IUseCase,
   IUserRepository,
-  UserSigninDto,
 } from "../../../interfaces";
 import { checkUserStatus } from "../domain/check-user-status";
 import { SigninError } from "../../../errors";
+import { UserSigninDto } from "./user-signin.dto";
 
 export class UserSigninUseCase implements IUseCase<UserSigninDto, AuthTokens> {
   constructor(

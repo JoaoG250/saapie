@@ -1,12 +1,8 @@
 import bcrypt from "bcrypt";
 import * as yup from "yup";
 import { IntegrityError } from "../../../errors";
-import {
-  IMailProvider,
-  IUseCase,
-  IUserRepository,
-  UserSignupDto,
-} from "../../../interfaces";
+import { IMailProvider, IUseCase, IUserRepository } from "../../../interfaces";
+import { UserSignupDto } from "./user-signup.dto";
 
 export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
   constructor(

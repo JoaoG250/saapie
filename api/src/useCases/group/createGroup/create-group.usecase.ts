@@ -1,12 +1,8 @@
 import { Group } from "@prisma/client";
 import * as yup from "yup";
 import { IntegrityError } from "../../../errors";
-import {
-  CreateGroupDto,
-  IGroupRepository,
-  IUseCase,
-  UpdateGroupDto,
-} from "../../../interfaces";
+import { IGroupRepository, IUseCase } from "../../../interfaces";
+import { CreateGroupDto } from "./create-group.dto";
 
 export class CreateGroupUseCase implements IUseCase<CreateGroupDto, Group> {
   constructor(private readonly groupRepository: IGroupRepository) {}
@@ -27,9 +23,7 @@ export class CreateGroupUseCase implements IUseCase<CreateGroupDto, Group> {
     return createGroupDataConstraints.validate(data);
   }
 
-  async checkGroupUniqueFields(
-    data: CreateGroupDto | UpdateGroupDto
-  ): Promise<true> {
+  async checkGroupUniqueFields(data: CreateGroupDto): Promise<true> {
     const matchingGroups = await this.groupRepository.findMany({
       where: {
         OR: { name: data.name },
