@@ -1,4 +1,4 @@
-# TokenRefresh Use Case
+# RefreshTokens Use Case
 
 # Data
 * Refresh Token
