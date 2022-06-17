@@ -6,6 +6,7 @@ import { UserRepository } from "../../../repositories/user";
 import { UserWithGroups } from "../../../interfaces";
 import { RefreshTokensUseCase } from "./refresh-tokens.usecase";
 import { prismaMock } from "../../../tests/mock/prisma";
+import { createFakeUser } from "../../../tests/fake/user";
 
 const buildSUT = (): {
   refreshTokensUseCase: RefreshTokensUseCase;
@@ -47,15 +48,7 @@ describe("TokenRefresh", () => {
   it("should check if the user is active and verified", async () => {
     const { refreshTokensUseCase, jwtService } = buildSUT();
     const user: UserWithGroups = {
-      id: "1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@test.com",
-      password: "123456",
-      isActive: true,
-      isVerified: true,
+      ...createFakeUser({ isActive: true, isVerified: true }, 1),
       groups: [],
     };
 

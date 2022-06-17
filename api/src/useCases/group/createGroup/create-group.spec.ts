@@ -1,8 +1,8 @@
-import { Group } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../../../errors";
 import { CreateGroupDto } from "../../../interfaces";
 import { GroupRepository } from "../../../repositories/group";
+import { createFakeGroup } from "../../../tests/fake/group";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { CreateGroupUseCase } from "./create-group.usecase";
 
@@ -38,14 +38,7 @@ describe("CreateGroup", () => {
     ).rejects.toThrow(ValidationError);
   });
   it("should check if unique fields are not in use", async () => {
-    const groups: Group[] = [
-      {
-        id: "1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        name: "GROUP_1",
-      },
-    ];
+    const groups = [createFakeGroup({ name: "GROUP_1" }, 1)];
     const data: CreateGroupDto = {
       name: "TEST_GROUP",
     };

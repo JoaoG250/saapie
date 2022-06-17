@@ -1,5 +1,4 @@
 import RedisMock from "ioredis-mock";
-import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { UserSigninDto } from "../../../interfaces";
 import { JwtRepository } from "../../../repositories/jwt";
@@ -9,6 +8,7 @@ import { prismaMock } from "../../../tests/mock/prisma";
 import { UserSigninUseCase } from "./user-signin.usecase";
 import { UserSignupUseCase } from "../userSignup/user-signup.usecase";
 import { GmailMailProvider } from "../../../providers/mail";
+import { createFakeUser } from "../../../tests/fake/user";
 
 const buildSUT = (): {
   userSigninUseCase: UserSigninUseCase;
@@ -58,6 +58,7 @@ describe("UserSignin", () => {
       email: "john@test.com",
       password: "123456",
     };
+    const user = createFakeUser({ email: data.email }, 1);
     const { userSigninUseCase } = buildSUT();
 
     prismaMock.user.findUnique.mockResolvedValue(null);
@@ -65,17 +66,7 @@ describe("UserSignin", () => {
       userSigninUseCase.getUserByEmail(data.email)
     ).resolves.toBeNull();
 
-    prismaMock.user.findUnique.mockResolvedValue({
-      id: "1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@test.com",
-      password: "123456",
-      isActive: true,
-      isVerified: true,
-    });
+    prismaMock.user.findUnique.mockResolvedValue(user);
     await expect(
       userSigninUseCase.getUserByEmail(data.email)
     ).resolves.toBeTruthy();
@@ -85,17 +76,7 @@ describe("UserSignin", () => {
       email: "john@test.com",
       password: "123456",
     };
-    const user: User = {
-      id: "1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@test.com",
-      password: "123456",
-      isActive: true,
-      isVerified: true,
-    };
+    const user = createFakeUser({}, 1);
     const { userSigninUseCase, userSignupUseCase } = buildSUT();
 
     await expect(

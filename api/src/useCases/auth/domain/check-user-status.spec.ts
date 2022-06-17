@@ -1,19 +1,9 @@
-import { User } from "@prisma/client";
+import { createFakeUser } from "../../../tests/fake/user";
 import { checkUserStatus } from "./check-user-status";
 
 describe("CheckUserStatus", () => {
   it("should check if user is active and verified", () => {
-    const user: User = {
-      id: "1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@test.com",
-      password: "123456",
-      isActive: false,
-      isVerified: false,
-    };
+    const user = createFakeUser({ isActive: false, isVerified: false }, 1);
     expect(checkUserStatus(user)).toBeFalsy();
 
     user.isActive = true;

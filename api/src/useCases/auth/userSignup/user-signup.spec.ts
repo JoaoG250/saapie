@@ -4,6 +4,7 @@ import { IntegrityError } from "../../../errors";
 import { UserSignupDto } from "../../../interfaces";
 import { GmailMailProvider } from "../../../providers/mail";
 import { UserRepository } from "../../../repositories/user";
+import { createFakeUser } from "../../../tests/fake/user";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { UserSignupUseCase } from "./user-signup.usecase";
 
@@ -50,28 +51,8 @@ describe("UserSignup", () => {
   });
   it("should check if user unique fields are not in use", async () => {
     const users: User[] = [
-      {
-        id: "1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        firstName: "John",
-        lastName: "Doe",
-        email: "john@gmail.com",
-        password: "123456",
-        isActive: true,
-        isVerified: true,
-      },
-      {
-        id: "2",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        firstName: "Jane",
-        lastName: "Doe",
-        email: "jane@gmail.com",
-        password: "123456",
-        isActive: true,
-        isVerified: true,
-      },
+      createFakeUser({ email: "john@gmail.com" }, 1),
+      createFakeUser({ email: "jane@gmail.com" }, 2),
     ];
     const data: UserSignupDto = {
       firstName: "John",
