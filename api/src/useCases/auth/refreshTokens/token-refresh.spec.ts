@@ -1,23 +1,24 @@
 import RedisMock from "ioredis-mock";
-import { JwtRepository } from "../src/repositories/jwt";
-import { JwtService } from "../src/services/jwt";
+import { JwtRepository } from "../../../repositories/jwt";
+import { JwtService } from "../../../services/jwt";
 import { JsonWebTokenError } from "jsonwebtoken";
-import { GmailMailProvider } from "../src/providers/mail";
-import { UserRepository } from "../src/repositories/user";
-import { AuthService } from "../src/services/auth";
-import { prismaMock } from "./mock/prisma";
-import { UserWithGroups } from "../src/interfaces";
+import { UserRepository } from "../../../repositories/user";
+import { UserWithGroups } from "../../../interfaces";
+import { RefreshTokensUseCase } from "./refresh-tokens.usecase";
+import { prismaMock } from "../../../tests/mock/prisma";
 
 const buildSUT = (): {
+  refreshTokensUseCase: RefreshTokensUseCase;
   jwtService: JwtService;
-  authService: AuthService;
 } => {
-  const mailProvider = new GmailMailProvider();
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
   const userRepository = new UserRepository(prismaMock);
-  const authService = new AuthService(userRepository, mailProvider, jwtService);
-  return { jwtService, authService };
+  const refreshTokensUseCase = new RefreshTokensUseCase(
+    jwtService,
+    userRepository
+  );
+  return { refreshTokensUseCase, jwtService };
 };
 
 describe("TokenRefresh", () => {
@@ -44,7 +45,7 @@ describe("TokenRefresh", () => {
     );
   });
   it("should check if the user is active and verified", async () => {
-    const { authService, jwtService } = buildSUT();
+    const { refreshTokensUseCase, jwtService } = buildSUT();
     const user: UserWithGroups = {
       id: "1",
       createdAt: new Date(),
@@ -63,15 +64,17 @@ describe("TokenRefresh", () => {
       { id: user.id },
       user.id
     );
-    await expect(authService.refreshTokens(refreshToken)).resolves.toBeTruthy();
+    await expect(
+      refreshTokensUseCase.execute({ refreshToken })
+    ).resolves.toBeTruthy();
 
     const inactiveUser = {
       ...user,
       isActive: false,
     };
     prismaMock.user.findUnique.mockResolvedValue(inactiveUser);
-    await expect(authService.refreshTokens(refreshToken)).rejects.toThrow(
-      Error
-    );
+    await expect(
+      refreshTokensUseCase.execute({ refreshToken })
+    ).rejects.toThrow(Error);
   });
 });

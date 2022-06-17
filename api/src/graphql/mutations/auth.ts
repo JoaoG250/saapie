@@ -2,6 +2,12 @@ import { ValidationError } from "yup";
 import { extendType, stringArg } from "nexus";
 import { ForbiddenError, UserInputError } from "apollo-server-express";
 import { IntegrityError } from "../../errors";
+import {
+  refreshTokensUseCase,
+  userSigninUseCase,
+  userSignupUseCase,
+} from "../../useCases/auth";
+import { SigninError } from "../../useCases/auth/userSignin/user-signin.usecase";
 
 export const authMutations = extendType({
   type: "Mutation",
@@ -14,17 +20,17 @@ export const authMutations = extendType({
         email: stringArg(),
         password: stringArg(),
       },
-      async resolve(_root, args, ctx) {
+      async resolve(_root, args) {
         try {
-          return await ctx.authService.userSignup(args);
+          return await userSignupUseCase.execute(args);
         } catch (err) {
           if (err instanceof IntegrityError) {
             throw new UserInputError(err.message);
-          } else if (err instanceof ValidationError) {
-            throw new UserInputError(err.message);
-          } else {
-            throw err;
           }
+          if (err instanceof ValidationError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
         }
       },
     });
@@ -34,24 +40,18 @@ export const authMutations = extendType({
         email: stringArg(),
         password: stringArg(),
       },
-      async resolve(_root, args, ctx) {
-        let user;
-
+      async resolve(_root, args) {
         try {
-          user = await ctx.authService.validateUser(args);
+          return await userSigninUseCase.execute(args);
         } catch (err) {
           if (err instanceof ValidationError) {
             throw new UserInputError(err.message);
-          } else {
-            throw err;
           }
+          if (err instanceof SigninError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
         }
-
-        if (!user) {
-          throw new UserInputError("Invalid credentials");
-        }
-
-        return ctx.authService.userSignin(user);
       },
     });
     t.field("refreshTokens", {
@@ -59,9 +59,9 @@ export const authMutations = extendType({
       args: {
         refreshToken: stringArg(),
       },
-      async resolve(_root, args, ctx) {
+      async resolve(_root, args) {
         try {
-          return await ctx.authService.refreshTokens(args.refreshToken);
+          return await refreshTokensUseCase.execute(args);
         } catch (err) {
           if (err instanceof Error) {
             throw new ForbiddenError(err.message);

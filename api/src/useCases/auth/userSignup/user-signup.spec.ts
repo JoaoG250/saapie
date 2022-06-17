@@ -1,25 +1,19 @@
-import RedisMock from "ioredis-mock";
 import { User } from "@prisma/client";
 import { ValidationError } from "yup";
-import { IntegrityError } from "../src/errors";
-import { UserSignupDto } from "../src/interfaces";
-import { GmailMailProvider } from "../src/providers/mail";
-import { UserRepository } from "../src/repositories/user";
-import { AuthService } from "../src/services/auth";
-import { prismaMock } from "./mock/prisma";
-import { JwtService } from "../src/services/jwt";
-import { JwtRepository } from "../src/repositories/jwt";
+import { IntegrityError } from "../../../errors";
+import { UserSignupDto } from "../../../interfaces";
+import { GmailMailProvider } from "../../../providers/mail";
+import { UserRepository } from "../../../repositories/user";
+import { prismaMock } from "../../../tests/mock/prisma";
+import { UserSignupUseCase } from "./user-signup.usecase";
 
 const buildSUT = (): {
-  authService: AuthService;
-  userRepository: UserRepository;
+  userSignupUseCase: UserSignupUseCase;
 } => {
   const mailProvider = new GmailMailProvider();
-  const jwtRepository = new JwtRepository(new RedisMock());
-  const jwtService = new JwtService(jwtRepository);
   const userRepository = new UserRepository(prismaMock);
-  const authService = new AuthService(userRepository, mailProvider, jwtService);
-  return { authService, userRepository };
+  const userSignupUseCase = new UserSignupUseCase(userRepository, mailProvider);
+  return { userSignupUseCase };
 };
 
 describe("UserSignup", () => {
@@ -31,28 +25,28 @@ describe("UserSignup", () => {
       password: "123456",
     };
     let testData = { ...data };
-    const { authService } = buildSUT();
+    const { userSignupUseCase } = buildSUT();
 
     await expect(
-      authService.validateSignupData(testData)
+      userSignupUseCase.validateSignupData(testData)
     ).resolves.toBeTruthy();
 
     testData.firstName = "";
-    await expect(authService.validateSignupData(testData)).rejects.toThrow(
-      ValidationError
-    );
+    await expect(
+      userSignupUseCase.validateSignupData(testData)
+    ).rejects.toThrow(ValidationError);
 
     testData = { ...data };
     testData.email = "test.com";
-    await expect(authService.validateSignupData(testData)).rejects.toThrow(
-      ValidationError
-    );
+    await expect(
+      userSignupUseCase.validateSignupData(testData)
+    ).rejects.toThrow(ValidationError);
 
     testData = { ...data };
     testData.password = "12";
-    await expect(authService.validateSignupData(testData)).rejects.toThrow(
-      ValidationError
-    );
+    await expect(
+      userSignupUseCase.validateSignupData(testData)
+    ).rejects.toThrow(ValidationError);
   });
   it("should check if user unique fields are not in use", async () => {
     const users: User[] = [
@@ -85,15 +79,17 @@ describe("UserSignup", () => {
       email: "johndoe@gmail.com",
       password: "123456",
     };
-    const { authService } = buildSUT();
+    const { userSignupUseCase } = buildSUT();
 
     prismaMock.user.findMany.mockResolvedValue(users);
-    await expect(authService.checkUserUniqueFields(data)).resolves.toBeTruthy();
+    await expect(
+      userSignupUseCase.checkUserUniqueFields(data)
+    ).resolves.toBeTruthy();
 
     data.email = "john@gmail.com";
-    await expect(() => authService.checkUserUniqueFields(data)).rejects.toThrow(
-      IntegrityError
-    );
+    await expect(() =>
+      userSignupUseCase.checkUserUniqueFields(data)
+    ).rejects.toThrow(IntegrityError);
   });
   it("should hash the password before saving the user", async () => {
     const data: UserSignupDto = {
@@ -102,9 +98,9 @@ describe("UserSignup", () => {
       email: "john@gmail.com",
       password: "123456",
     };
-    const { authService } = buildSUT();
+    const { userSignupUseCase } = buildSUT();
 
-    const hash = await authService.hashPassword(data.password);
+    const hash = await userSignupUseCase.hashPassword(data.password);
     expect(hash).toBeTruthy();
     expect(hash).not.toEqual(data.password);
   });

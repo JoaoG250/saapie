@@ -3,7 +3,7 @@ import { ValidationError } from "yup";
 import { IntegrityError } from "../../../errors";
 import { CreateGroupDto } from "../../../interfaces";
 import { GroupRepository } from "../../../repositories/group";
-import { prismaMock } from "../../../../tests/mock/prisma";
+import { prismaMock } from "../../../tests/mock/prisma";
 import { CreateGroupUseCase } from "./create-group.usecase";
 
 const buildSUT = (): {
