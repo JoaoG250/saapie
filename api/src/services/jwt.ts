@@ -80,6 +80,7 @@ export class JwtService implements IJwtService {
       return false;
     }
 
+    await this.jwtRepository.deleteToken(type, payload.sub);
     return payload;
   }
 }

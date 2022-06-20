@@ -6,6 +6,9 @@ function getEnvironmentVariable(name: string): string {
   return value;
 }
 
+const accessTokenSecret = getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET");
+const refreshTokenSecret = getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET");
+
 export default {
   server: {
     domain: getEnvironmentVariable("DOMAIN"),
@@ -23,12 +26,16 @@ export default {
   },
   jwt: {
     accessToken: {
-      secret: getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET"),
+      secret: accessTokenSecret,
       expiresIn: 60 * 2,
     },
     refreshToken: {
-      secret: getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET"),
+      secret: refreshTokenSecret,
       expiresIn: 60 * 60 * 24 * 1,
+    },
+    accountActivationToken: {
+      secret: accessTokenSecret,
+      expiresIn: 60 * 60 * 24 * 5,
     },
   },
   redis: {
