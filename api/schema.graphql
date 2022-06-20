@@ -37,6 +37,7 @@ type GroupEdge {
 }
 
 type Mutation {
+  activateAccount(token: String!): Boolean!
   createGroup(data: CreateGroupInput!): Group!
   deleteGroup(id: ID!): Group!
   refreshTokens(refreshToken: String!): AuthTokens!

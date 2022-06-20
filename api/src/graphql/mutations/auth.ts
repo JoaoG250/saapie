@@ -3,6 +3,7 @@ import { extendType, stringArg } from "nexus";
 import { ForbiddenError, UserInputError } from "apollo-server-express";
 import { IntegrityError, InvalidTokenError, SigninError } from "../../errors";
 import {
+  activateAccountUseCase,
   refreshTokensUseCase,
   userSigninUseCase,
   userSignupUseCase,
@@ -61,6 +62,22 @@ export const authMutations = extendType({
       async resolve(_root, args) {
         try {
           return await refreshTokensUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof InvalidTokenError) {
+            throw new ForbiddenError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("activateAccount", {
+      type: "Boolean",
+      args: {
+        token: stringArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await activateAccountUseCase.execute(args);
         } catch (err) {
           if (err instanceof InvalidTokenError) {
             throw new ForbiddenError(err.message);

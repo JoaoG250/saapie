@@ -108,4 +108,4 @@ dist
 !*.example.env
 
 # Generated files
-nexusTypes.gen.ts
+nexus-types.gen.ts
