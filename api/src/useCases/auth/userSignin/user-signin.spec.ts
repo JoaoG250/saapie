@@ -2,7 +2,7 @@ import RedisMock from "ioredis-mock";
 import { ValidationError } from "yup";
 import { JwtRepository } from "../../../repositories/jwt";
 import { UserRepository } from "../../../repositories/user";
-import { JwtService } from "../../../services/jwt";
+import { JwtService } from "../../../services/jwtService/jwt.service";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { UserSigninUseCase } from "./user-signin.usecase";
 import { UserSignupUseCase } from "../userSignup/user-signup.usecase";

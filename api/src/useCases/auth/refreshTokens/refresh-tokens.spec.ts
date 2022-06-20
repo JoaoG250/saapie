@@ -1,6 +1,6 @@
 import RedisMock from "ioredis-mock";
 import { JwtRepository } from "../../../repositories/jwt";
-import { JwtService } from "../../../services/jwt";
+import { JwtService } from "../../../services/jwtService/jwt.service";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { UserRepository } from "../../../repositories/user";
 import { UserWithGroups } from "../../../interfaces";

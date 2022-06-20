@@ -7,14 +7,20 @@ import {
   SignJwtArgs,
   TokensConfig,
   TokenType,
-} from "../interfaces";
+} from "../../interfaces";
 
 const jwtConfig: TokensConfig = config.get("jwt");
 
 export class JwtService implements IJwtService {
   constructor(private readonly jwtRepository: IJwtRepository) {}
 
-  signJwt({ payload, subject, secret, expiresIn, jwtid }: SignJwtArgs): string {
+  private signJwt({
+    payload,
+    subject,
+    secret,
+    expiresIn,
+    jwtid,
+  }: SignJwtArgs): string {
     const jti = jwtid || cuid();
     return jwt.sign(payload, secret, {
       algorithm: "HS256",
@@ -24,7 +30,7 @@ export class JwtService implements IJwtService {
     });
   }
 
-  verifyJwt(token: string, secret: string): string | JwtPayload {
+  private verifyJwt(token: string, secret: string): string | JwtPayload {
     return jwt.verify(token, secret, {
       algorithms: ["HS256"],
     });

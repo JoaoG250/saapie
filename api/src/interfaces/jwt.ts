@@ -23,8 +23,6 @@ export interface TokensConfig {
 export type TokenType = keyof Omit<TokensConfig, "accessToken">;
 
 export interface IJwtService {
-  signJwt(args: SignJwtArgs): string;
-  verifyJwt(token: string, secret: string): JwtPayload | string;
   signAcessToken(payload: AuthTokenPayload, subject: string): string;
   signToken(
     type: TokenType,
