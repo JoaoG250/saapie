@@ -10,7 +10,7 @@ import { buildContext } from "./context";
 const domain: string = config.get("server.domain");
 const protocol: string = config.get("server.protocol");
 const port: number = config.get("server.port");
-const accessTokenSecret: string = config.get("jwt.accessTokenSecret");
+const accessTokenSecret: string = config.get("jwt.accessToken.secret");
 
 async function startServer(): Promise<void> {
   const app = express();

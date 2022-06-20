@@ -1,14 +1,15 @@
 import cuid from "cuid";
 import config from "config";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { IJwtRepository, IJwtService, SignJwtArgs } from "../interfaces";
+import {
+  IJwtRepository,
+  IJwtService,
+  SignJwtArgs,
+  TokensConfig,
+  TokenType,
+} from "../interfaces";
 
-const jwtConfig: {
-  accessTokenSecret: string;
-  accessTokenExpiresIn: number;
-  refreshTokenSecret: string;
-  refreshTokenExpiresIn: number;
-} = config.get("jwt");
+const jwtConfig: TokensConfig = config.get("jwt");
 
 export class JwtService implements IJwtService {
   constructor(private readonly jwtRepository: IJwtRepository) {}
@@ -23,23 +24,24 @@ export class JwtService implements IJwtService {
     });
   }
 
-  verifyJwt(token: string, secret: string): string | jwt.JwtPayload {
+  verifyJwt(token: string, secret: string): string | JwtPayload {
     return jwt.verify(token, secret, {
       algorithms: ["HS256"],
     });
   }
 
-  signAcessToken(payload: jwt.JwtPayload, subject: string): string {
+  signAcessToken(payload: JwtPayload, subject: string): string {
     return this.signJwt({
       payload,
       subject,
-      secret: jwtConfig.accessTokenSecret,
-      expiresIn: jwtConfig.accessTokenExpiresIn,
+      secret: jwtConfig.accessToken.secret,
+      expiresIn: jwtConfig.accessToken.expiresIn,
     });
   }
 
-  async signRefreshToken(
-    payload: jwt.JwtPayload,
+  async signToken(
+    type: TokenType,
+    payload: JwtPayload,
     subject: string
   ): Promise<string> {
     const jwtid = cuid();
@@ -47,29 +49,33 @@ export class JwtService implements IJwtService {
       payload,
       subject,
       jwtid,
-      secret: jwtConfig.refreshTokenSecret,
-      expiresIn: jwtConfig.refreshTokenExpiresIn,
+      secret: jwtConfig[type].secret,
+      expiresIn: jwtConfig[type].expiresIn,
     });
 
-    await this.jwtRepository.setRefreshToken(
+    await this.jwtRepository.setToken(
+      type,
       subject,
       jwtid,
-      jwtConfig.refreshTokenExpiresIn
+      jwtConfig[type].expiresIn
     );
     return token;
   }
 
-  verifyRefreshToken(token: string): string | jwt.JwtPayload {
-    return this.verifyJwt(token, jwtConfig.refreshTokenSecret);
+  verifyToken(type: TokenType, token: string): string | JwtPayload {
+    return this.verifyJwt(token, jwtConfig[type].secret);
   }
 
-  async validateRefreshToken(token: string): Promise<JwtPayload | false> {
-    const payload = this.verifyRefreshToken(token);
+  async validateToken(
+    type: TokenType,
+    token: string
+  ): Promise<JwtPayload | false> {
+    const payload = this.verifyToken(type, token);
     if (typeof payload === "string" || !payload.jti || !payload.sub) {
       return false;
     }
 
-    const storedValue = await this.jwtRepository.getRefreshToken(payload.sub);
+    const storedValue = await this.jwtRepository.getToken(type, payload.sub);
     if (storedValue === null || storedValue !== payload.jti) {
       return false;
     }

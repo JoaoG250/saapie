@@ -22,10 +22,14 @@ export default {
     refreshToken: getEnvironmentVariable("OAUTH_REFRESH_TOKEN"),
   },
   jwt: {
-    accessTokenSecret: getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET"),
-    accessTokenExpiresIn: 60 * 2,
-    refreshTokenSecret: getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET"),
-    refreshTokenExpiresIn: 60 * 60 * 24 * 1,
+    accessToken: {
+      secret: getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET"),
+      expiresIn: 60 * 2,
+    },
+    refreshToken: {
+      secret: getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET"),
+      expiresIn: 60 * 60 * 24 * 1,
+    },
   },
   redis: {
     port: 6379,

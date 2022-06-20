@@ -20,7 +20,10 @@ export class RefreshTokensUseCase
     const { refreshToken } = args;
     let payload;
     try {
-      payload = await this.jwtService.validateRefreshToken(refreshToken);
+      payload = await this.jwtService.validateToken(
+        "refreshToken",
+        refreshToken
+      );
     } catch (err) {
       throw new InvalidTokenError("Invalid refresh token");
     }
@@ -41,7 +44,8 @@ export class RefreshTokensUseCase
     };
     return {
       accessToken: this.jwtService.signAcessToken(signPayload, user.id),
-      refreshToken: await this.jwtService.signRefreshToken(
+      refreshToken: await this.jwtService.signToken(
+        "refreshToken",
         signPayload,
         user.id
       ),

@@ -4,21 +4,22 @@ import { IJwtRepository } from "../interfaces";
 export class JwtRepository implements IJwtRepository {
   constructor(private readonly redis: Redis) {}
 
-  async getRefreshToken(subject: string): Promise<string | null> {
-    return this.redis.get(`refreshToken:${subject}`);
-  }
-
-  async setRefreshToken(
+  async setToken(
+    prefix: string,
     subject: string,
     jwid: string,
     expiresIn: number
   ): Promise<true> {
-    await this.redis.set(`refreshToken:${subject}`, jwid, "EX", expiresIn);
+    await this.redis.set(`${prefix}:${subject}`, jwid, "EX", expiresIn);
     return true;
   }
 
-  async deleteRefreshToken(subject: string): Promise<true> {
-    await this.redis.del(`refreshToken:${subject}`);
+  async getToken(prefix: string, subject: string): Promise<string | null> {
+    return this.redis.get(`${prefix}:${subject}`);
+  }
+
+  async deleteToken(prefix: string, subject: string): Promise<true> {
+    await this.redis.del(`${prefix}:${subject}`);
     return true;
   }
 }

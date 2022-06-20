@@ -9,21 +9,38 @@ export interface SignJwtArgs {
   jwtid?: string;
 }
 
+interface TokenConfig {
+  secret: string;
+  expiresIn: number;
+}
+
+export interface TokensConfig {
+  accessToken: TokenConfig;
+  refreshToken: TokenConfig;
+}
+
+export type TokenType = keyof Omit<TokensConfig, "accessToken">;
+
 export interface IJwtService {
   signJwt(args: SignJwtArgs): string;
   verifyJwt(token: string, secret: string): JwtPayload | string;
   signAcessToken(payload: AuthTokenPayload, subject: string): string;
-  signRefreshToken(payload: AuthTokenPayload, subject: string): Promise<string>;
-  verifyRefreshToken(token: string): JwtPayload | string;
-  validateRefreshToken(token: string): Promise<JwtPayload | false>;
+  signToken(
+    type: TokenType,
+    payload: JwtPayload,
+    subject: string
+  ): Promise<string>;
+  verifyToken(type: TokenType, token: string): string | JwtPayload;
+  validateToken(type: TokenType, token: string): Promise<JwtPayload | false>;
 }
 
 export interface IJwtRepository {
-  getRefreshToken(subject: string): Promise<string | null>;
-  setRefreshToken(
+  setToken(
+    prefix: string,
     subject: string,
     jwid: string,
     expiresIn: number
   ): Promise<true>;
-  deleteRefreshToken(subject: string): Promise<true>;
+  getToken(prefix: string, subject: string): Promise<string | null>;
+  deleteToken(prefix: string, subject: string): Promise<true>;
 }

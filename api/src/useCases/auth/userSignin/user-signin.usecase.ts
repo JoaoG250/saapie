@@ -73,7 +73,11 @@ export class UserSigninUseCase implements IUseCase<UserSigninDto, AuthTokens> {
     const payload = { id: user.id, groups: groups.map((group) => group.name) };
     return {
       accessToken: this.jwtService.signAcessToken(payload, user.id),
-      refreshToken: await this.jwtService.signRefreshToken(payload, user.id),
+      refreshToken: await this.jwtService.signToken(
+        "refreshToken",
+        payload,
+        user.id
+      ),
     };
   }
 }
