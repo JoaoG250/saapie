@@ -1,6 +1,5 @@
-import { mailProvider } from "../../providers";
 import { userRepository } from "../../repositories";
-import { jwtService } from "../../services";
+import { jwtService, mailService } from "../../services";
 import { ActivateAccountUseCase } from "./activateAccount/activate-account.usecase";
 import { RefreshTokensUseCase } from "./refreshTokens/refresh-tokens.usecase";
 import { UserSigninUseCase } from "./userSignin/user-signin.usecase";
@@ -11,7 +10,11 @@ const refreshTokensUseCase = new RefreshTokensUseCase(
   userRepository
 );
 const userSigninUseCase = new UserSigninUseCase(userRepository, jwtService);
-const userSignupUseCase = new UserSignupUseCase(userRepository, mailProvider);
+const userSignupUseCase = new UserSignupUseCase(
+  userRepository,
+  mailService,
+  jwtService
+);
 const activateAccountUseCase = new ActivateAccountUseCase(
   jwtService,
   userRepository

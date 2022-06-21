@@ -1,13 +1,20 @@
+import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import * as yup from "yup";
 import { IntegrityError } from "../../../errors";
-import { IMailProvider, IUseCase, IUserRepository } from "../../../interfaces";
+import {
+  IJwtService,
+  IMailService,
+  IUseCase,
+  IUserRepository,
+} from "../../../interfaces";
 import { UserSignupDto } from "./user-signup.dto";
 
 export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly mailProvider: IMailProvider
+    private readonly mailService: IMailService,
+    private readonly jwtService: IJwtService
   ) {}
 
   async validateSignupData(data: UserSignupDto): Promise<UserSignupDto> {
@@ -38,14 +45,22 @@ export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
     return bcrypt.hash(password, 12);
   }
 
-  async sendSignupEmail(data: UserSignupDto): Promise<void> {
-    return this.mailProvider.sendMail({
+  async sendSignupEmail(user: User): Promise<void> {
+    const token = await this.jwtService.signToken(
+      "accountActivationToken",
+      { id: user.id },
+      user.id
+    );
+    return this.mailService.sendMail({
       to: {
-        name: data.firstName,
-        address: data.email,
+        name: user.firstName,
+        address: user.email,
       },
       subject: "Confirmação de cadastro",
-      body: "<h1>Confirmação de cadastro</h1>",
+      template: "accountActivation",
+      data: {
+        url: "activate-account/" + token,
+      },
     });
   }
 
@@ -55,12 +70,12 @@ export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
     await this.checkUserUniqueFields(validatedData);
 
     const passwordHash = await this.hashPassword(validatedData.password);
-    await this.userRepository.create({
+    const user = await this.userRepository.create({
       ...validatedData,
       password: passwordHash,
     });
 
-    await this.sendSignupEmail(validatedData);
+    await this.sendSignupEmail(user);
     return true;
   }
 }

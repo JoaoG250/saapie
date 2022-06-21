@@ -7,6 +7,8 @@ export const User = objectType({
     t.string("firstName");
     t.string("lastName");
     t.string("email");
+    t.boolean("isActive");
+    t.boolean("isVerified");
     t.list.field("groups", {
       type: "Group",
       resolve(root, args, ctx) {

@@ -9,6 +9,7 @@ import { UserSignupUseCase } from "../userSignup/user-signup.usecase";
 import { GmailMailProvider } from "../../../providers/mail";
 import { createFakeUser } from "../../../tests/fake/user";
 import { UserSigninDto } from "./user-signin.dto";
+import { MailService } from "../../../services/mailService/mail.service";
 
 function buildSUT(): {
   userSigninUseCase: UserSigninUseCase;
@@ -17,9 +18,14 @@ function buildSUT(): {
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
   const mailProvider = new GmailMailProvider();
+  const mailService = new MailService(mailProvider);
   const userRepository = new UserRepository(prismaMock);
   const userSigninUseCase = new UserSigninUseCase(userRepository, jwtService);
-  const userSignupUseCase = new UserSignupUseCase(userRepository, mailProvider);
+  const userSignupUseCase = new UserSignupUseCase(
+    userRepository,
+    mailService,
+    jwtService
+  );
   return { userSigninUseCase, userSignupUseCase };
 }
 

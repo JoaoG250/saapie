@@ -12,3 +12,24 @@ export interface MailMessage {
 export interface IMailProvider {
   sendMail(message: MailMessage): Promise<void>;
 }
+
+export interface EmailData {
+  protocol: string;
+  domain: string;
+  title: string;
+  to: MailAddress;
+  [key: string]: string | object;
+}
+
+export type EmailTemplates = "accountActivation";
+
+export interface SendMailArgs {
+  to: MailAddress;
+  subject: string;
+  template: EmailTemplates;
+  data: object;
+}
+
+export interface IMailService {
+  sendMail(args: SendMailArgs): Promise<void>;
+}

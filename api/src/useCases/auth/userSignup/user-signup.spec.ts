@@ -1,19 +1,30 @@
+import RedisMock from "ioredis-mock";
 import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../../../errors";
 import { GmailMailProvider } from "../../../providers/mail";
 import { UserRepository } from "../../../repositories/user";
+import { MailService } from "../../../services/mailService/mail.service";
 import { createFakeUser } from "../../../tests/fake/user";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { UserSignupDto } from "./user-signup.dto";
 import { UserSignupUseCase } from "./user-signup.usecase";
+import { JwtRepository } from "../../../repositories/jwt";
+import { JwtService } from "../../../services/jwtService/jwt.service";
 
 function buildSUT(): {
   userSignupUseCase: UserSignupUseCase;
 } {
   const mailProvider = new GmailMailProvider();
   const userRepository = new UserRepository(prismaMock);
-  const userSignupUseCase = new UserSignupUseCase(userRepository, mailProvider);
+  const mailService = new MailService(mailProvider);
+  const jwtRepository = new JwtRepository(new RedisMock());
+  const jwtService = new JwtService(jwtRepository);
+  const userSignupUseCase = new UserSignupUseCase(
+    userRepository,
+    mailService,
+    jwtService
+  );
   return { userSignupUseCase };
 }
 
