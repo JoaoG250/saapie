@@ -11,11 +11,12 @@ import { UserSignupDto } from "./user-signup.dto";
 import { UserSignupUseCase } from "./user-signup.usecase";
 import { JwtRepository } from "../../../repositories/jwt";
 import { JwtService } from "../../../services/jwtService/jwt.service";
+import { mailTransporterMock } from "../../../tests/mock/nodemailer";
 
 function buildSUT(): {
   userSignupUseCase: UserSignupUseCase;
 } {
-  const mailProvider = new GmailMailProvider();
+  const mailProvider = new GmailMailProvider(mailTransporterMock);
   const userRepository = new UserRepository(prismaMock);
   const mailService = new MailService(mailProvider);
   const jwtRepository = new JwtRepository(new RedisMock());

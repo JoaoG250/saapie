@@ -10,6 +10,7 @@ import { GmailMailProvider } from "../../../providers/mail";
 import { createFakeUser } from "../../../tests/fake/user";
 import { UserSigninDto } from "./user-signin.dto";
 import { MailService } from "../../../services/mailService/mail.service";
+import { mailTransporterMock } from "../../../tests/mock/nodemailer";
 
 function buildSUT(): {
   userSigninUseCase: UserSigninUseCase;
@@ -17,7 +18,7 @@ function buildSUT(): {
 } {
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
-  const mailProvider = new GmailMailProvider();
+  const mailProvider = new GmailMailProvider(mailTransporterMock);
   const mailService = new MailService(mailProvider);
   const userRepository = new UserRepository(prismaMock);
   const userSigninUseCase = new UserSigninUseCase(userRepository, jwtService);

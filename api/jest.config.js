@@ -3,5 +3,8 @@ module.exports = {
   preset: "ts-jest",
   testRegex: "(/__tests__/.*|(\\.|/)(spec))\\.[jt]sx?$",
   testEnvironment: "node",
-  setupFilesAfterEnv: ["<rootDir>/src/tests/mock/prisma.ts"],
+  setupFilesAfterEnv: [
+    "<rootDir>/src/tests/mock/prisma.ts",
+    "<rootDir>/src/tests/mock/nodemailer.ts",
+  ],
 };
