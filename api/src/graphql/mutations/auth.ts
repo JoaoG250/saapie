@@ -1,10 +1,16 @@
 import { ValidationError } from "yup";
 import { extendType, stringArg } from "nexus";
 import { ForbiddenError, UserInputError } from "apollo-server-express";
-import { IntegrityError, InvalidTokenError, SigninError } from "../../errors";
+import {
+  IntegrityError,
+  InvalidTokenError,
+  SigninError,
+  UserNotFoundError,
+} from "../../errors";
 import {
   activateAccountUseCase,
   refreshTokensUseCase,
+  sendPasswordResetEmailUseCase,
   userSigninUseCase,
   userSignupUseCase,
 } from "../../useCases/auth";
@@ -81,6 +87,25 @@ export const authMutations = extendType({
         } catch (err) {
           if (err instanceof InvalidTokenError) {
             throw new ForbiddenError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("sendPasswordResetEmail", {
+      type: "Boolean",
+      args: {
+        email: stringArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await sendPasswordResetEmailUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ValidationError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof UserNotFoundError) {
+            throw new UserInputError(err.message);
           }
           throw err;
         }
