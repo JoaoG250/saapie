@@ -21,7 +21,7 @@ export interface EmailData {
   [key: string]: string | object;
 }
 
-export type EmailTemplates = "accountActivation";
+export type EmailTemplates = "accountActivation" | "passwordReset";
 
 export interface SendMailArgs {
   to: MailAddress;

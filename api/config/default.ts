@@ -37,6 +37,10 @@ export default {
       secret: accessTokenSecret,
       expiresIn: 60 * 60 * 24 * 5,
     },
+    resetPasswordToken: {
+      secret: accessTokenSecret,
+      expiresIn: 60 * 60 * 24 * 1,
+    },
   },
   redis: {
     port: 6379,

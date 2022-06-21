@@ -18,6 +18,7 @@ export interface TokensConfig {
   accessToken: TokenConfig;
   refreshToken: TokenConfig;
   accountActivationToken: TokenConfig;
+  resetPasswordToken: TokenConfig;
 }
 
 export type TokenType = keyof Omit<TokensConfig, "accessToken">;
