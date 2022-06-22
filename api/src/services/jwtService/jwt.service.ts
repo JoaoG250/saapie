@@ -89,4 +89,8 @@ export class JwtService implements IJwtService {
     await this.jwtRepository.deleteToken(type, payload.sub);
     return payload;
   }
+
+  async deleteToken(type: TokenType, subject: string): Promise<void> {
+    await this.jwtRepository.deleteToken(type, subject);
+  }
 }

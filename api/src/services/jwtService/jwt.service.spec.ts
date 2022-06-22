@@ -105,4 +105,17 @@ describe("JwtService", () => {
       jwtService.validateToken("accountActivationToken", token)
     ).resolves.toBeFalsy();
   });
+  it("should delete tokens from jwt repository by the token subject", async () => {
+    const { jwtService, jwtRepository } = buildSUT();
+    await jwtService.signToken("resetPasswordToken", { id: "1" }, "1");
+
+    await expect(
+      jwtRepository.getToken("resetPasswordToken", "1")
+    ).resolves.toBeTruthy();
+
+    await jwtService.deleteToken("resetPasswordToken", "1");
+    await expect(
+      jwtRepository.getToken("resetPasswordToken", "1")
+    ).resolves.toBeNull();
+  });
 });

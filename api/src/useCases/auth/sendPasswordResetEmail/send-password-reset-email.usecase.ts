@@ -37,6 +37,7 @@ export class SendPasswordResetEmailUseCase
     if (!user) {
       throw new UserNotFoundError("User not found");
     }
+    await this.jwtService.deleteToken("refreshToken", user.id);
     const token = await this.jwtService.signToken(
       "resetPasswordToken",
       { id: user.id },

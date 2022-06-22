@@ -32,6 +32,7 @@ export interface IJwtService {
   ): Promise<string>;
   verifyToken(type: TokenType, token: string): string | JwtPayload;
   validateToken(type: TokenType, token: string): Promise<JwtPayload | false>;
+  deleteToken(type: TokenType, subject: string): Promise<void>;
 }
 
 export interface IJwtRepository {

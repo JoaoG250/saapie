@@ -13,6 +13,8 @@ import { SendPasswordResetEmailUseCase } from "./send-password-reset-email.useca
 
 function buildSUT(): {
   sendPasswordResetEmailUseCase: SendPasswordResetEmailUseCase;
+  jwtService: JwtService;
+  jwtRepository: JwtRepository;
 } {
   const userRepository = new UserRepository(prismaMock);
   const jwtRepository = new JwtRepository(new RedisMock());
@@ -24,7 +26,7 @@ function buildSUT(): {
     jwtService,
     mailService
   );
-  return { sendPasswordResetEmailUseCase };
+  return { sendPasswordResetEmailUseCase, jwtService, jwtRepository };
 }
 
 describe("SendPasswordResetEmailUseCase", () => {
@@ -63,5 +65,25 @@ describe("SendPasswordResetEmailUseCase", () => {
     await expect(
       sendPasswordResetEmailUseCase.getUserByEmail(data.email)
     ).resolves.toBe(user);
+  });
+  it("should remove the user refreshToken from jwt repository", async () => {
+    const { sendPasswordResetEmailUseCase, jwtService, jwtRepository } =
+      buildSUT();
+    const user = createFakeUser({ id: "1" }, 1);
+    const data: SendPasswordResetEmailDto = {
+      email: user.email,
+    };
+
+    prismaMock.user.findUnique.mockResolvedValue(user);
+    await jwtService.signToken("refreshToken", { id: user.id }, user.id);
+
+    await expect(
+      jwtRepository.getToken("refreshToken", user.id)
+    ).resolves.toBeTruthy();
+
+    await sendPasswordResetEmailUseCase.execute(data);
+    await expect(
+      jwtRepository.getToken("refreshToken", user.id)
+    ).resolves.toBeNull();
   });
 });

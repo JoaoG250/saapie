@@ -63,6 +63,7 @@ export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, true> {
       { id: user.id },
       { password: passwordHash }
     );
+    await this.jwtService.deleteToken("refreshToken", user.id);
     return true;
   }
 }

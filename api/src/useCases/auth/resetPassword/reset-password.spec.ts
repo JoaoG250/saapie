@@ -12,6 +12,7 @@ import { ResetPasswordUseCase } from "./reset-password.usecase";
 function buildSUT(): {
   resetPasswordUseCase: ResetPasswordUseCase;
   jwtService: JwtService;
+  jwtRepository: JwtRepository;
 } {
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
@@ -20,7 +21,7 @@ function buildSUT(): {
     jwtService,
     userRepository
   );
-  return { resetPasswordUseCase, jwtService };
+  return { resetPasswordUseCase, jwtService, jwtRepository };
 }
 
 describe("ResetPassword", () => {
@@ -104,5 +105,29 @@ describe("ResetPassword", () => {
     prismaMock.user.findUnique.mockResolvedValue(user);
     prismaMock.user.update.mockResolvedValue(user);
     await expect(resetPasswordUseCase.execute(data)).resolves.toBeTruthy();
+  });
+  it("should remove the user refreshToken from jwt repository", async () => {
+    const { resetPasswordUseCase, jwtService, jwtRepository } = buildSUT();
+    const user = createFakeUser({ id: "1" }, 1);
+    const data: ResetPasswordDto = {
+      password: "123456",
+      token: await jwtService.signToken(
+        "resetPasswordToken",
+        { id: user.id },
+        user.id
+      ),
+    };
+
+    prismaMock.user.findUnique.mockResolvedValue(user);
+    await jwtService.signToken("refreshToken", { id: user.id }, user.id);
+
+    await expect(
+      jwtRepository.getToken("refreshToken", user.id)
+    ).resolves.toBeTruthy();
+
+    await resetPasswordUseCase.execute(data);
+    await expect(
+      jwtRepository.getToken("refreshToken", user.id)
+    ).resolves.toBeNull();
   });
 });
