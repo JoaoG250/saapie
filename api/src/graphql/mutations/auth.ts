@@ -10,6 +10,7 @@ import {
 import {
   activateAccountUseCase,
   refreshTokensUseCase,
+  resetPasswordUseCase,
   sendPasswordResetEmailUseCase,
   userSigninUseCase,
   userSignupUseCase,
@@ -106,6 +107,26 @@ export const authMutations = extendType({
           }
           if (err instanceof UserNotFoundError) {
             throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("resetPassword", {
+      type: "Boolean",
+      args: {
+        token: stringArg(),
+        password: stringArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await resetPasswordUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ValidationError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof InvalidTokenError) {
+            throw new ForbiddenError(err.message);
           }
           throw err;
         }
