@@ -1,7 +1,7 @@
 import { UserInputError } from "apollo-server-express";
 import { extendType, idArg } from "nexus";
 import { getGroupsUseCase, getGroupUseCase } from "../../useCases/group";
-import { parsePaginationArgs } from "../../utils/prisma";
+import { parsePaginationArgs } from "../../utils";
 
 export const groupQueries = extendType({
   type: "Query",

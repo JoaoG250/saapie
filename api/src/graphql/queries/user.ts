@@ -1,7 +1,7 @@
 import { UserInputError } from "apollo-server-express";
 import { extendType, idArg } from "nexus";
 import { getUsersUseCase, getUserUseCase } from "../../useCases/user";
-import { parsePaginationArgs } from "../../utils/prisma";
+import { parsePaginationArgs } from "../../utils";
 
 export const userQueries = extendType({
   type: "Query",
