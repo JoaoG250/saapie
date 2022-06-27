@@ -1,10 +1,16 @@
 import { UserInputError } from "apollo-server-express";
 import { arg, extendType, idArg } from "nexus";
 import { ValidationError } from "yup";
-import { GroupNotFoundError, IntegrityError } from "../../errors";
 import {
+  GroupNotFoundError,
+  IntegrityError,
+  UserNotFoundError,
+} from "../../errors";
+import {
+  addUserToGroupUseCase,
   createGroupUseCase,
   deleteGroupUseCase,
+  removeUserFromGroupUseCase,
   updateGroupUseCase,
 } from "../../useCases/group";
 
@@ -63,6 +69,46 @@ export const groupMutations = extendType({
           return await deleteGroupUseCase.execute(args);
         } catch (err) {
           if (err instanceof GroupNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("addUserToGroup", {
+      type: "Boolean",
+      args: {
+        groupId: idArg(),
+        userId: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await addUserToGroupUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof GroupNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof UserNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("removeUserFromGroup", {
+      type: "Boolean",
+      args: {
+        groupId: idArg(),
+        userId: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await removeUserFromGroupUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof GroupNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof UserNotFoundError) {
             throw new UserInputError(err.message);
           }
           throw err;
