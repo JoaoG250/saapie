@@ -41,6 +41,7 @@ type Mutation {
   addUserToGroup(groupId: ID!, userId: ID!): Boolean!
   createGroup(data: CreateGroupInput!): Group!
   deleteGroup(id: ID!): Group!
+  deleteUser(id: ID!): User!
   refreshTokens(refreshToken: String!): AuthTokens!
   removeUserFromGroup(groupId: ID!, userId: ID!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!

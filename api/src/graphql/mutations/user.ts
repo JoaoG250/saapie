@@ -2,7 +2,7 @@ import { UserInputError } from "apollo-server-express";
 import { arg, extendType, idArg } from "nexus";
 import { ValidationError } from "yup";
 import { IntegrityError, UserNotFoundError } from "../../errors";
-import { updateUserUseCase } from "../../useCases/user";
+import { deleteUserUseCase, updateUserUseCase } from "../../useCases/user";
 
 export const userMutations = extendType({
   type: "Mutation",
@@ -24,6 +24,22 @@ export const userMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("deleteUser", {
+      type: "User",
+      args: {
+        id: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await deleteUserUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof UserNotFoundError) {
             throw new UserInputError(err.message);
           }
           throw err;
