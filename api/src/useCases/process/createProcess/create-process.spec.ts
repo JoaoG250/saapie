@@ -24,9 +24,9 @@ describe("CreateProcessUseCase", () => {
   it("should check if all fields are within assigned constraints", async () => {
     const data: CreateProcessDto = {
       name: "Test Process",
+      description: "Test Form Description",
       form: {
         name: "Test Form",
-        description: "Test Form Description",
         definition: {},
       },
       targetGroupId: "1",
@@ -71,9 +71,9 @@ describe("CreateProcessUseCase", () => {
   it("should check if target group exists", async () => {
     const data: CreateProcessDto = {
       name: "Test Process",
+      description: "Test Form Description",
       form: {
         name: "Test Form",
-        description: "Test Form Description",
         definition: {},
       },
       targetGroupId: "1",
@@ -130,9 +130,9 @@ describe("CreateProcessUseCase", () => {
   it("should check if unique fields are not in use", async () => {
     const data: CreateProcessDto = {
       name: "Test Process",
+      description: "Test Form Description",
       form: {
         name: "Test Form",
-        description: "Test Form Description",
         definition: {},
       },
       targetGroupId: "1",
@@ -157,9 +157,9 @@ describe("CreateProcessUseCase", () => {
   it("should create the process", async () => {
     const data: CreateProcessDto = {
       name: "Test Process",
+      description: "Test Form Description",
       form: {
         name: "Test Form",
-        description: "Test Form Description",
         definition: {},
       },
       targetGroupId: "1",

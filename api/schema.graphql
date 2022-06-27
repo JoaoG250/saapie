@@ -13,11 +13,11 @@ input CreateGroupInput {
 
 input CreateProcessFormInput {
   definition: JSON!
-  description: String!
   name: String!
 }
 
 input CreateProcessInput {
+  description: String!
   form: CreateProcessFormInput!
   forwardToGroupId: ID
   name: String!
@@ -112,6 +112,7 @@ type PageInfo {
 }
 
 type Process {
+  description: String!
   form: ProcessForm
   forwardToGroupId: String
   id: ID!
@@ -122,7 +123,6 @@ type Process {
 
 type ProcessForm {
   definition: JSON!
-  description: String!
   id: ID!
   name: String!
 }

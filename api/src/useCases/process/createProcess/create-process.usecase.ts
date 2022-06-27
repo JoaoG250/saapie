@@ -22,9 +22,9 @@ export class CreateProcessUseCase
   ): Promise<CreateProcessDto> {
     const createProcessDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
+      description: yup.string().required().min(3).max(150).trim(),
       form: yup.object().shape({
         name: yup.string().required().min(3).max(50).trim(),
-        description: yup.string().required().min(3).max(150).trim(),
         definition: yup.object().required(),
       }),
       targetGroupId: yup.string().required(),
@@ -89,6 +89,7 @@ export class CreateProcessUseCase
     await this.checkProcessUniqueFields(validatedData, slug);
     return this.processRepository.create({
       name: validatedData.name,
+      description: validatedData.description,
       slug,
       form,
       targetGroup,

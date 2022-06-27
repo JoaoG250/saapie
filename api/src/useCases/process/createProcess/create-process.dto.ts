@@ -1,8 +1,8 @@
 export interface CreateProcessDto {
   name: string;
+  description: string;
   form: {
     name: string;
-    description: string;
     definition: object;
   };
   targetGroupId: string;

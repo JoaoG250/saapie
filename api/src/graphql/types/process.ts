@@ -5,7 +5,6 @@ export const ProcessForm = objectType({
   definition(t) {
     t.id("id");
     t.string("name");
-    t.string("description");
     t.json("definition");
   },
 });
@@ -16,6 +15,7 @@ export const Process = objectType({
     t.id("id");
     t.string("name");
     t.string("slug");
+    t.string("description");
     t.string("targetGroupId");
     t.nullable.string("forwardToGroupId");
     t.nullable.field("form", {
@@ -35,7 +35,6 @@ export const CreateProcessFormInput = inputObjectType({
   name: "CreateProcessFormInput",
   definition(t) {
     t.string("name");
-    t.string("description");
     t.json("definition");
   },
 });
@@ -44,6 +43,7 @@ export const CreateProcessInput = inputObjectType({
   name: "CreateProcessInput",
   definition(t) {
     t.string("name");
+    t.string("description");
     t.id("targetGroupId");
     t.nullable.id("forwardToGroupId");
     t.field("form", { type: "CreateProcessFormInput" });
