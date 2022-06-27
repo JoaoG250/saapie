@@ -54,7 +54,7 @@ describe("CreateUserUseCase", () => {
       createUserUseCase.validateCreateUserData(testData)
     ).rejects.toThrow(ValidationError);
   });
-  it("should check if unique fields are not in user", async () => {
+  it("should check if unique fields are not in use", async () => {
     const data: CreateUserDto = {
       firstName: "John",
       lastName: "Doe",
