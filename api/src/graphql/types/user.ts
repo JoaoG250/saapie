@@ -1,4 +1,4 @@
-import { objectType } from "nexus";
+import { inputObjectType, objectType } from "nexus";
 
 export const User = objectType({
   name: "User",
@@ -19,5 +19,16 @@ export const User = objectType({
           .groups();
       },
     });
+  },
+});
+
+export const UpdateUserInput = inputObjectType({
+  name: "UpdateUserInput",
+  definition(t) {
+    t.string("firstName");
+    t.string("lastName");
+    t.string("email");
+    t.boolean("isActive");
+    t.boolean("isVerified");
   },
 });

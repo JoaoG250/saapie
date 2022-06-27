@@ -6,6 +6,7 @@ export * from "./types/group";
 // Mutations
 export * from "./mutations/auth";
 export * from "./mutations/group";
+export * from "./mutations/user";
 
 // Queries
 export * from "./queries/user";
