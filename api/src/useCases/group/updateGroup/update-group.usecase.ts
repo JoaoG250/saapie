@@ -25,10 +25,14 @@ export class UpdateGroupUseCase implements IUseCase<UpdateGroupDto, Group> {
     return updateGroupDataConstraints.validate(data);
   }
 
-  async checkGroupUniqueFields(data: UpdateGroupDto["data"]): Promise<true> {
+  async checkGroupUniqueFields(
+    data: UpdateGroupDto["data"],
+    group: Group
+  ): Promise<true> {
     const matchingGroups = await this.groupRepository.findMany({
       where: {
         OR: { name: data.name },
+        NOT: { id: group.id },
       },
     });
     matchingGroups.forEach((group) => {
@@ -45,7 +49,7 @@ export class UpdateGroupUseCase implements IUseCase<UpdateGroupDto, Group> {
     if (!group) {
       throw new GroupNotFoundError("Group not found");
     }
-    await this.checkGroupUniqueFields(validatedData);
+    await this.checkGroupUniqueFields(validatedData, group);
     return this.groupRepository.update({ id: group.id }, validatedData);
   }
 }

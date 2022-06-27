@@ -50,7 +50,7 @@ describe("UpdateGroupUseCase", () => {
     ).resolves.toBeTruthy();
   });
   it("should check if unique fields are not in use", async () => {
-    const groups = [createFakeGroup({ name: "GROUP" }, 1)];
+    const groups = [createFakeGroup({ id: "1", name: "GROUP" }, 1)];
     const data: UpdateGroupDto = {
       id: "1",
       data: { name: "TEST_GROUP" },
@@ -59,12 +59,12 @@ describe("UpdateGroupUseCase", () => {
 
     prismaMock.group.findMany.mockResolvedValue(groups);
     await expect(
-      updateGroupUseCase.checkGroupUniqueFields(data.data)
+      updateGroupUseCase.checkGroupUniqueFields(data.data, groups[0])
     ).resolves.toBeTruthy();
 
     data.data.name = "GROUP";
     await expect(
-      updateGroupUseCase.checkGroupUniqueFields(data.data)
+      updateGroupUseCase.checkGroupUniqueFields(data.data, groups[0])
     ).rejects.toThrow(IntegrityError);
   });
 });
