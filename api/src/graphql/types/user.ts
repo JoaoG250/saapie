@@ -22,6 +22,18 @@ export const User = objectType({
   },
 });
 
+export const CreateUserInput = inputObjectType({
+  name: "CreateUserInput",
+  definition(t) {
+    t.string("firstName");
+    t.string("lastName");
+    t.string("email");
+    t.string("password");
+    t.boolean("isActive");
+    t.boolean("isVerified");
+  },
+});
+
 export const UpdateUserInput = inputObjectType({
   name: "UpdateUserInput",
   definition(t) {

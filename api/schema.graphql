@@ -11,6 +11,15 @@ input CreateGroupInput {
   name: String!
 }
 
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  isActive: Boolean!
+  isVerified: Boolean!
+  lastName: String!
+  password: String!
+}
+
 type Group {
   id: ID!
   name: String!
@@ -40,6 +49,7 @@ type Mutation {
   activateAccount(token: String!): Boolean!
   addUserToGroup(groupId: ID!, userId: ID!): Boolean!
   createGroup(data: CreateGroupInput!): Group!
+  createUser(data: CreateUserInput!): User!
   deleteGroup(id: ID!): Group!
   deleteUser(id: ID!): User!
   refreshTokens(refreshToken: String!): AuthTokens!
