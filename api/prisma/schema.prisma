@@ -47,7 +47,8 @@ model Process {
     id               String           @id @default(cuid())
     createdAt        DateTime         @default(now())
     updatedAt        DateTime         @updatedAt
-    name             String
+    name             String           @unique
+    slug             String           @unique
     form             ProcessForm?
     requests         ProcessRequest[]
     targetGroup      Group            @relation("GroupProcesses", fields: [targetGroupId], references: [id])
