@@ -4,6 +4,7 @@ export * from "./auth";
 export * from "./mail";
 export * from "./user";
 export * from "./group";
+export * from "./process";
 
 export interface IRepository<T> {
   findOne(where: unknown): Promise<T | null>;
