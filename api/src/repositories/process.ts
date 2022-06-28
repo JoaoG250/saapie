@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient, Process } from "@prisma/client";
-import { IProcessRepository } from "../interfaces";
+import { IProcessRepository, ProcessWithGroups } from "../interfaces";
 
 export class ProcessRepository implements IProcessRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -39,5 +39,14 @@ export class ProcessRepository implements IProcessRepository {
 
   async delete(where: Prisma.ProcessWhereUniqueInput): Promise<Process> {
     return this.prisma.process.delete({ where });
+  }
+
+  async findOneWithGroups(
+    where: Prisma.ProcessWhereUniqueInput
+  ): Promise<ProcessWithGroups | null> {
+    return this.prisma.process.findUnique({
+      where,
+      include: { targetGroup: true, forwardToGroup: true },
+    });
   }
 }
