@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import slugify from "slugify";
-import { Group, Process } from "@prisma/client";
+import { Group, Prisma, Process } from "@prisma/client";
 import {
   IGroupRepository,
   IProcessRepository,
@@ -74,26 +74,35 @@ export class CreateProcessUseCase
     return true;
   }
 
-  async execute(args: CreateProcessDto): Promise<Process> {
-    const validatedData = await this.validateCreateProcessData(args);
-    const tgGroup = await this.getGroupById(validatedData.targetGroupId);
+  async getGroupParams(data: CreateProcessDto): Promise<{
+    targetGroup: Prisma.GroupCreateNestedOneWithoutProcessesInput;
+    forwardToGroup:
+      | Prisma.GroupCreateNestedOneWithoutForwardedProcessesInput
+      | undefined;
+  }> {
+    const tgGroup = await this.getGroupById(data.targetGroupId);
     const targetGroup = { connect: { id: tgGroup.id } };
-    let forwardToGroup: { connect: { id: string } } | undefined = undefined;
-    if (validatedData.forwardToGroupId) {
-      const fwtGroup = await this.getGroupById(validatedData.forwardToGroupId);
+
+    let forwardToGroup = undefined;
+    if (data.forwardToGroupId) {
+      const fwtGroup = await this.getGroupById(data.forwardToGroupId);
       this.checkGroups(tgGroup, fwtGroup);
       forwardToGroup = { connect: { id: fwtGroup.id } };
     }
-    const form = { create: validatedData.form };
+    return { targetGroup, forwardToGroup };
+  }
+
+  async execute(args: CreateProcessDto): Promise<Process> {
+    const validatedData = await this.validateCreateProcessData(args);
+    const groupParams = await this.getGroupParams(validatedData);
     const slug = this.createSlug(validatedData.name);
     await this.checkProcessUniqueFields(validatedData, slug);
     return this.processRepository.create({
       name: validatedData.name,
       description: validatedData.description,
+      form: { create: validatedData.form },
       slug,
-      form,
-      targetGroup,
-      forwardToGroup,
+      ...groupParams,
     });
   }
 }

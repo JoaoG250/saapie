@@ -69,30 +69,6 @@ describe("CreateProcessUseCase", () => {
     ).rejects.toThrow(ValidationError);
   });
   it("should check if target group exists", async () => {
-    const data: CreateProcessDto = {
-      name: "Test Process",
-      description: "Test Form Description",
-      form: {
-        name: "Test Form",
-        definition: {},
-      },
-      targetGroupId: "1",
-      forwardToGroupId: "2",
-    };
-    const group = createFakeGroup({ id: "1" }, 1);
-    const { createProcessUseCase } = buildSUT();
-
-    prismaMock.group.findUnique.mockResolvedValue(null);
-    await expect(
-      createProcessUseCase.getGroupById(data.targetGroupId)
-    ).rejects.toThrow(GroupNotFoundError);
-
-    prismaMock.group.findUnique.mockResolvedValue(group);
-    await expect(
-      createProcessUseCase.getGroupById(data.targetGroupId)
-    ).resolves.toBeTruthy();
-  });
-  it("should check if target group exists", async () => {
     const targetGroupId = "1";
     const group = createFakeGroup({ id: targetGroupId }, 1);
     const { createProcessUseCase } = buildSUT();
