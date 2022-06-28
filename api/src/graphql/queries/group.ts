@@ -1,4 +1,3 @@
-import { UserInputError } from "apollo-server-express";
 import { extendType, idArg } from "nexus";
 import { getGroupsUseCase, getGroupUseCase } from "../../useCases/group";
 import { parsePaginationArgs } from "../../utils";
@@ -6,17 +5,13 @@ import { parsePaginationArgs } from "../../utils";
 export const groupQueries = extendType({
   type: "Query",
   definition(t) {
-    t.field("group", {
+    t.nullable.field("group", {
       type: "Group",
       args: {
         id: idArg(),
       },
-      async resolve(_root, args) {
-        const group = await getGroupUseCase.execute(args);
-        if (!group) {
-          throw new UserInputError("Group not found");
-        }
-        return group;
+      resolve(_root, args) {
+        return getGroupUseCase.execute(args);
       },
     });
     t.connectionField("groups", {

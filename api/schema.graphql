@@ -149,7 +149,7 @@ type ProcessForm {
 }
 
 type Query {
-  group(id: ID!): Group!
+  group(id: ID!): Group
   groups(
     """Returns the elements in the list that come after the specified cursor"""
     after: String
@@ -177,7 +177,7 @@ type Query {
     """Returns the last n elements from the list."""
     last: Int
   ): ProcessConnection!
-  user(id: ID!): User!
+  user(id: ID!): User
   users(
     """Returns the elements in the list that come after the specified cursor"""
     after: String

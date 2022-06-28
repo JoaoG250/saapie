@@ -1,4 +1,3 @@
-import { UserInputError } from "apollo-server-express";
 import { extendType, idArg } from "nexus";
 import { getUsersUseCase, getUserUseCase } from "../../useCases/user";
 import { parsePaginationArgs } from "../../utils";
@@ -6,17 +5,13 @@ import { parsePaginationArgs } from "../../utils";
 export const userQueries = extendType({
   type: "Query",
   definition(t) {
-    t.field("user", {
+    t.nullable.field("user", {
       type: "User",
       args: {
         id: idArg(),
       },
-      async resolve(_root, args) {
-        const user = await getUserUseCase.execute(args);
-        if (!user) {
-          throw new UserInputError("User not found");
-        }
-        return user;
+      resolve(_root, args) {
+        return getUserUseCase.execute(args);
       },
     });
     t.connectionField("users", {
