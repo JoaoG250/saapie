@@ -14,3 +14,4 @@ export * from "./mutations/process";
 // Queries
 export * from "./queries/user";
 export * from "./queries/group";
+export * from "./queries/process";
