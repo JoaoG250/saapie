@@ -1,8 +1,15 @@
 import { UserInputError } from "apollo-server-express";
-import { arg, extendType } from "nexus";
+import { arg, extendType, idArg } from "nexus";
 import { ValidationError } from "yup";
-import { GroupNotFoundError, IntegrityError } from "../../errors";
-import { createProcessUseCase } from "../../useCases/process";
+import {
+  GroupNotFoundError,
+  IntegrityError,
+  ProcessNotFoundError,
+} from "../../errors";
+import {
+  createProcessUseCase,
+  deleteProcessUseCase,
+} from "../../useCases/process";
 import { removeNullability } from "../../utils";
 
 export const ProcessMutations = extendType({
@@ -27,6 +34,22 @@ export const ProcessMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("deleteProcess", {
+      type: "Process",
+      args: {
+        id: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await deleteProcessUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessNotFoundError) {
             throw new UserInputError(err.message);
           }
           throw err;

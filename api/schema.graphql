@@ -75,6 +75,7 @@ type Mutation {
   createProcess(data: CreateProcessInput!): Process!
   createUser(data: CreateUserInput!): User!
   deleteGroup(id: ID!): Group!
+  deleteProcess(id: ID!): Process!
   deleteUser(id: ID!): User!
   refreshTokens(refreshToken: String!): AuthTokens!
   removeUserFromGroup(groupId: ID!, userId: ID!): Boolean!
