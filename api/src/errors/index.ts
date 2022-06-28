@@ -39,3 +39,10 @@ export class GroupNotFoundError extends Error {
     this.name = "GroupNotFoundError";
   }
 }
+
+export class ProcessNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ProcessNotFoundError";
+  }
+}
