@@ -49,3 +49,22 @@ export const CreateProcessInput = inputObjectType({
     t.field("form", { type: "CreateProcessFormInput" });
   },
 });
+
+export const UpdateProcessFormInput = inputObjectType({
+  name: "UpdateProcessFormInput",
+  definition(t) {
+    t.string("name");
+    t.json("definition");
+  },
+});
+
+export const UpdateProcessInput = inputObjectType({
+  name: "UpdateProcessInput",
+  definition(t) {
+    t.string("name");
+    t.string("description");
+    t.id("targetGroupId");
+    t.nullable.id("forwardToGroupId");
+    t.field("form", { type: "UpdateProcessFormInput" });
+  },
+});

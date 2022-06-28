@@ -84,6 +84,7 @@ type Mutation {
   signin(email: String!, password: String!): AuthTokens!
   signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
   updateGroup(data: UpdateGroupInput!, id: ID!): Group!
+  updateProcess(data: UpdateProcessInput!, id: ID!): Process!
   updateUser(data: UpdateUserInput!, id: ID!): User!
 }
 
@@ -195,6 +196,19 @@ type Query {
 
 input UpdateGroupInput {
   name: String!
+}
+
+input UpdateProcessFormInput {
+  definition: JSON!
+  name: String!
+}
+
+input UpdateProcessInput {
+  description: String!
+  form: UpdateProcessFormInput!
+  forwardToGroupId: ID
+  name: String!
+  targetGroupId: ID!
 }
 
 input UpdateUserInput {
