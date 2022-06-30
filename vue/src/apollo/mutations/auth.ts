@@ -20,3 +20,10 @@ export interface SigninMutationVariables {
   email: string;
   password: string;
 }
+
+export interface RefreshTokensResult {
+  refreshTokens: {
+    refreshToken: string;
+    accessToken: string;
+  };
+}

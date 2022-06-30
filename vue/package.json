@@ -17,6 +17,7 @@
     "@quasar/extras": "^1.0.0",
     "@types/js-cookie": "^3.0.2",
     "@vue/apollo-composable": "^4.0.0-alpha.18",
+    "apollo-link-token-refresh": "^0.4.0",
     "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
     "js-cookie": "^3.0.1",

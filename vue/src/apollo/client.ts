@@ -3,6 +3,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from "@apollo/client/core";
+import { authLink, refreshLink } from "./links";
 
 // HTTP connection to the API
 const httpLink = createHttpLink({
@@ -15,7 +16,7 @@ const cache = new InMemoryCache();
 
 // Create the apollo client
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: refreshLink.concat(authLink).concat(httpLink),
   cache,
 });
 
