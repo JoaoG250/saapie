@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
 
 const leftDrawerOpen = ref(false);
 
@@ -14,7 +15,9 @@ function toggleLeftDrawer() {
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> SAAPIE </q-toolbar-title>
+        <q-toolbar-title>
+          <router-link :to="{ name: 'index' }">SAAPIE</router-link>
+        </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -40,4 +43,14 @@ function toggleLeftDrawer() {
   </q-layout>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.q-toolbar__title {
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+</style>

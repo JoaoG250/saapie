@@ -1,10 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+</script>
 
 <template>
   <q-layout view="hHh LpR lfr">
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-toolbar-title> SAAPIE </q-toolbar-title>
+        <q-toolbar-title>
+          <router-link :to="{ name: 'index' }">SAAPIE</router-link>
+        </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -20,4 +24,14 @@
   </q-layout>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.q-toolbar__title {
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+</style>
