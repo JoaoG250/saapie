@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { reactive } from "vue";
-import { useRouter, RouterLink } from "vue-router";
-import { useAuthStore } from "stores/auth";
 import { useQuasar } from "quasar";
+import { useAuthStore } from "stores/auth";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
 
 const $q = useQuasar();
 const router = useRouter();
 const authStore = useAuthStore();
 const form = reactive({
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
 });
 
-async function signin() {
+async function signup() {
   try {
-    await authStore.actions.signin(form);
+    await authStore.actions.signup(form);
   } catch (err) {
     if (err instanceof Error) {
       $q.notify({
@@ -26,7 +28,13 @@ async function signin() {
     }
     throw err;
   }
-  await router.push({ name: "index" });
+  $q.notify({
+    position: "top",
+    color: "positive",
+    message: "Cadastro realizado com sucesso!",
+    icon: "check",
+  });
+  await router.push({ name: "signin" });
 }
 </script>
 
@@ -34,9 +42,11 @@ async function signin() {
   <q-page class="row items-center justify-center">
     <q-card style="width: 450px">
       <q-card-section>
-        <div class="text-h4 text-center">Autenticação</div>
+        <div class="text-h4 text-center">Cadastro</div>
       </q-card-section>
       <q-card-section>
+        <q-input v-model="form.firstName" label="Nome" />
+        <q-input v-model="form.lastName" label="Sobrenome" />
         <q-input v-model="form.email" label="Email" type="email" />
         <q-input v-model="form.password" label="Senha" type="password" />
       </q-card-section>
@@ -45,12 +55,12 @@ async function signin() {
           <q-btn
             :loading="authStore.state.loading"
             color="primary"
-            @click="signin"
-            >Entrar</q-btn
+            @click="signup"
+            >Cadastrar</q-btn
           >
           <span class="q-mt-lg">
-            Não possui cadastro?
-            <router-link :to="{ name: 'signup' }"> Cadastrar </router-link>
+            Já possui cadastro?
+            <router-link :to="{ name: 'signin' }"> Autenticar </router-link>
           </span>
           <span class="q-mt-sm">
             Voltar a

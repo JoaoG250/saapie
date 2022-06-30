@@ -4,6 +4,9 @@ import {
   SigninMutationResult,
   SigninMutationVariables,
   SIGNIN_MUTATION,
+  SignupMutationResult,
+  SignupMutationVariables,
+  SIGNUP_MUTATION,
 } from "src/apollo/mutations";
 import {
   deleteAccessToken,
@@ -13,11 +16,12 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "src/common/auth";
-import { SigninError } from "src/errors";
+import { SigninError, SignupError } from "src/errors";
 import { User } from "src/models";
 import { computed, reactive } from "vue";
 
 interface AuthStoreState {
+  loading: boolean;
   user: User | null;
   accessToken: string | undefined;
   refreshToken: string | undefined;
@@ -25,6 +29,7 @@ interface AuthStoreState {
 
 export const useAuthStore = defineStore("auth", () => {
   const state = reactive<AuthStoreState>({
+    loading: false,
     user: null,
     accessToken: getAccessToken(),
     refreshToken: getRefreshToken(),
@@ -45,24 +50,48 @@ export const useAuthStore = defineStore("auth", () => {
     deleteRefreshToken();
   }
 
-  async function signin(data: { email: string; password: string }) {
+  async function signin(data: SigninMutationVariables) {
     const { mutate } = useMutation<
       SigninMutationResult,
       SigninMutationVariables
     >(SIGNIN_MUTATION, { variables: data });
 
-    const response = await mutate();
-    if (!response?.data) {
-      throw new SigninError("Signin failed");
+    try {
+      state.loading = true;
+      const response = await mutate();
+      if (!response?.data) {
+        throw new SigninError("Signin failed");
+      }
+
+      const { accessToken, refreshToken } = response.data.signin;
+      setTokens(accessToken, refreshToken);
+
+      return {
+        accessToken,
+        refreshToken,
+      };
+    } finally {
+      state.loading = false;
     }
+  }
 
-    const { accessToken, refreshToken } = response.data.signin;
-    setTokens(accessToken, refreshToken);
+  async function signup(data: SignupMutationVariables) {
+    const { mutate } = useMutation<
+      SignupMutationResult,
+      SignupMutationVariables
+    >(SIGNUP_MUTATION, { variables: data });
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    try {
+      state.loading = true;
+      const response = await mutate();
+      if (!response?.data) {
+        throw new SignupError("Signup failed");
+      }
+
+      return response.data.signup;
+    } finally {
+      state.loading = false;
+    }
   }
 
   function signout() {
@@ -77,6 +106,7 @@ export const useAuthStore = defineStore("auth", () => {
     },
     actions: {
       signin,
+      signup,
       signout,
     },
   };

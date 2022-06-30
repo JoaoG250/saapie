@@ -21,6 +21,33 @@ export interface SigninMutationVariables {
   password: string;
 }
 
+export const SIGNUP_MUTATION = gql`
+  mutation signup(
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $password: String!
+  ) {
+    signup(
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      password: $password
+    )
+  }
+`;
+
+export interface SignupMutationResult {
+  signup: boolean;
+}
+
+export interface SignupMutationVariables {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 export interface RefreshTokensResult {
   refreshTokens: {
     refreshToken: string;
