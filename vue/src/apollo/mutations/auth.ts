@@ -83,3 +83,17 @@ export interface ResetPasswordMutationVariables {
   token: string;
   password: string;
 }
+
+export const SEND_PASSWORD_RESET_EMAIL_MUTATION = gql`
+  mutation sendPasswordResetEmail($email: String!) {
+    sendPasswordResetEmail(email: $email)
+  }
+`;
+
+export interface SendPasswordResetEmailMutationResult {
+  sendPasswordResetEmail: boolean;
+}
+
+export interface SendPasswordResetEmailMutationVariables {
+  email: string;
+}

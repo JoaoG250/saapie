@@ -3,6 +3,7 @@ import { reactive } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import { useAuthStore } from "stores/auth";
 import { useQuasar } from "quasar";
+import SendEmailDialog from "src/components/auth/SendEmailDialog.vue";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -45,17 +46,26 @@ async function signin() {
         <div class="column text-center">
           <q-btn
             :loading="authStore.state.loading"
+            class="q-mb-sm"
             color="primary"
             @click="signin"
-            >Entrar</q-btn
-          >
+            >Entrar
+          </q-btn>
+          <SendEmailDialog>
+            <template #activator="{ open }">
+              <q-btn flat dense no-caps @click="open">
+                Esqueceu sua senha?
+              </q-btn>
+            </template>
+          </SendEmailDialog>
           <span class="q-mt-lg">
             Não possui cadastro?
             <router-link :to="{ name: 'signup' }"> Cadastrar </router-link>
           </span>
           <span class="q-mt-sm">
-            Voltar a
-            <router-link :to="{ name: 'index' }"> página inicial </router-link>
+            <router-link :to="{ name: 'index' }">
+              Voltar a página inicial
+            </router-link>
           </span>
         </div>
       </q-card-section>
