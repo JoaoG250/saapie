@@ -27,6 +27,11 @@ const routes: RouteRecordRaw[] = [
         name: "signup",
         component: () => import("pages/auth/SignupPage.vue"),
       },
+      {
+        path: "activate-account/:token",
+        name: "activate-account",
+        component: () => import("pages/auth/ActivateAccountPage.vue"),
+      },
     ],
   },
 

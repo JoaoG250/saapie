@@ -54,3 +54,17 @@ export interface RefreshTokensResult {
     accessToken: string;
   };
 }
+
+export const ACTIVATE_ACCOUNT_MUTATION = gql`
+  mutation activateAccount($token: String!) {
+    activateAccount(token: $token)
+  }
+`;
+
+export interface ActivateAccountMutationResult {
+  activateAccount: boolean;
+}
+
+export interface ActivateAccountMutationVariables {
+  token: string;
+}

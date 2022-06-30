@@ -35,7 +35,7 @@ export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, true> {
       id,
     });
     if (!user) {
-      throw new InvalidTokenError("Invalid refresh token");
+      throw new InvalidTokenError("Invalid token");
     }
     return user;
   }
@@ -49,13 +49,13 @@ export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, true> {
     const payload = await this.validateToken(validatedData.token);
 
     if (!payload || typeof payload.id !== "string") {
-      throw new InvalidTokenError("Invalid refresh token");
+      throw new InvalidTokenError("Invalid token");
     }
     const user = await this.userRepository.findOne({
       id: payload.id,
     });
     if (!user) {
-      throw new InvalidTokenError("Invalid refresh token");
+      throw new InvalidTokenError("Invalid token");
     }
 
     const passwordHash = await this.hashPassword(validatedData.password);

@@ -18,17 +18,17 @@ export class ActivateAccountUseCase
         args.token
       );
     } catch (err) {
-      throw new InvalidTokenError("Invalid refresh token");
+      throw new InvalidTokenError("Invalid token");
     }
 
     if (!payload || typeof payload.id !== "string") {
-      throw new InvalidTokenError("Invalid refresh token");
+      throw new InvalidTokenError("Invalid token");
     }
     const user = await this.userRepository.findOne({
       id: payload.id,
     });
     if (!user) {
-      throw new InvalidTokenError("Invalid refresh token");
+      throw new InvalidTokenError("Invalid token");
     }
 
     await this.userRepository.update(

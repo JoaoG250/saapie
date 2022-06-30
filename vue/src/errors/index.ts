@@ -11,3 +11,10 @@ export class SignupError extends Error {
     this.name = "SignupError";
   }
 }
+
+export class AccountActivationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AccountActivationError";
+  }
+}

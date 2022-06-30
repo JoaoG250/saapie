@@ -48,7 +48,7 @@ export class SendPasswordResetEmailUseCase
       subject: "Recuperação de senha",
       template: "passwordReset",
       data: {
-        url: "auth/reset-password/" + token,
+        url: `auth/reset-password/${token}/`,
       },
     });
     return true;
