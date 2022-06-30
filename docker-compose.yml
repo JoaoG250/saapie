@@ -29,3 +29,19 @@ services:
       - "5555:5555" # Prisma studio
     depends_on:
       - db
+
+  vue:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: vue
+    image: saapie-vue:latest
+    env_file:
+      - ./dotenv/vue.env
+    command: development
+    volumes:
+      - ./vue:/home/node/saapie/vue
+    ports:
+      - "9000:9000"
+    depends_on:
+      - api
