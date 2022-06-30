@@ -59,7 +59,7 @@ export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
       subject: "Confirmação de cadastro",
       template: "accountActivation",
       data: {
-        url: "activate-account/" + token,
+        url: "auth/activate-account/" + token,
       },
     });
   }
