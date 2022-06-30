@@ -5,6 +5,14 @@ import {
   SigninMutationVariables,
   SIGNIN_MUTATION,
 } from "src/apollo/mutations";
+import {
+  deleteAccessToken,
+  deleteRefreshToken,
+  getAccessToken,
+  getRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from "src/common/auth";
 import { SigninError } from "src/errors";
 import { User } from "src/models";
 import { computed, reactive } from "vue";
@@ -18,10 +26,24 @@ interface AuthStoreState {
 export const useAuthStore = defineStore("auth", () => {
   const state = reactive<AuthStoreState>({
     user: null,
-    accessToken: undefined,
-    refreshToken: undefined,
+    accessToken: getAccessToken(),
+    refreshToken: getRefreshToken(),
   });
   const isAuthenticated = computed(() => !!state.accessToken);
+
+  function setTokens(accessToken: string, refreshToken: string) {
+    state.accessToken = accessToken;
+    state.refreshToken = refreshToken;
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+  }
+
+  function clearTokens() {
+    state.accessToken = undefined;
+    state.refreshToken = undefined;
+    deleteAccessToken();
+    deleteRefreshToken();
+  }
 
   async function signin(data: { email: string; password: string }) {
     const { mutate } = useMutation<
@@ -35,13 +57,17 @@ export const useAuthStore = defineStore("auth", () => {
     }
 
     const { accessToken, refreshToken } = response.data.signin;
-    state.accessToken = accessToken;
-    state.refreshToken = refreshToken;
+    setTokens(accessToken, refreshToken);
 
     return {
       accessToken,
       refreshToken,
     };
+  }
+
+  function signout() {
+    state.user = null;
+    clearTokens();
   }
 
   return {
@@ -51,6 +77,7 @@ export const useAuthStore = defineStore("auth", () => {
     },
     actions: {
       signin,
+      signout,
     },
   };
 });
