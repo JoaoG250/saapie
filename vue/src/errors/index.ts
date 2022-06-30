@@ -18,3 +18,10 @@ export class AccountActivationError extends Error {
     this.name = "AccountActivationError";
   }
 }
+
+export class PasswordResetError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PasswordResetError";
+  }
+}

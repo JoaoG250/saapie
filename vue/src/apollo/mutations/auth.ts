@@ -68,3 +68,18 @@ export interface ActivateAccountMutationResult {
 export interface ActivateAccountMutationVariables {
   token: string;
 }
+
+export const RESET_PASSWORD_MUTATION = gql`
+  mutation resetPassword($token: String!, $password: String!) {
+    resetPassword(token: $token, password: $password)
+  }
+`;
+
+export interface ResetPasswordMutationResult {
+  resetPassword: boolean;
+}
+
+export interface ResetPasswordMutationVariables {
+  token: string;
+  password: string;
+}

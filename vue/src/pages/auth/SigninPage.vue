@@ -11,6 +11,7 @@ const form = reactive({
   email: "",
   password: "",
 });
+// TODO: Add field validation
 
 async function signin() {
   try {
