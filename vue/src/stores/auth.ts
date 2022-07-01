@@ -17,7 +17,7 @@ import {
   setRefreshToken,
 } from "src/common/auth";
 import { SigninError, SignupError } from "src/errors";
-import { User } from "src/models";
+import { User } from "src/interfaces";
 import { computed, reactive } from "vue";
 
 interface AuthStoreState {
