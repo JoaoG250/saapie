@@ -106,7 +106,7 @@ export const authMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof UserNotFoundError) {
-            throw new UserInputError(err.message);
+            return true;
           }
           throw err;
         }

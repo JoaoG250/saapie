@@ -1,4 +1,3 @@
-import mailTransporter from "../mail";
-import { GmailMailProvider } from "./mail";
+import { SendGridMailProvider } from "./mail";
 
-export const mailProvider = new GmailMailProvider(mailTransporter);
+export const mailProvider = new SendGridMailProvider();

@@ -19,6 +19,9 @@ export default {
     userName: getEnvironmentVariable("MAIL_USER_NAME"),
     userAddress: getEnvironmentVariable("MAIL_USER_ADDRESS"),
   },
+  sendgrid: {
+    apiKey: getEnvironmentVariable("SENDGRID_API_KEY"),
+  },
   oauth: {
     clientId: getEnvironmentVariable("OAUTH_CLIENT_ID"),
     clientSecret: getEnvironmentVariable("OAUTH_CLIENT_SECRET"),
