@@ -164,6 +164,7 @@ type Query {
     """Returns the last n elements from the list."""
     last: Int
   ): GroupConnection!
+  me: User!
   process(id: ID!): Process
   processes(
     """Returns the elements in the list that come after the specified cursor"""
