@@ -18,7 +18,7 @@ export function setAccessToken(token: string) {
 
 export function setRefreshToken(token: string) {
   const claims = decodeJWT<JwtPayload>(token);
-  const maxAge = 60 * 24 * 60 * 1;
+  const maxAge = 60 * 60 * 24 * 1;
   let expDate: Date | undefined;
   if (claims.exp) {
     expDate = new Date(claims.exp * 1000);

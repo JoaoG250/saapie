@@ -30,7 +30,7 @@ export default {
   jwt: {
     accessToken: {
       secret: accessTokenSecret,
-      expiresIn: 60 * 2,
+      expiresIn: 60 * 5,
     },
     refreshToken: {
       secret: refreshTokenSecret,

@@ -5,6 +5,7 @@ import Redis from "ioredis";
 
 interface UserFromRequest {
   id: string;
+  groups: string[];
 }
 
 interface JwtRequest extends Request {
