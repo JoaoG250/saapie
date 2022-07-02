@@ -1,1 +1,25 @@
 // app global css in SCSS form
+.container {
+  width: 100%;
+  padding: 12px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: $breakpoint-sm) {
+  .container {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  .container {
+    max-width: 1185px;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .container {
+    max-width: 1785px;
+  }
+}

@@ -3,16 +3,28 @@ import { ref } from "vue";
 import { RouterLink } from "vue-router";
 
 const leftDrawerOpen = ref(false);
+const miniState = ref(false);
 const menuList = [
   {
     icon: "person",
-    label: "Usuários",
+    label: "Usuário",
     to: { name: "admin:user" },
   },
 ];
 
+function toggleMini() {
+  miniState.value = !miniState.value;
+}
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+function toggle() {
+  if (!leftDrawerOpen.value) {
+    miniState.value = false;
+    toggleLeftDrawer();
+  } else {
+    toggleMini();
+  }
 }
 </script>
 
@@ -20,7 +32,7 @@ function toggleLeftDrawer() {
   <q-layout view="hHh LpR fff">
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-btn dense flat round icon="menu" @click="toggle" />
 
         <q-toolbar-title>
           <router-link :to="{ name: 'index' }">SAAPIE</router-link>
@@ -28,7 +40,13 @@ function toggleLeftDrawer() {
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above side="left" bordered>
+    <q-drawer
+      v-model="leftDrawerOpen"
+      :mini="miniState"
+      show-if-above
+      side="left"
+      bordered
+    >
       <q-list>
         <template v-for="(item, index) in menuList" :key="index">
           <q-item :to="item.to" exact clickable>
