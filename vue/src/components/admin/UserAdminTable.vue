@@ -1,19 +1,26 @@
 <script setup lang="ts">
 import * as _ from "lodash";
 import { QTableProps, useQuasar } from "quasar";
-import { User, PaginationArgs, PageInfo } from "src/interfaces";
+import {
+  CreateUserMutationVariables,
+  DeleteUserMutationVariables,
+  UpdateUserMutationVariables,
+} from "src/apollo/mutations";
+import { UsersQueryVariables } from "src/apollo/queries";
+import { User, PageInfo } from "src/interfaces";
 import { computed, onMounted, ref, watch } from "vue";
 
-interface AdminTableProps {
+export interface AdminTableProps {
+  itemName: string;
   defaultItem: User;
   columns: NonNullable<QTableProps["columns"]>;
   crud: {
     list: (
-      args: PaginationArgs
+      args: UsersQueryVariables
     ) => Promise<{ items: User[]; pageInfo: PageInfo }>;
-    create?: (args: { data: User }) => Promise<User>;
-    update?: (args: { id: string; data: User }) => Promise<User>;
-    delete?: (args: { id: string }) => Promise<User>;
+    create?: (args: CreateUserMutationVariables) => Promise<User>;
+    update?: (args: UpdateUserMutationVariables) => Promise<User>;
+    delete?: (args: DeleteUserMutationVariables) => Promise<User>;
   };
   itemsPerPage: number;
 }
@@ -32,8 +39,11 @@ const pageInfo = ref<PageInfo>({
 const editedIndex = ref<number>(-1);
 const editedItem = ref<User>({ ...props.defaultItem });
 
+const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
 const formTitle = computed(() => {
-  return editedIndex.value === -1 ? "Novo item" : "Editar item";
+  return editedIndex.value === -1
+    ? `Novo ${itemNameLowerCase.value}`
+    : `Editar ${itemNameLowerCase.value}`;
 });
 const tableColumns = computed(() => {
   if (props.crud.update || props.crud.delete) {
@@ -43,7 +53,7 @@ const tableColumns = computed(() => {
 });
 
 watch(dialogOpen, (val) => {
-  if (val) {
+  if (!val) {
     closeDialog();
   }
 });
@@ -88,14 +98,14 @@ function deleteItem(item: User) {
   };
   $q.dialog({
     title: "Confirmação",
-    message: "Deseja realmente excluir o item?",
+    message: `Deseja realmente excluir o ${itemNameLowerCase.value}?`,
     cancel: true,
     persistent: true,
   })
     .onOk(async () => {
       if (!props.crud.delete) return;
       await props.crud.delete({ id: item.id });
-      items.value = items.value.splice(editedIndex.value, 1);
+      items.value.splice(editedIndex.value, 1);
       closeDialog();
     })
     .onCancel(() => {
@@ -105,14 +115,16 @@ function deleteItem(item: User) {
 
 async function save() {
   try {
+    const { id, ...itemData } = editedItem.value;
     if (editedIndex.value > -1) {
       if (!props.crud.update) return;
-      const item = items.value[editedIndex.value];
-      await props.crud.update({ id: item.id, data: editedItem.value });
+      await props.crud.update({ id, data: itemData });
       items.value[editedIndex.value] = editedItem.value;
     } else {
       if (!props.crud.create) return;
-      const item = await props.crud.create({ data: editedItem.value });
+      const item = await props.crud.create({
+        data: { password: "123456", ...itemData },
+      });
       items.value.push(item);
     }
     closeDialog();
@@ -133,29 +145,60 @@ async function save() {
 <template>
   <div class="q-pa-md">
     <q-dialog v-model="dialogOpen" persistent>
-      <q-card>
+      <q-card style="width: 400px">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6 q-mr-md">{{ formTitle }}</div>
           <q-space />
           <q-btn flat round dense icon="close" @click="closeDialog" />
         </q-card-section>
-        <q-card-section> </q-card-section>
         <q-card-section>
+          <q-input v-model="editedItem.firstName" label="Nome" />
+          <q-input v-model="editedItem.lastName" label="Sobrenome" />
+          <q-input v-model="editedItem.email" label="Email" />
+          <div class="q-mt-sm">
+            <q-checkbox
+              v-model="editedItem.isActive"
+              class="q-mr-sm"
+              label="Ativo"
+            />
+            <q-checkbox v-model="editedItem.isVerified" label="Verificado" />
+          </div>
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right">
           <q-btn label="Cancelar" @click="closeDialog" />
           <q-btn color="primary" label="Salvar" @click="save" />
-        </q-card-section>
+        </q-card-actions>
       </q-card>
     </q-dialog>
     <q-table
-      title="Treats"
+      :loading="loading"
       :rows="items"
       :columns="tableColumns"
       row-key="name"
     >
+      <template #top>
+        <div class="q-table__title">{{ itemName }}</div>
+        <q-space />
+        <q-btn
+          v-if="crud.create"
+          :label="`Novo ${itemNameLowerCase}`"
+          icon="add"
+          color="primary"
+          @click="openDialog"
+        />
+      </template>
       <template #body-cell-actions="slotItem">
         <q-td :props="slotItem">
-          <q-btn round icon="edit" size="xs" @click="editItem(slotItem.row)" />
           <q-btn
+            v-if="crud.update"
+            round
+            icon="edit"
+            size="xs"
+            @click="editItem(slotItem.row)"
+          />
+          <q-btn
+            v-if="crud.delete"
             class="q-ml-sm"
             round
             icon="delete"

@@ -1,9 +1,27 @@
 <script setup lang="ts">
-import UserAdminTable from "components/admin/UserAdminTable.vue";
-import { QTableProps } from "quasar";
-import { PageInfo, PaginationArgs, User } from "src/interfaces";
+import UserAdminTable, {
+  AdminTableProps,
+} from "components/admin/UserAdminTable.vue";
+import {
+  UsersQueryResult,
+  UsersQueryVariables,
+  USERS_QUERY,
+} from "src/apollo/queries";
+import { useAsyncQuery } from "src/composables";
+import { useMutation } from "@vue/apollo-composable";
+import {
+  CreateUserMutationResult,
+  CreateUserMutationVariables,
+  CREATE_USER_MUTATION,
+  UpdateUserMutationResult,
+  UpdateUserMutationVariables,
+  UPDATE_USER_MUTATION,
+  DeleteUserMutationResult,
+  DeleteUserMutationVariables,
+  DELETE_USER_MUTATION,
+} from "src/apollo/mutations";
 
-const defaultItem: User = {
+const defaultItem: AdminTableProps["defaultItem"] = {
   id: "",
   firstName: "",
   lastName: "",
@@ -11,7 +29,7 @@ const defaultItem: User = {
   isActive: false,
   isVerified: false,
 };
-const columns: QTableProps["columns"] = [
+const columns: AdminTableProps["columns"] = [
   {
     name: "firstName",
     label: "Nome",
@@ -50,30 +68,51 @@ const columns: QTableProps["columns"] = [
     },
   },
 ];
-
-const crud = {
-  async list(
-    args: PaginationArgs
-  ): Promise<{ items: User[]; pageInfo: PageInfo }> {
+const crud: AdminTableProps["crud"] = {
+  async list(args: UsersQueryVariables) {
+    const data = await useAsyncQuery<UsersQueryResult, UsersQueryVariables>(
+      USERS_QUERY,
+      { variables: args, fetchPolicy: "network-only" }
+    );
     return {
-      items: [],
-      pageInfo: {
-        startCursor: "",
-        endCursor: "",
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
+      items: data.users.edges.map(({ node }) => node),
+      pageInfo: data.users.pageInfo,
     };
   },
-  async delete(args: { id: string }): Promise<User> {
-    return {
-      ...defaultItem,
-    };
+  async create(args: CreateUserMutationVariables) {
+    const { mutate } = await useMutation<
+      CreateUserMutationResult,
+      CreateUserMutationVariables
+    >(CREATE_USER_MUTATION, {
+      variables: args,
+    });
+    const response = await mutate();
+    if (!response?.data) {
+      throw new Error("Error creating user");
+    }
+    return response.data.createUser;
   },
-  async update(args: { id: string; data: User }): Promise<User> {
-    return {
-      ...defaultItem,
-    };
+  async update(args: UpdateUserMutationVariables) {
+    const { mutate } = useMutation<
+      UpdateUserMutationResult,
+      UpdateUserMutationVariables
+    >(UPDATE_USER_MUTATION, { variables: args });
+    const response = await mutate();
+    if (!response?.data) {
+      throw new Error("Error updating user");
+    }
+    return response.data.updateUser;
+  },
+  async delete(args: DeleteUserMutationVariables) {
+    const { mutate } = useMutation<
+      DeleteUserMutationResult,
+      DeleteUserMutationVariables
+    >(DELETE_USER_MUTATION, { variables: args });
+    const response = await mutate();
+    if (!response?.data) {
+      throw new Error("Error deleting user");
+    }
+    return response.data.deleteUser;
   },
 };
 </script>
@@ -81,6 +120,7 @@ const crud = {
 <template>
   <q-page class="row">
     <UserAdminTable
+      item-name="Usuário"
       :default-item="defaultItem"
       :columns="columns"
       :items-per-page="10"
