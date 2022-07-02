@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import * as _ from "lodash";
-import { QTableProps, useQuasar } from "quasar";
+import { QTableProps } from "quasar";
 import {
   CreateUserMutationVariables,
   DeleteUserMutationVariables,
@@ -8,7 +7,8 @@ import {
 } from "src/apollo/mutations";
 import { UsersQueryVariables } from "src/apollo/queries";
 import { User, PageInfo } from "src/interfaces";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed } from "vue";
+import { useCrudAdminTable } from "src/composables";
 
 export interface AdminTableProps {
   itemName: string;
@@ -25,19 +25,25 @@ export interface AdminTableProps {
   itemsPerPage: number;
 }
 
-const $q = useQuasar();
 const props = defineProps<AdminTableProps>();
-const loading = ref(true);
-const dialogOpen = ref(false);
-const items = ref<User[]>([]);
-const pageInfo = ref<PageInfo>({
-  startCursor: "",
-  endCursor: "",
-  hasNextPage: false,
-  hasPreviousPage: false,
+
+const {
+  dialogOpen,
+  loading,
+  items,
+  editedIndex,
+  editedItem,
+  openDialog,
+  closeDialog,
+  editItem,
+  deleteItem,
+  save,
+} = useCrudAdminTable<User>({
+  itemName: props.itemName,
+  defaultItem: props.defaultItem,
+  crud: props.crud,
+  itemsPerPage: props.itemsPerPage,
 });
-const editedIndex = ref<number>(-1);
-const editedItem = ref<User>({ ...props.defaultItem });
 
 const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
 const formTitle = computed(() => {
@@ -51,95 +57,6 @@ const tableColumns = computed(() => {
   }
   return props.columns.filter((column) => column.name !== "actions");
 });
-
-watch(dialogOpen, (val) => {
-  if (!val) {
-    closeDialog();
-  }
-});
-
-onMounted(() => {
-  initialize();
-});
-
-function openDialog() {
-  dialogOpen.value = true;
-}
-
-function closeDialog() {
-  dialogOpen.value = false;
-  editedIndex.value = -1;
-  editedItem.value = { ...props.defaultItem };
-}
-
-async function initialize() {
-  const { items: itemsList, pageInfo: pageInfoList } = await props.crud.list({
-    first: props.itemsPerPage + 1,
-  });
-  items.value = itemsList;
-  pageInfo.value = pageInfoList;
-  loading.value = false;
-}
-
-function editItem(item: User) {
-  editedIndex.value = items.value.indexOf(item);
-  editedItem.value = {
-    ...props.defaultItem,
-    ..._.pick(item, _.keys(props.defaultItem)),
-  };
-  openDialog();
-}
-
-function deleteItem(item: User) {
-  editedIndex.value = items.value.indexOf(item);
-  editedItem.value = {
-    ...props.defaultItem,
-    ..._.pick(item, _.keys(props.defaultItem)),
-  };
-  $q.dialog({
-    title: "Confirmação",
-    message: `Deseja realmente excluir o ${itemNameLowerCase.value}?`,
-    cancel: true,
-    persistent: true,
-  })
-    .onOk(async () => {
-      if (!props.crud.delete) return;
-      await props.crud.delete({ id: item.id });
-      items.value.splice(editedIndex.value, 1);
-      closeDialog();
-    })
-    .onCancel(() => {
-      closeDialog();
-    });
-}
-
-async function save() {
-  try {
-    const { id, ...itemData } = editedItem.value;
-    if (editedIndex.value > -1) {
-      if (!props.crud.update) return;
-      await props.crud.update({ id, data: itemData });
-      items.value[editedIndex.value] = editedItem.value;
-    } else {
-      if (!props.crud.create) return;
-      const item = await props.crud.create({
-        data: { password: "123456", ...itemData },
-      });
-      items.value.push(item);
-    }
-    closeDialog();
-  } catch (err) {
-    if (err instanceof Error) {
-      $q.notify({
-        position: "top",
-        color: "negative",
-        message: err.message,
-        icon: "report_problem",
-      });
-    }
-    throw err;
-  }
-}
 </script>
 
 <template>

@@ -84,7 +84,7 @@ const crud: AdminTableProps["crud"] = {
       CreateUserMutationResult,
       CreateUserMutationVariables
     >(CREATE_USER_MUTATION, {
-      variables: args,
+      variables: { data: { ...args.data, password: "123456" } },
     });
     const response = await mutate();
     if (!response?.data) {
