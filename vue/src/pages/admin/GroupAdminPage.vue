@@ -29,12 +29,13 @@ const columns: GroupAdminTableProps["columns"] = [
     name: "name",
     label: "Nome",
     field: "name",
-    sortable: true,
     align: "left",
+    sortable: true,
   },
   {
     name: "actions",
     label: "Ações",
+    align: "right",
     field: () => {
       return;
     },

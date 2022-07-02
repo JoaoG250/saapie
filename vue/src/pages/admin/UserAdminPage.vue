@@ -34,35 +34,41 @@ const columns: UserAdminTableProps["columns"] = [
     name: "firstName",
     label: "Nome",
     field: "firstName",
+    align: "left",
     sortable: true,
   },
   {
     name: "lastName",
     label: "Sobrenome",
     field: "lastName",
+    align: "center",
     sortable: true,
   },
   {
     name: "email",
     label: "Email",
     field: "email",
+    align: "center",
     sortable: true,
   },
   {
     name: "isActive",
     label: "Ativo",
     field: "isActive",
+    align: "center",
     sortable: true,
   },
   {
     name: "isVerified",
     label: "Verificado",
     field: "isVerified",
+    align: "center",
     sortable: true,
   },
   {
     name: "actions",
     label: "Ações",
+    align: "right",
     field: () => {
       return;
     },
@@ -118,7 +124,7 @@ const crud: UserAdminTableProps["crud"] = {
 </script>
 
 <template>
-  <q-page class="row">
+  <q-page>
     <UserAdminTable
       item-name="Usuário"
       :default-item="defaultItem"
