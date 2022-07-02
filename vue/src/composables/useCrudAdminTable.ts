@@ -3,7 +3,12 @@ import { useQuasar } from "quasar";
 import { PageInfo, PaginationArgs } from "src/interfaces";
 import { onMounted, Ref, ref, watch } from "vue";
 
-type ExtraData = Ref<{ [key: string]: string | number | boolean }>;
+type ExtraDataTypes =
+  | string
+  | number
+  | boolean
+  | { [key: string]: ExtraDataTypes };
+type ExtraData = Ref<{ [key: string]: ExtraDataTypes }>;
 
 interface UseCrudAdminTableArgs<T> {
   defaultItem: T;
@@ -19,6 +24,7 @@ interface UseCrudAdminTableArgs<T> {
   itemsPerPage: number;
   extraCreateData?: ExtraData;
   extraUpdateData?: ExtraData;
+  stripFields?: string[];
 }
 
 export function useCrudAdminTable<T extends { id: string }>({
@@ -28,6 +34,7 @@ export function useCrudAdminTable<T extends { id: string }>({
   itemsPerPage,
   extraCreateData,
   extraUpdateData,
+  stripFields = [],
 }: UseCrudAdminTableArgs<T>) {
   const $q = useQuasar();
   const loading = ref(true);
@@ -106,16 +113,20 @@ export function useCrudAdminTable<T extends { id: string }>({
   async function save() {
     try {
       const { id, ...itemData } = editedItem.value;
+      const cleanedData = _.omit(itemData, stripFields);
       if (editedIndex.value > -1) {
         if (!crud.update) return;
         const extraData = extraUpdateData?.value || {};
-        await crud.update({ id, data: { ...itemData, ...extraData } });
-        items.value[editedIndex.value] = editedItem.value;
+        const item = await crud.update({
+          id,
+          data: { ...cleanedData, ...extraData },
+        });
+        items.value[editedIndex.value] = item;
       } else {
         if (!crud.create) return;
         const extraData = extraCreateData?.value || {};
         const item = await crud.create({
-          data: { ...itemData, ...extraData },
+          data: { ...cleanedData, ...extraData },
         });
         items.value.push(item);
       }

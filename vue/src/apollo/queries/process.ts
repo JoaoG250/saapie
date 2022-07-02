@@ -45,6 +45,11 @@ export const PROCESSES_QUERY = gql`
           description
           targetGroupId
           forwardToGroupId
+          form {
+            id
+            name
+            definition
+          }
         }
       }
     }
@@ -56,7 +61,7 @@ export interface ProcessesQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: Omit<ProcessType, "form">;
+      node: ProcessType;
     }[];
   };
 }
