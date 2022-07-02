@@ -10,6 +10,11 @@ const menuList = [
     label: "Usuário",
     to: { name: "admin:user" },
   },
+  {
+    icon: "group",
+    label: "Grupo",
+    to: { name: "admin:group" },
+  },
 ];
 
 function toggleMini() {

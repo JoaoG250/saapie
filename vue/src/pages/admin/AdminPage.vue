@@ -13,6 +13,12 @@ const models: Model[] = [
     description: "Página de administração do modelo de usuário",
     to: { name: "admin:user" },
   },
+  {
+    name: "Grupo",
+    icon: "group",
+    description: "Página de administração do modelo de grupo",
+    to: { name: "admin:group" },
+  },
 ];
 </script>
 
