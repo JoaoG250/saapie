@@ -10,7 +10,7 @@ import { User, PageInfo } from "src/interfaces";
 import { computed, ref } from "vue";
 import { useCrudAdminTable } from "src/composables";
 
-export interface AdminTableProps {
+export interface UserAdminTableProps {
   itemName: string;
   defaultItem: User;
   columns: NonNullable<QTableProps["columns"]>;
@@ -25,7 +25,7 @@ export interface AdminTableProps {
   itemsPerPage: number;
 }
 
-const props = defineProps<AdminTableProps>();
+const props = defineProps<UserAdminTableProps>();
 const extraCreateData = ref({
   password: "",
 });

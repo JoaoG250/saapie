@@ -3,6 +3,13 @@ import { ref } from "vue";
 import { RouterLink } from "vue-router";
 
 const leftDrawerOpen = ref(false);
+const menuList = [
+  {
+    icon: "person",
+    label: "Usuários",
+    to: { name: "admin:user" },
+  },
+];
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -22,7 +29,18 @@ function toggleLeftDrawer() {
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above side="left" bordered>
-      <!-- drawer content -->
+      <q-list>
+        <template v-for="(item, index) in menuList" :key="index">
+          <q-item :to="item.to" exact clickable>
+            <q-item-section avatar>
+              <q-icon :name="item.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ item.label }}
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-list>
     </q-drawer>
 
     <q-page-container>
