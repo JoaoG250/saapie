@@ -13,3 +13,18 @@ export interface ProcessType {
   forwardToGroupId: string;
   form: ProcessFormType;
 }
+
+export interface CreateProcessFormInput {
+  name: string;
+  definition: object;
+}
+
+export interface CreateProcessInput {
+  name: string;
+  description: string;
+  targetGroupId: string;
+  forwardToGroupId: string;
+  form: CreateProcessFormInput;
+}
+
+export type UpdateProcessInput = CreateProcessInput;
