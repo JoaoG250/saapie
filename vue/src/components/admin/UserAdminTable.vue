@@ -7,7 +7,7 @@ import {
 } from "src/apollo/mutations";
 import { UsersQueryVariables } from "src/apollo/queries";
 import { User, PageInfo } from "src/interfaces";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useCrudAdminTable } from "src/composables";
 
 export interface AdminTableProps {
@@ -26,7 +26,9 @@ export interface AdminTableProps {
 }
 
 const props = defineProps<AdminTableProps>();
-
+const extraCreateData = ref({
+  password: "",
+});
 const {
   dialogOpen,
   loading,
@@ -43,6 +45,7 @@ const {
   defaultItem: props.defaultItem,
   crud: props.crud,
   itemsPerPage: props.itemsPerPage,
+  extraCreateData,
 });
 
 const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
@@ -72,6 +75,12 @@ const tableColumns = computed(() => {
           <q-input v-model="editedItem.firstName" label="Nome" />
           <q-input v-model="editedItem.lastName" label="Sobrenome" />
           <q-input v-model="editedItem.email" label="Email" />
+          <q-input
+            v-if="editedIndex === -1"
+            v-model="extraCreateData.password"
+            label="Senha"
+            type="password"
+          />
           <div class="q-mt-sm">
             <q-checkbox
               v-model="editedItem.isActive"
