@@ -11,6 +11,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/IndexPage.vue"),
       },
     ],
+    meta: {
+      authRequired: true,
+    },
   },
 
   {
@@ -65,13 +68,20 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/admin/ProcessAdminPage.vue"),
       },
     ],
+    meta: {
+      authRequired: true,
+      groupRequired: "ADMINISTRATORS",
+    },
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: "/:catchAll(.*)*",
     component: () => import("pages/ErrorNotFound.vue"),
+  },
+  {
+    path: "/:catchAll(.*)*",
+    name: "forbidden",
+    component: () => import("pages/ErrorForbidden.vue"),
   },
 ];
 

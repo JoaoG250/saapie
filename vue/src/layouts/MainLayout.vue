@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { useAuthStore } from "src/stores/auth";
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 
 const leftDrawerOpen = ref(false);
 const authStore = useAuthStore();
+const router = useRouter();
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
-function handleSignout() {
-  authStore.actions.signout();
+async function handleSignout() {
+  await authStore.actions.signout();
+  await router.push({ name: "signin" });
 }
 </script>
 

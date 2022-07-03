@@ -32,6 +32,10 @@ module.exports = configure(function (/* ctx */) {
         server: false,
         path: "apollo-client",
       },
+      {
+        server: false,
+        path: "auth-store",
+      },
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

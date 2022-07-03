@@ -1,4 +1,5 @@
 import { route } from "quasar/wrappers";
+import { useAuthStore } from "src/stores/auth";
 import {
   createMemoryHistory,
   createRouter,
@@ -17,6 +18,13 @@ import routes from "./routes";
  * with the Router instance.
  */
 
+declare module "vue-router" {
+  interface RouteMeta {
+    authRequired?: boolean;
+    groupRequired?: string;
+  }
+}
+
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -32,6 +40,24 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  Router.beforeEach((to) => {
+    const authStore = useAuthStore();
+
+    if (to.meta.authRequired) {
+      if (!authStore.getters.isAuthenticated()) {
+        return { name: "signin" };
+      }
+    }
+    if (to.meta.groupRequired) {
+      const userIsInGroup = authStore.state.user?.groups.some(
+        (group) => group.name === to.meta.groupRequired
+      );
+      if (!userIsInGroup) {
+        return { name: "forbidden" };
+      }
+    }
   });
 
   return Router;

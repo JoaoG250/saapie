@@ -1,8 +1,4 @@
-<script setup lang="ts">
-import { useAuthStore } from "./stores/auth";
-
-useAuthStore();
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <router-view />

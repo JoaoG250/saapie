@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import { defineStore } from "pinia";
 import {
   SigninMutationResult,
@@ -19,12 +19,12 @@ import {
 } from "src/common/auth";
 import { useAsyncQuery } from "src/composables";
 import { SigninError, SignupError } from "src/errors";
-import { User } from "src/interfaces";
+import { UserWithGroups } from "src/interfaces";
 import { computed, reactive } from "vue";
 
 interface AuthStoreState {
   loading: boolean;
-  user: User | null;
+  user: UserWithGroups | null;
   accessToken: string | undefined;
   refreshToken: string | undefined;
 }
@@ -37,14 +37,6 @@ export const useAuthStore = defineStore("auth", () => {
     refreshToken: getRefreshToken(),
   });
   const isAuthenticated = computed(() => !!state.accessToken);
-  const { onResult } = useQuery<MeQueryResult>(ME_QUERY, undefined, {
-    enabled: isAuthenticated.value,
-    fetchPolicy: "network-only",
-  });
-
-  onResult((result) => {
-    state.user = result.data.me;
-  });
 
   function setTokens(accessToken: string, refreshToken: string) {
     state.accessToken = accessToken;
@@ -61,10 +53,15 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function fetchUser() {
-    const user = await useAsyncQuery<MeQueryResult>(ME_QUERY, {
-      fetchPolicy: "network-only",
-    });
-    state.user = user.me;
+    try {
+      state.loading = true;
+      const user = await useAsyncQuery<MeQueryResult>(ME_QUERY, {
+        fetchPolicy: "network-only",
+      });
+      state.user = user.me;
+    } finally {
+      state.loading = false;
+    }
   }
 
   async function signin(data: SigninMutationVariables) {
@@ -112,7 +109,7 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  function signout() {
+  async function signout() {
     state.user = null;
     clearTokens();
   }
@@ -123,6 +120,7 @@ export const useAuthStore = defineStore("auth", () => {
       isAuthenticated: () => isAuthenticated.value,
     },
     actions: {
+      fetchUser,
       signin,
       signup,
       signout,
