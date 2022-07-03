@@ -24,7 +24,7 @@ interface UseCrudAdminTableArgs<T> {
   itemsPerPage: number;
   extraCreateData?: ExtraData;
   extraUpdateData?: ExtraData;
-  stripFields?: string[];
+  omitOnSave?: string[];
 }
 
 export function useCrudAdminTable<T extends { id: string }>({
@@ -34,7 +34,7 @@ export function useCrudAdminTable<T extends { id: string }>({
   itemsPerPage,
   extraCreateData,
   extraUpdateData,
-  stripFields = [],
+  omitOnSave = [],
 }: UseCrudAdminTableArgs<T>) {
   const $q = useQuasar();
   const loading = ref(true);
@@ -113,7 +113,7 @@ export function useCrudAdminTable<T extends { id: string }>({
   async function save() {
     try {
       const { id, ...itemData } = editedItem.value;
-      const cleanedData = _.omit(itemData, stripFields);
+      const cleanedData = _.omit(itemData, omitOnSave);
       if (editedIndex.value > -1) {
         if (!crud.update) return;
         const extraData = extraUpdateData?.value || {};

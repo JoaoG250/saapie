@@ -50,16 +50,13 @@ const {
   itemsPerPage: props.itemsPerPage,
   extraCreateData: extraData,
   extraUpdateData: extraData,
-  stripFields: ["slug"],
+  omitOnSave: ["slug"],
 });
 
-watch(editedItem, (item) => {
-  extraData.value.form = {
-    name: item.form.name,
-    definition: JSON.stringify(item.form.definition),
-  };
+const forwardFor = ref(Boolean(editedItem.value.forwardToGroupId));
+const showForwardFor = computed(() => {
+  return Boolean(editedItem.value.forwardToGroupId) || forwardFor.value;
 });
-
 const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
 const formTitle = computed(() => {
   return editedIndex.value === -1
@@ -71,6 +68,24 @@ const tableColumns = computed(() => {
     return props.columns;
   }
   return props.columns.filter((column) => column.name !== "actions");
+});
+
+watch(editedItem, (item) => {
+  extraData.value.form = {
+    name: item.form.name,
+    definition: JSON.stringify(item.form.definition),
+  };
+});
+
+watch(forwardFor, (val) => {
+  if (!val) {
+    if (
+      typeof editedItem.value.forwardToGroupId === "string" &&
+      editedItem.value.forwardToGroupId.length === 0
+    ) {
+      editedItem.value.forwardToGroupId = undefined;
+    }
+  }
 });
 </script>
 
@@ -96,6 +111,16 @@ const tableColumns = computed(() => {
             v-model="extraData.form.definition"
             label="Definição do formulário"
             type="textarea"
+          />
+          <q-toggle
+            v-model="forwardFor"
+            class="q-mt-md"
+            label="Emcaminhar para grupo?"
+          />
+          <q-input
+            v-if="showForwardFor"
+            v-model="editedItem.forwardToGroupId"
+            label="Encaminhar para"
           />
         </q-card-section>
         <q-separator />
