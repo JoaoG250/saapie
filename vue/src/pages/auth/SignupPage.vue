@@ -48,7 +48,7 @@ async function signup() {
       <q-card-section>
         <q-input v-model="form.firstName" label="Nome" />
         <q-input v-model="form.lastName" label="Sobrenome" />
-        <q-input v-model="form.email" label="Email" type="email" />
+        <q-input v-model="form.email" label="Email" type="email" name="email" />
         <q-input v-model="form.password" label="Senha" type="password" />
       </q-card-section>
       <q-card-section class="row justify-center">

@@ -6,7 +6,7 @@ export async function useAsyncQuery<
   TVariables extends OperationVariables = OperationVariables
 >(
   document: DocumentNode,
-  options: { variables: TVariables; fetchPolicy?: FetchPolicy }
+  options?: { variables?: TVariables; fetchPolicy?: FetchPolicy }
 ): Promise<TResult> {
   const { resolveClient } = useApolloClient();
   const client = resolveClient();

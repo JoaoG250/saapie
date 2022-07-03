@@ -1,4 +1,4 @@
-import { useMutation } from "@vue/apollo-composable";
+import { useMutation, useQuery } from "@vue/apollo-composable";
 import { defineStore } from "pinia";
 import {
   SigninMutationResult,
@@ -8,6 +8,7 @@ import {
   SignupMutationVariables,
   SIGNUP_MUTATION,
 } from "src/apollo/mutations";
+import { MeQueryResult, ME_QUERY } from "src/apollo/queries";
 import {
   deleteAccessToken,
   deleteRefreshToken,
@@ -16,6 +17,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "src/common/auth";
+import { useAsyncQuery } from "src/composables";
 import { SigninError, SignupError } from "src/errors";
 import { User } from "src/interfaces";
 import { computed, reactive } from "vue";
@@ -35,6 +37,14 @@ export const useAuthStore = defineStore("auth", () => {
     refreshToken: getRefreshToken(),
   });
   const isAuthenticated = computed(() => !!state.accessToken);
+  const { onResult } = useQuery<MeQueryResult>(ME_QUERY, undefined, {
+    enabled: isAuthenticated.value,
+    fetchPolicy: "network-only",
+  });
+
+  onResult((result) => {
+    state.user = result.data.me;
+  });
 
   function setTokens(accessToken: string, refreshToken: string) {
     state.accessToken = accessToken;
@@ -48,6 +58,13 @@ export const useAuthStore = defineStore("auth", () => {
     state.refreshToken = undefined;
     deleteAccessToken();
     deleteRefreshToken();
+  }
+
+  async function fetchUser() {
+    const user = await useAsyncQuery<MeQueryResult>(ME_QUERY, {
+      fetchPolicy: "network-only",
+    });
+    state.user = user.me;
   }
 
   async function signin(data: SigninMutationVariables) {
@@ -65,6 +82,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       const { accessToken, refreshToken } = response.data.signin;
       setTokens(accessToken, refreshToken);
+      await fetchUser();
 
       return {
         accessToken,

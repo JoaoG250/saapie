@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { useAuthStore } from "src/stores/auth";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 
 const leftDrawerOpen = ref(false);
+const authStore = useAuthStore();
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+function handleSignout() {
+  authStore.actions.signout();
 }
 </script>
 
@@ -18,6 +23,32 @@ function toggleLeftDrawer() {
         <q-toolbar-title>
           <router-link :to="{ name: 'index' }">SAAPIE</router-link>
         </q-toolbar-title>
+        <q-btn
+          v-if="authStore.state.user"
+          color="primary"
+          icon="menu"
+          :label="authStore.state.user.firstName"
+        >
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item v-close-popup clickable @click="handleSignout">
+                <q-item-section>
+                  <div class="row justify-between items-center">
+                    Sair
+                    <q-icon name="logout" size="1.2rem" />
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
+        <q-btn
+          v-else
+          :to="{ name: 'signin' }"
+          icon="login"
+          color="secondary"
+          label="Autenticar"
+        />
       </q-toolbar>
     </q-header>
 

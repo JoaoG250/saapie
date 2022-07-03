@@ -39,8 +39,13 @@ async function signin() {
         <div class="text-h4 text-center">Autenticação</div>
       </q-card-section>
       <q-card-section>
-        <q-input v-model="form.email" label="Email" type="email" />
-        <q-input v-model="form.password" label="Senha" type="password" />
+        <q-input v-model="form.email" label="Email" type="email" name="email" />
+        <q-input
+          v-model="form.password"
+          label="Senha"
+          type="password"
+          name="password"
+        />
       </q-card-section>
       <q-card-section class="row justify-center">
         <div class="column text-center">
