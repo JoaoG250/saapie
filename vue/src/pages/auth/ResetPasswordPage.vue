@@ -7,6 +7,8 @@ import {
   RESET_PASSWORD_MUTATION,
 } from "src/apollo/mutations";
 import { PasswordResetError } from "src/errors";
+import { matches } from "src/validation";
+import { userRules } from "src/validation/user";
 import { computed, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -19,7 +21,16 @@ const form = reactive({
   password: "",
   passwordConfirmation: "",
 });
-// TODO: Add field validation
+const confirmPasswordRules = [
+  ...userRules["password"],
+  (value: string) =>
+    matches({
+      value,
+      target: form.password,
+      valueLabel: "Confirmação de senha",
+      targetLabel: "Senha",
+    }),
+];
 
 const token = computed(() => {
   const token = route.params.token;
@@ -76,27 +87,39 @@ async function resetPassword() {
 <template>
   <q-page class="row items-center justify-center">
     <q-card style="width: 450px">
-      <q-card-section>
-        <div class="text-h4 text-center">Redefinir senha</div>
-      </q-card-section>
-      <q-card-section class="column">
-        <q-input v-model="form.password" label="Senha" type="password" />
-        <q-input
-          v-model="form.passwordConfirmation"
-          label="Confirmar senha"
-          type="password"
-        />
-      </q-card-section>
-      <q-card-section class="column">
-        <q-btn
-          color="primary"
-          class="q-mb-lg"
-          label="Redefinir senha"
-          :loading="loading"
-          @click="resetPassword"
-        />
-        <q-btn :to="{ name: 'signin' }" flat label="Voltar para autenticação" />
-      </q-card-section>
+      <q-form @submit="resetPassword">
+        <q-card-section>
+          <div class="text-h4 text-center">Redefinir senha</div>
+        </q-card-section>
+        <q-card-section class="column">
+          <q-input
+            v-model="form.password"
+            label="Senha"
+            type="password"
+            :rules="userRules['password']"
+          />
+          <q-input
+            v-model="form.passwordConfirmation"
+            label="Confirmação de senha"
+            type="password"
+            :rules="confirmPasswordRules"
+          />
+        </q-card-section>
+        <q-card-section class="column">
+          <q-btn
+            :loading="loading"
+            color="primary"
+            class="q-mb-lg"
+            label="Redefinir senha"
+            type="submit"
+          />
+          <q-btn
+            :to="{ name: 'signin' }"
+            flat
+            label="Voltar para autenticação"
+          />
+        </q-card-section>
+      </q-form>
     </q-card>
   </q-page>
 </template>
