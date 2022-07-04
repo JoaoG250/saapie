@@ -9,6 +9,7 @@ import { UsersQueryVariables } from "src/apollo/queries";
 import { User, PageInfo } from "src/interfaces";
 import { computed, ref } from "vue";
 import { useCrudAdminTable } from "src/composables";
+import { userRules } from "src/validation/user";
 
 export interface UserAdminTableProps {
   itemName: string;
@@ -66,35 +67,50 @@ const tableColumns = computed(() => {
   <div class="q-pa-md">
     <q-dialog v-model="dialogOpen" persistent>
       <q-card style="width: 400px">
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6 q-mr-md">{{ formTitle }}</div>
-          <q-space />
-          <q-btn flat round dense icon="close" @click="closeDialog" />
-        </q-card-section>
-        <q-card-section>
-          <q-input v-model="editedItem.firstName" label="Nome" />
-          <q-input v-model="editedItem.lastName" label="Sobrenome" />
-          <q-input v-model="editedItem.email" label="Email" />
-          <q-input
-            v-if="editedIndex === -1"
-            v-model="extraCreateData.password"
-            label="Senha"
-            type="password"
-          />
-          <div class="q-mt-sm">
-            <q-checkbox
-              v-model="editedItem.isActive"
-              class="q-mr-sm"
-              label="Ativo"
+        <q-form @submit="save">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6 q-mr-md">{{ formTitle }}</div>
+            <q-space />
+            <q-btn flat round dense icon="close" @click="closeDialog" />
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="editedItem.firstName"
+              label="Nome"
+              :rules="userRules.firstName"
             />
-            <q-checkbox v-model="editedItem.isVerified" label="Verificado" />
-          </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right">
-          <q-btn label="Cancelar" @click="closeDialog" />
-          <q-btn color="primary" label="Salvar" @click="save" />
-        </q-card-actions>
+            <q-input
+              v-model="editedItem.lastName"
+              label="Sobrenome"
+              :rules="userRules.lastName"
+            />
+            <q-input
+              v-model="editedItem.email"
+              label="Email"
+              :rules="userRules.email"
+            />
+            <q-input
+              v-if="editedIndex === -1"
+              v-model="extraCreateData.password"
+              label="Senha"
+              type="password"
+              :rules="userRules.password"
+            />
+            <div class="q-mt-sm">
+              <q-checkbox
+                v-model="editedItem.isActive"
+                class="q-mr-sm"
+                label="Ativo"
+              />
+              <q-checkbox v-model="editedItem.isVerified" label="Verificado" />
+            </div>
+          </q-card-section>
+          <q-separator />
+          <q-card-actions align="right">
+            <q-btn label="Cancelar" @click="closeDialog" />
+            <q-btn color="primary" label="Salvar" type="submit" />
+          </q-card-actions>
+        </q-form>
       </q-card>
     </q-dialog>
     <q-table

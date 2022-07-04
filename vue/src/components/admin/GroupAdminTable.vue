@@ -9,6 +9,7 @@ import { GroupsQueryVariables } from "src/apollo/queries";
 import { PageInfo, Group } from "src/interfaces";
 import { computed } from "vue";
 import { useCrudAdminTable } from "src/composables";
+import { groupRules } from "src/validation/group";
 
 export interface GroupAdminTableProps {
   itemName: string;
@@ -62,19 +63,25 @@ const tableColumns = computed(() => {
   <div class="q-pa-md">
     <q-dialog v-model="dialogOpen" persistent>
       <q-card style="width: 400px">
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6 q-mr-md">{{ formTitle }}</div>
-          <q-space />
-          <q-btn flat round dense icon="close" @click="closeDialog" />
-        </q-card-section>
-        <q-card-section>
-          <q-input v-model="editedItem.name" label="Nome" />
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right">
-          <q-btn label="Cancelar" @click="closeDialog" />
-          <q-btn color="primary" label="Salvar" @click="save" />
-        </q-card-actions>
+        <q-form @submit="save">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6 q-mr-md">{{ formTitle }}</div>
+            <q-space />
+            <q-btn flat round dense icon="close" @click="closeDialog" />
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="editedItem.name"
+              label="Nome"
+              :rules="groupRules.name"
+            />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions align="right">
+            <q-btn label="Cancelar" @click="closeDialog" />
+            <q-btn color="primary" label="Salvar" type="submit" />
+          </q-card-actions>
+        </q-form>
       </q-card>
     </q-dialog>
     <q-table

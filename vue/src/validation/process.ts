@@ -1,0 +1,46 @@
+import * as yup from "yup";
+import { validateRules } from "./common";
+
+export function validateName(value: string) {
+  const rules = yup
+    .string()
+    .required("Nome é obrigatório")
+    .min(3, "Nome deve ter no mínimo 3 caracteres")
+    .max(80, "Nome deve ter no máximo 80 caracteres")
+    .trim();
+  return validateRules(rules, value);
+}
+
+export function validateDescription(value: string) {
+  const rules = yup
+    .string()
+    .required("Descrição é obrigatória")
+    .min(3, "Descrição deve ter no mínimo 3 caracteres")
+    .max(150, "Descrição deve ter no máximo 150 caracteres")
+    .trim();
+  return validateRules(rules, value);
+}
+
+export function validateFormName(value: string) {
+  const rules = yup
+    .string()
+    .required("Nome do formulário é obrigatório")
+    .min(3, "Nome do formulário deve ter no mínimo 3 caracteres")
+    .max(50, "Nome do formulário deve ter no máximo 50 caracteres")
+    .trim();
+  return validateRules(rules, value);
+}
+
+export function validateFormDefinition(value: unknown) {
+  const rules = yup.object().required();
+  return validateRules(rules, value);
+}
+
+export const processRules = {
+  name: [(value: string) => validateName(value)],
+  description: [(value: string) => validateDescription(value)],
+  form: {
+    name: [(value: string) => validateFormName(value)],
+    definition: [(value: unknown) => validateFormDefinition(value)],
+  },
+};

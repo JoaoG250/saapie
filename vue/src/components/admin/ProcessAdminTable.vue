@@ -9,6 +9,7 @@ import { ProcessesQueryVariables } from "src/apollo/queries";
 import { PageInfo, Process } from "src/interfaces";
 import { computed, ref, watch } from "vue";
 import { useCrudAdminTable } from "src/composables";
+import { processRules } from "src/validation/process";
 
 export interface ProcessAdminTableProps {
   itemName: string;
@@ -93,41 +94,53 @@ watch(forwardFor, (val) => {
   <div class="q-pa-md">
     <q-dialog v-model="dialogOpen" persistent>
       <q-card style="width: 400px">
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6 q-mr-md">{{ formTitle }}</div>
-          <q-space />
-          <q-btn flat round dense icon="close" @click="closeDialog" />
-        </q-card-section>
-        <q-card-section>
-          <q-input v-model="editedItem.name" label="Nome" />
-          <q-input
-            v-model="editedItem.description"
-            label="Descrição"
-            type="textarea"
-          />
-          <q-input v-model="editedItem.targetGroupId" label="Grupo alvo" />
-          <q-input v-model="extraData.form.name" label="Nome do formulário" />
-          <q-input
-            v-model="extraData.form.definition"
-            label="Definição do formulário"
-            type="textarea"
-          />
-          <q-toggle
-            v-model="forwardFor"
-            class="q-mt-md"
-            label="Emcaminhar para grupo?"
-          />
-          <q-input
-            v-if="showForwardFor"
-            v-model="editedItem.forwardToGroupId"
-            label="Encaminhar para"
-          />
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right">
-          <q-btn label="Cancelar" @click="closeDialog" />
-          <q-btn color="primary" label="Salvar" @click="save" />
-        </q-card-actions>
+        <q-form @submit="save">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6 q-mr-md">{{ formTitle }}</div>
+            <q-space />
+            <q-btn flat round dense icon="close" @click="closeDialog" />
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="editedItem.name"
+              label="Nome"
+              :rules="processRules.name"
+            />
+            <q-input
+              v-model="editedItem.description"
+              label="Descrição"
+              type="textarea"
+              :rules="processRules.description"
+            />
+            <q-input v-model="editedItem.targetGroupId" label="Grupo alvo" />
+            <q-input
+              v-model="extraData.form.name"
+              label="Nome do formulário"
+              :rules="processRules.form.name"
+            />
+            <q-input
+              v-model="extraData.form.definition"
+              label="Definição do formulário"
+              type="textarea"
+              :rules="processRules.form.definition"
+            />
+            <q-toggle
+              v-model="forwardFor"
+              class="q-mt-md"
+              label="Emcaminhar para grupo?"
+            />
+            <q-input
+              v-if="showForwardFor"
+              v-model="editedItem.forwardToGroupId"
+              label="Encaminhar para"
+            />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions align="right">
+            <q-btn label="Cancelar" @click="closeDialog" />
+            <q-btn color="primary" label="Salvar" type="submit" />
+          </q-card-actions>
+        </q-form>
       </q-card>
     </q-dialog>
     <q-table
