@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { validateRules } from "./common";
 
-export function validateName(value: string) {
+function validateName(value: string) {
   const rules = yup
     .string()
     .required("Nome é obrigatório")
@@ -11,7 +11,7 @@ export function validateName(value: string) {
   return validateRules(rules, value);
 }
 
-export function validateDescription(value: string) {
+function validateDescription(value: string) {
   const rules = yup
     .string()
     .required("Descrição é obrigatória")
@@ -21,7 +21,7 @@ export function validateDescription(value: string) {
   return validateRules(rules, value);
 }
 
-export function validateFormName(value: string) {
+function validateFormName(value: string) {
   const rules = yup
     .string()
     .required("Nome do formulário é obrigatório")
@@ -31,7 +31,7 @@ export function validateFormName(value: string) {
   return validateRules(rules, value);
 }
 
-export function validateFormDefinition(value: unknown) {
+function validateFormDefinition(value: unknown) {
   const rules = yup.object().required();
   return validateRules(rules, value);
 }

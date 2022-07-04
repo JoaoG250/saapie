@@ -33,6 +33,14 @@ async function handleSignout() {
         >
           <q-menu>
             <q-list style="min-width: 100px">
+              <q-item v-close-popup clickable :to="{ name: 'admin' }">
+                <q-item-section>
+                  <div class="row justify-between items-center">
+                    Admin
+                    <q-icon name="local_police" size="1.2rem" />
+                  </div>
+                </q-item-section>
+              </q-item>
               <q-item v-close-popup clickable @click="handleSignout">
                 <q-item-section>
                   <div class="row justify-between items-center">

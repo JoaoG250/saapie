@@ -63,25 +63,25 @@ async function signup() {
           <q-input
             v-model="form.firstName"
             label="Nome"
-            :rules="userRules['firstName']"
+            :rules="userRules.firstName"
           />
           <q-input
             v-model="form.lastName"
             label="Sobrenome"
-            :rules="userRules['lastName']"
+            :rules="userRules.lastName"
           />
           <q-input
             v-model="form.email"
             label="Email"
             type="email"
             name="email"
-            :rules="userRules['email']"
+            :rules="userRules.email"
           />
           <q-input
             v-model="form.password"
             label="Senha"
             type="password"
-            :rules="userRules['password']"
+            :rules="userRules.password"
           />
           <q-input
             v-model="confirmPassword"

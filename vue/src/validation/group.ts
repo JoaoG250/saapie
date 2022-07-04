@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { validateRules } from "./common";
 
-export function validateName(value: string) {
+function validateName(value: string) {
   const rules = yup
     .string()
     .required("Nome é obrigatório")

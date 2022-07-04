@@ -96,7 +96,7 @@ async function resetPassword() {
             v-model="form.password"
             label="Senha"
             type="password"
-            :rules="userRules['password']"
+            :rules="userRules.password"
           />
           <q-input
             v-model="form.passwordConfirmation"

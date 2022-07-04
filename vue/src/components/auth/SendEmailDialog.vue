@@ -85,7 +85,7 @@ async function sendEmail() {
             v-model="form.email"
             label="Email"
             type="email"
-            :rules="userRules['email']"
+            :rules="userRules.email"
           />
           <q-input
             v-model="form.confirmEmail"

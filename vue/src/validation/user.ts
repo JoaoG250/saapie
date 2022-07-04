@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { validateRules } from "./common";
 
-export function validateFirstName(value: string) {
+function validateFirstName(value: string) {
   const rules = yup
     .string()
     .required("Nome é obrigatório")
@@ -11,7 +11,7 @@ export function validateFirstName(value: string) {
   return validateRules(rules, value);
 }
 
-export function validateLastName(value: string) {
+function validateLastName(value: string) {
   const rules = yup
     .string()
     .required("Sobrenome é obrigatório")
@@ -21,7 +21,7 @@ export function validateLastName(value: string) {
   return validateRules(rules, value);
 }
 
-export function validateEmail(value: string) {
+function validateEmail(value: string) {
   const rules = yup
     .string()
     .required("Email é obrigatório")
@@ -31,7 +31,7 @@ export function validateEmail(value: string) {
   return validateRules(rules, value);
 }
 
-export function validatePassword(value: string) {
+function validatePassword(value: string) {
   const rules = yup
     .string()
     .required("Senha é obrigatória")

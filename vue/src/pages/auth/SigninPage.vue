@@ -45,7 +45,7 @@ async function signin() {
             label="Email"
             type="email"
             name="email"
-            :rules="userRules['email']"
+            :rules="userRules.email"
           />
           <q-input
             v-model="form.password"
