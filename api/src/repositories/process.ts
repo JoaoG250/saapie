@@ -17,13 +17,7 @@ export class ProcessRepository implements IProcessRepository {
     where?: Prisma.ProcessWhereInput;
     orderBy?: Prisma.ProcessOrderByWithRelationInput;
   }): Promise<Process[]> {
-    return this.prisma.process.findMany({
-      skip: args.skip,
-      take: args.take,
-      cursor: args.cursor,
-      where: args.where,
-      orderBy: args.orderBy,
-    });
+    return this.prisma.process.findMany(args);
   }
 
   async create(data: Prisma.ProcessCreateInput): Promise<Process> {

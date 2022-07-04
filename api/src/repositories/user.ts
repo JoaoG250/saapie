@@ -15,13 +15,7 @@ export class UserRepository implements IUserRepository {
     where: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
-    return this.prisma.user.findMany({
-      skip: args.skip,
-      take: args.take,
-      cursor: args.cursor,
-      where: args.where,
-      orderBy: args.orderBy,
-    });
+    return this.prisma.user.findMany(args);
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {

@@ -15,10 +15,7 @@ export class GroupRepository implements IGroupRepository {
     where?: Prisma.GroupWhereInput;
     orderBy?: Prisma.GroupOrderByWithRelationInput | undefined;
   }): Promise<Group[]> {
-    return this.prisma.group.findMany({
-      where: args.where,
-      orderBy: args.orderBy,
-    });
+    return this.prisma.group.findMany(args);
   }
 
   async create(data: Prisma.GroupCreateInput): Promise<Group> {
