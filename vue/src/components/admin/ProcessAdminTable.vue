@@ -53,9 +53,9 @@ const {
   omitOnSave: ["slug"],
 });
 
-const forwardFor = ref(Boolean(editedItem.value.forwardToGroupId));
+const forwardFor = ref(!!editedItem.value.forwardToGroupId);
 const showForwardFor = computed(() => {
-  return Boolean(editedItem.value.forwardToGroupId) || forwardFor.value;
+  return !!editedItem.value.forwardToGroupId || forwardFor.value;
 });
 const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
 const formTitle = computed(() => {

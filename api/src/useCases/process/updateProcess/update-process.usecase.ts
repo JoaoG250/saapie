@@ -104,15 +104,15 @@ export class UpdateProcessUseCase
     if (data.targetGroupId !== process.targetGroup.id) {
       targetGroup = { connect: { id: tgGroup.id } };
     }
-    const addingForwardToGroup = Boolean(
+    const addingForwardToGroup = !!(
       data.forwardToGroupId && !process.forwardToGroup
     );
-    const updatingForwardToGroup = Boolean(
+    const updatingForwardToGroup = !!(
       data.forwardToGroupId &&
-        process.forwardToGroup &&
-        data.forwardToGroupId !== process.forwardToGroup.id
+      process.forwardToGroup &&
+      data.forwardToGroupId !== process.forwardToGroup.id
     );
-    const removingForwardToGroup = Boolean(
+    const removingForwardToGroup = !!(
       !data.forwardToGroupId && process.forwardToGroup
     );
     if (
