@@ -1,39 +1,73 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
-import {
-  CreateUserMutationVariables,
-  DeleteUserMutationVariables,
-  UpdateUserMutationVariables,
-} from "src/apollo/mutations";
-import { UsersQueryVariables } from "src/apollo/queries";
-import { User, PageInfo } from "src/interfaces";
+import { User } from "src/interfaces";
 import { computed, ref } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { userRules } from "src/validation/user";
+import { useUserStore } from "src/stores/user";
 
-export interface UserAdminTableProps {
-  itemName: string;
-  defaultItem: User;
-  columns: NonNullable<QTableProps["columns"]>;
-  crud: {
-    list: (
-      args: UsersQueryVariables
-    ) => Promise<{ items: User[]; pageInfo: PageInfo }>;
-    create?: (args: CreateUserMutationVariables) => Promise<User>;
-    update?: (args: UpdateUserMutationVariables) => Promise<User>;
-    delete?: (args: DeleteUserMutationVariables) => Promise<User>;
-  };
-  itemsPerPage: number;
-}
+const itemName = "Usuário";
+const defaultItem: User = {
+  id: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  isActive: false,
+  isVerified: false,
+};
+const columns: NonNullable<QTableProps["columns"]> = [
+  {
+    name: "firstName",
+    label: "Nome",
+    field: "firstName",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "lastName",
+    label: "Sobrenome",
+    field: "lastName",
+    align: "center",
+    sortable: true,
+  },
+  {
+    name: "email",
+    label: "Email",
+    field: "email",
+    align: "center",
+    sortable: true,
+  },
+  {
+    name: "isActive",
+    label: "Ativo",
+    field: "isActive",
+    align: "center",
+    sortable: true,
+  },
+  {
+    name: "isVerified",
+    label: "Verificado",
+    field: "isVerified",
+    align: "center",
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Ações",
+    align: "right",
+    field: () => {
+      return;
+    },
+  },
+];
 
-const props = defineProps<UserAdminTableProps>();
+const userStore = useUserStore();
 const extraCreateData = ref({
   password: "",
 });
 const {
   dialogOpen,
   loading,
-  items,
   editedIndex,
   editedItem,
   openDialog,
@@ -42,25 +76,22 @@ const {
   deleteItem,
   save,
 } = useCrudAdminTable<User>({
-  itemName: props.itemName,
-  defaultItem: props.defaultItem,
-  crud: props.crud,
-  itemsPerPage: props.itemsPerPage,
+  itemName: itemName,
+  defaultItem: defaultItem,
+  store: userStore,
   extraCreateData,
 });
 
-const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
+const itemNameLowerCase = computed(() => itemName.toLowerCase());
 const formTitle = computed(() => {
   return editedIndex.value === -1
     ? `Novo ${itemNameLowerCase.value}`
     : `Editar ${itemNameLowerCase.value}`;
 });
-const tableColumns = computed(() => {
-  if (props.crud.update || props.crud.delete) {
-    return props.columns;
-  }
-  return props.columns.filter((column) => column.name !== "actions");
-});
+
+const onRequest: QTableProps["onRequest"] = (requestProp) => {
+  userStore.actions.paginate(requestProp.pagination);
+};
 </script>
 
 <template>
@@ -115,15 +146,15 @@ const tableColumns = computed(() => {
     </q-dialog>
     <q-table
       :loading="loading"
-      :rows="items"
-      :columns="tableColumns"
+      :rows="userStore.state.items"
+      :columns="columns"
       row-key="name"
+      @request="onRequest"
     >
       <template #top>
         <div class="q-table__title">{{ itemName }}</div>
         <q-space />
         <q-btn
-          v-if="crud.create"
           :label="`Novo ${itemNameLowerCase}`"
           icon="add"
           color="primary"
@@ -132,15 +163,8 @@ const tableColumns = computed(() => {
       </template>
       <template #body-cell-actions="slotItem">
         <q-td :props="slotItem">
+          <q-btn round icon="edit" size="xs" @click="editItem(slotItem.row)" />
           <q-btn
-            v-if="crud.update"
-            round
-            icon="edit"
-            size="xs"
-            @click="editItem(slotItem.row)"
-          />
-          <q-btn
-            v-if="crud.delete"
             class="q-ml-sm"
             round
             icon="delete"
@@ -148,6 +172,26 @@ const tableColumns = computed(() => {
             @click="deleteItem(slotItem.row)"
           />
         </q-td>
+      </template>
+      <template #pagination="scope">
+        <q-btn
+          icon="chevron_left"
+          color="grey-8"
+          round
+          dense
+          flat
+          :disable="scope.isFirstPage"
+          @click="scope.prevPage"
+        />
+        <q-btn
+          icon="chevron_right"
+          color="grey-8"
+          round
+          dense
+          flat
+          :disable="scope.isLastPage"
+          @click="scope.nextPage"
+        />
       </template>
     </q-table>
   </div>

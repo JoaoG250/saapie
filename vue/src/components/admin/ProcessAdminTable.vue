@@ -1,32 +1,44 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
-import {
-  CreateProcessMutationVariables,
-  DeleteProcessMutationVariables,
-  UpdateProcessMutationVariables,
-} from "src/apollo/mutations";
-import { ProcessesQueryVariables } from "src/apollo/queries";
-import { PageInfo, Process } from "src/interfaces";
+import { Process } from "src/interfaces";
 import { computed, ref, watch } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { processRules } from "src/validation/process";
+import { useProcessStore } from "src/stores/process";
 
-export interface ProcessAdminTableProps {
-  itemName: string;
-  defaultItem: Process;
-  columns: NonNullable<QTableProps["columns"]>;
-  crud: {
-    list: (
-      args: ProcessesQueryVariables
-    ) => Promise<{ items: Process[]; pageInfo: PageInfo }>;
-    create?: (args: CreateProcessMutationVariables) => Promise<Process>;
-    update?: (args: UpdateProcessMutationVariables) => Promise<Process>;
-    delete?: (args: DeleteProcessMutationVariables) => Promise<Process>;
-  };
-  itemsPerPage: number;
-}
+const itemName = "Processo";
+const defaultItem: Process = {
+  id: "",
+  name: "",
+  slug: "",
+  description: "",
+  targetGroupId: "",
+  forwardToGroupId: undefined,
+  form: {
+    id: "",
+    name: "",
+    definition: {},
+  },
+};
+const columns: NonNullable<QTableProps["columns"]> = [
+  {
+    name: "name",
+    label: "Nome",
+    field: "name",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Ações",
+    align: "right",
+    field: () => {
+      return;
+    },
+  },
+];
 
-const props = defineProps<ProcessAdminTableProps>();
+const processStore = useProcessStore();
 const extraData = ref({
   form: {
     name: "",
@@ -36,7 +48,6 @@ const extraData = ref({
 const {
   dialogOpen,
   loading,
-  items,
   editedIndex,
   editedItem,
   openDialog,
@@ -45,10 +56,9 @@ const {
   deleteItem,
   save,
 } = useCrudAdminTable<Process>({
-  itemName: props.itemName,
-  defaultItem: props.defaultItem,
-  crud: props.crud,
-  itemsPerPage: props.itemsPerPage,
+  itemName: itemName,
+  defaultItem: defaultItem,
+  store: processStore,
   extraCreateData: extraData,
   extraUpdateData: extraData,
   omitOnSave: ["slug"],
@@ -58,17 +68,11 @@ const forwardFor = ref(!!editedItem.value.forwardToGroupId);
 const showForwardFor = computed(() => {
   return !!editedItem.value.forwardToGroupId || forwardFor.value;
 });
-const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
+const itemNameLowerCase = computed(() => itemName.toLowerCase());
 const formTitle = computed(() => {
   return editedIndex.value === -1
     ? `Novo ${itemNameLowerCase.value}`
     : `Editar ${itemNameLowerCase.value}`;
-});
-const tableColumns = computed(() => {
-  if (props.crud.update || props.crud.delete) {
-    return props.columns;
-  }
-  return props.columns.filter((column) => column.name !== "actions");
 });
 
 watch(editedItem, (item) => {
@@ -88,6 +92,10 @@ watch(forwardFor, (val) => {
     }
   }
 });
+
+const onRequest: QTableProps["onRequest"] = (requestProp) => {
+  processStore.actions.paginate(requestProp.pagination);
+};
 </script>
 
 <template>
@@ -145,15 +153,15 @@ watch(forwardFor, (val) => {
     </q-dialog>
     <q-table
       :loading="loading"
-      :rows="items"
-      :columns="tableColumns"
+      :rows="processStore.state.items"
+      :columns="columns"
       row-key="name"
+      @request="onRequest"
     >
       <template #top>
         <div class="q-table__title">{{ itemName }}</div>
         <q-space />
         <q-btn
-          v-if="crud.create"
           :label="`Novo ${itemNameLowerCase}`"
           icon="add"
           color="primary"
@@ -162,15 +170,8 @@ watch(forwardFor, (val) => {
       </template>
       <template #body-cell-actions="slotItem">
         <q-td :props="slotItem">
+          <q-btn round icon="edit" size="xs" @click="editItem(slotItem.row)" />
           <q-btn
-            v-if="crud.update"
-            round
-            icon="edit"
-            size="xs"
-            @click="editItem(slotItem.row)"
-          />
-          <q-btn
-            v-if="crud.delete"
             class="q-ml-sm"
             round
             icon="delete"
@@ -178,6 +179,26 @@ watch(forwardFor, (val) => {
             @click="deleteItem(slotItem.row)"
           />
         </q-td>
+      </template>
+      <template #pagination="scope">
+        <q-btn
+          icon="chevron_left"
+          color="grey-8"
+          round
+          dense
+          flat
+          :disable="scope.isFirstPage"
+          @click="scope.prevPage"
+        />
+        <q-btn
+          icon="chevron_right"
+          color="grey-8"
+          round
+          dense
+          flat
+          :disable="scope.isLastPage"
+          @click="scope.nextPage"
+        />
       </template>
     </q-table>
   </div>
