@@ -1,36 +1,38 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
-import {
-  CreateGroupMutationVariables,
-  DeleteGroupMutationVariables,
-  UpdateGroupMutationVariables,
-} from "src/apollo/mutations";
-import { GroupsQueryVariables } from "src/apollo/queries";
-import { PageInfo, Group } from "src/interfaces";
+import { Group } from "src/interfaces";
 import { computed } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { groupRules } from "src/validation/group";
+import { useGroupStore } from "stores/group";
 
-export interface GroupAdminTableProps {
-  itemName: string;
-  defaultItem: Group;
-  columns: NonNullable<QTableProps["columns"]>;
-  crud: {
-    list: (
-      args: GroupsQueryVariables
-    ) => Promise<{ items: Group[]; pageInfo: PageInfo }>;
-    create?: (args: CreateGroupMutationVariables) => Promise<Group>;
-    update?: (args: UpdateGroupMutationVariables) => Promise<Group>;
-    delete?: (args: DeleteGroupMutationVariables) => Promise<Group>;
-  };
-  itemsPerPage: number;
-}
+const itemName = "Grupo";
+const defaultItem: Group = {
+  id: "",
+  name: "",
+};
+const columns: NonNullable<QTableProps["columns"]> = [
+  {
+    name: "name",
+    label: "Nome",
+    field: "name",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Ações",
+    align: "right",
+    field: () => {
+      return;
+    },
+  },
+];
 
-const props = defineProps<GroupAdminTableProps>();
+const groupStore = useGroupStore();
 const {
   dialogOpen,
   loading,
-  items,
   editedIndex,
   editedItem,
   openDialog,
@@ -39,24 +41,21 @@ const {
   deleteItem,
   save,
 } = useCrudAdminTable<Group>({
-  itemName: props.itemName,
-  defaultItem: props.defaultItem,
-  crud: props.crud,
-  itemsPerPage: props.itemsPerPage,
+  itemName: itemName,
+  defaultItem: defaultItem,
+  store: groupStore,
 });
 
-const itemNameLowerCase = computed(() => props.itemName.toLowerCase());
+const itemNameLowerCase = computed(() => itemName.toLowerCase());
 const formTitle = computed(() => {
   return editedIndex.value === -1
     ? `Novo ${itemNameLowerCase.value}`
     : `Editar ${itemNameLowerCase.value}`;
 });
-const tableColumns = computed(() => {
-  if (props.crud.update || props.crud.delete) {
-    return props.columns;
-  }
-  return props.columns.filter((column) => column.name !== "actions");
-});
+
+const onRequest: QTableProps["onRequest"] = (requestProp) => {
+  groupStore.actions.paginate(requestProp.pagination);
+};
 </script>
 
 <template>
@@ -85,16 +84,17 @@ const tableColumns = computed(() => {
       </q-card>
     </q-dialog>
     <q-table
+      v-model:pagination="groupStore.state.pagination"
       :loading="loading"
-      :rows="items"
-      :columns="tableColumns"
+      :rows="groupStore.state.items"
+      :columns="columns"
       row-key="name"
+      @request="onRequest"
     >
       <template #top>
         <div class="q-table__title">{{ itemName }}</div>
         <q-space />
         <q-btn
-          v-if="crud.create"
           :label="`Novo ${itemNameLowerCase}`"
           icon="add"
           color="primary"
@@ -103,15 +103,8 @@ const tableColumns = computed(() => {
       </template>
       <template #body-cell-actions="slotItem">
         <q-td :props="slotItem">
+          <q-btn round icon="edit" size="xs" @click="editItem(slotItem.row)" />
           <q-btn
-            v-if="crud.update"
-            round
-            icon="edit"
-            size="xs"
-            @click="editItem(slotItem.row)"
-          />
-          <q-btn
-            v-if="crud.delete"
             class="q-ml-sm"
             round
             icon="delete"
@@ -119,6 +112,26 @@ const tableColumns = computed(() => {
             @click="deleteItem(slotItem.row)"
           />
         </q-td>
+      </template>
+      <template #pagination="scope">
+        <q-btn
+          icon="chevron_left"
+          color="grey-8"
+          round
+          dense
+          flat
+          :disable="scope.isFirstPage"
+          @click="scope.prevPage"
+        />
+        <q-btn
+          icon="chevron_right"
+          color="grey-8"
+          round
+          dense
+          flat
+          :disable="scope.isLastPage"
+          @click="scope.nextPage"
+        />
       </template>
     </q-table>
   </div>

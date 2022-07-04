@@ -1,7 +1,19 @@
 import * as _ from "lodash";
 import { useQuasar } from "quasar";
-import { PageInfo, PaginationArgs } from "src/interfaces";
-import { onMounted, Ref, ref, watch } from "vue";
+import { Ref, ref, watch } from "vue";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+interface AdminStore<T> {
+  state: {
+    items: T[];
+  };
+  actions: {
+    createItem?: (args: any) => Promise<T>;
+    deleteItem?: (args: any) => Promise<T>;
+    updateItem?: (args: any) => Promise<T>;
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 type ExtraDataTypes =
   | string
@@ -13,15 +25,7 @@ type ExtraData = Ref<{ [key: string]: ExtraDataTypes }>;
 interface UseCrudAdminTableArgs<T> {
   defaultItem: T;
   itemName: string;
-  crud: {
-    list: (args: PaginationArgs) => Promise<{ items: T[]; pageInfo: PageInfo }>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    create?: (args: { data: any }) => Promise<T>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    update?: (args: { id: string; data: any }) => Promise<T>;
-    delete?: (args: { id: string }) => Promise<T>;
-  };
-  itemsPerPage: number;
+  store: AdminStore<T>;
   extraCreateData?: ExtraData;
   extraUpdateData?: ExtraData;
   omitOnSave?: string[];
@@ -30,22 +34,14 @@ interface UseCrudAdminTableArgs<T> {
 export function useCrudAdminTable<T extends { id: string }>({
   defaultItem,
   itemName,
-  crud,
-  itemsPerPage,
+  store,
   extraCreateData,
   extraUpdateData,
   omitOnSave = [],
 }: UseCrudAdminTableArgs<T>) {
   const $q = useQuasar();
-  const loading = ref(true);
+  const loading = ref(false);
   const dialogOpen = ref(false);
-  const items = ref<T[]>([]) as Ref<T[]>;
-  const pageInfo = ref<PageInfo>({
-    startCursor: "",
-    endCursor: "",
-    hasNextPage: false,
-    hasPreviousPage: false,
-  });
   const editedIndex = ref<number>(-1);
   const editedItem = ref<T>({ ...defaultItem }) as Ref<T>;
 
@@ -53,10 +49,6 @@ export function useCrudAdminTable<T extends { id: string }>({
     if (!val) {
       closeDialog();
     }
-  });
-
-  onMounted(() => {
-    initialize();
   });
 
   function openDialog() {
@@ -69,17 +61,8 @@ export function useCrudAdminTable<T extends { id: string }>({
     editedItem.value = { ...defaultItem };
   }
 
-  async function initialize() {
-    const { items: itemsList, pageInfo: pageInfoList } = await crud.list({
-      first: itemsPerPage + 1,
-    });
-    items.value = itemsList;
-    pageInfo.value = pageInfoList;
-    loading.value = false;
-  }
-
   function editItem(item: T) {
-    editedIndex.value = items.value.indexOf(item);
+    editedIndex.value = store.state.items.indexOf(item);
     editedItem.value = {
       ...defaultItem,
       ..._.pick(item, _.keys(defaultItem)),
@@ -88,7 +71,7 @@ export function useCrudAdminTable<T extends { id: string }>({
   }
 
   function deleteItem(item: T) {
-    editedIndex.value = items.value.indexOf(item);
+    editedIndex.value = store.state.items.indexOf(item);
     editedItem.value = {
       ...defaultItem,
       ..._.pick(item, _.keys(defaultItem)),
@@ -100,9 +83,9 @@ export function useCrudAdminTable<T extends { id: string }>({
       persistent: true,
     })
       .onOk(async () => {
-        if (!crud.delete) return;
-        await crud.delete({ id: item.id });
-        items.value.splice(editedIndex.value, 1);
+        if (!store.actions.deleteItem) return;
+        await store.actions.deleteItem({ id: item.id });
+        store.state.items.splice(editedIndex.value, 1);
         closeDialog();
       })
       .onCancel(() => {
@@ -115,20 +98,20 @@ export function useCrudAdminTable<T extends { id: string }>({
       const { id, ...itemData } = editedItem.value;
       const cleanedData = _.omit(itemData, omitOnSave);
       if (editedIndex.value > -1) {
-        if (!crud.update) return;
+        if (!store.actions.updateItem) return;
         const extraData = extraUpdateData?.value || {};
-        const item = await crud.update({
+        const item = await store.actions.updateItem({
           id,
           data: { ...cleanedData, ...extraData },
         });
-        items.value[editedIndex.value] = item;
+        store.state.items[editedIndex.value] = item;
       } else {
-        if (!crud.create) return;
+        if (!store.actions.createItem) return;
         const extraData = extraCreateData?.value || {};
-        const item = await crud.create({
+        const item = await store.actions.createItem({
           data: { ...cleanedData, ...extraData },
         });
-        items.value.push(item);
+        store.state.items.push(item);
       }
       closeDialog();
     } catch (err) {
@@ -147,8 +130,6 @@ export function useCrudAdminTable<T extends { id: string }>({
   return {
     loading,
     dialogOpen,
-    items,
-    pageInfo,
     editedIndex,
     editedItem,
     openDialog,
