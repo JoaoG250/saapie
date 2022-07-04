@@ -35,6 +35,11 @@ export const userQueries = extendType({
         const pagination = parsePaginationArgs(args);
         return getUsersUseCase.execute({ ...pagination });
       },
+      extendConnection(t) {
+        t.int("totalCount", {
+          resolve: (_root, _args, ctx) => ctx.prisma.user.count(),
+        });
+      },
     });
   },
 });

@@ -43,18 +43,6 @@ type Group {
   name: String!
 }
 
-type GroupConnection {
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
-  """
-  edges: [GroupEdge!]!
-
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
-  """
-  pageInfo: PageInfo!
-}
-
 type GroupEdge {
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
   cursor: String!
@@ -123,18 +111,6 @@ type Process {
   targetGroupId: String!
 }
 
-type ProcessConnection {
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
-  """
-  edges: [ProcessEdge!]!
-
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
-  """
-  pageInfo: PageInfo!
-}
-
 type ProcessEdge {
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
   cursor: String!
@@ -163,7 +139,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
-  ): GroupConnection!
+  ): QueryGroups_Connection!
   me: User!
   process(id: ID!): Process
   processes(
@@ -178,7 +154,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
-  ): ProcessConnection!
+  ): QueryProcesses_Connection!
   user(id: ID!): User
   users(
     """Returns the elements in the list that come after the specified cursor"""
@@ -192,7 +168,46 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
-  ): UserConnection!
+  ): QueryUsers_Connection!
+}
+
+type QueryGroups_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [GroupEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryProcesses_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ProcessEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryUsers_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [UserEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input UpdateGroupInput {
@@ -228,18 +243,6 @@ type User {
   isActive: Boolean!
   isVerified: Boolean!
   lastName: String!
-}
-
-type UserConnection {
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
-  """
-  edges: [UserEdge!]!
-
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
-  """
-  pageInfo: PageInfo!
 }
 
 type UserEdge {

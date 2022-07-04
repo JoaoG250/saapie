@@ -34,6 +34,7 @@ export const GROUPS_QUERY = gql`
           name
         }
       }
+      totalCount
     }
   }
 `;
@@ -45,6 +46,7 @@ export interface GroupsQueryResult {
       cursor: string;
       node: GroupType;
     }[];
+    totalCount: number;
   };
 }
 

@@ -20,6 +20,11 @@ export const processQueries = extendType({
         const pagination = parsePaginationArgs(args);
         return getProcessesUseCase.execute({ ...pagination });
       },
+      extendConnection(t) {
+        t.int("totalCount", {
+          resolve: (_root, _args, ctx) => ctx.prisma.process.count(),
+        });
+      },
     });
   },
 });

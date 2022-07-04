@@ -20,6 +20,11 @@ export const groupQueries = extendType({
         const pagination = parsePaginationArgs(args);
         return getGroupsUseCase.execute({ ...pagination });
       },
+      extendConnection(t) {
+        t.int("totalCount", {
+          resolve: (_root, _args, ctx) => ctx.prisma.group.count(),
+        });
+      },
     });
   },
 });

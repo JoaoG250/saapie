@@ -72,6 +72,7 @@ export const USERS_QUERY = gql`
           isVerified
         }
       }
+      totalCount
     }
   }
 `;
@@ -83,6 +84,7 @@ export interface UsersQueryResult {
       cursor: string;
       node: UserType;
     }[];
+    totalCount: number;
   };
 }
 

@@ -52,6 +52,7 @@ export const PROCESSES_QUERY = gql`
           }
         }
       }
+      totalCount
     }
   }
 `;
@@ -63,6 +64,7 @@ export interface ProcessesQueryResult {
       cursor: string;
       node: ProcessType;
     }[];
+    totalCount: number;
   };
 }
 

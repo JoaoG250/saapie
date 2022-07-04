@@ -4,6 +4,10 @@ import { useAuthStore } from "src/stores/auth";
 export default boot(async () => {
   const authStore = useAuthStore();
   if (authStore.getters.isAuthenticated()) {
-    await authStore.actions.fetchUser();
+    try {
+      await authStore.actions.fetchUser();
+    } catch (err) {
+      authStore.actions.signout();
+    }
   }
 });
