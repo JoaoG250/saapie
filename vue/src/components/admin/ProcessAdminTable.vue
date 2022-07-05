@@ -131,6 +131,25 @@ const setForwardToGroup: GroupSelectProps["onChange"] = (option) => {
     editedItem.value.forwardToGroupId = undefined;
   }
 };
+
+const targetGroupInitial = computed(() => {
+  if (editedItem.value.targetGroup.id) {
+    return {
+      label: editedItem.value.targetGroup.name,
+      value: editedItem.value.targetGroup.id,
+    };
+  }
+  return undefined;
+});
+const forwardToGroupInitial = computed(() => {
+  if (editedItem.value.forwardToGroup?.id) {
+    return {
+      label: editedItem.value.forwardToGroup.name,
+      value: editedItem.value.forwardToGroup.id,
+    };
+  }
+  return undefined;
+});
 </script>
 
 <template>
@@ -159,6 +178,7 @@ const setForwardToGroup: GroupSelectProps["onChange"] = (option) => {
               label="Grupo alvo"
               :on-change="setTargetGroup"
               :rules="processRules.targetGroup"
+              :initial-selected="targetGroupInitial"
             />
             <q-input
               v-model="extraData.form.name"
@@ -181,6 +201,7 @@ const setForwardToGroup: GroupSelectProps["onChange"] = (option) => {
               label="Grupo de encaminhamento"
               :on-change="setForwardToGroup"
               :rules="forwardToGroupRules"
+              :initial-selected="forwardToGroupInitial"
             />
           </q-card-section>
           <q-separator />

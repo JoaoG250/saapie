@@ -10,10 +10,11 @@ export interface AppAutocompleteProps {
   onFilter: QSelectProps["onFilter"];
   onChange: QSelectProps["onUpdate:modelValue"];
   rules?: QSelectProps["rules"];
+  initialSelected?: SelectOption;
 }
 
-defineProps<AppAutocompleteProps>();
-const model = ref<SelectOption | null>(null);
+const props = defineProps<AppAutocompleteProps>();
+const model = ref<SelectOption | null>(props.initialSelected || null);
 </script>
 
 <template>

@@ -15,11 +15,14 @@ export interface GroupSelectProps {
   label: string;
   onChange: (option: SelectOption | null | undefined) => void;
   rules?: AppAutocompleteProps["rules"];
+  initialSelected?: SelectOption;
 }
 
-defineProps<GroupSelectProps>();
-const options = ref<SelectOption[]>([]);
-const cache = ref<SelectOption[]>([]);
+const props = defineProps<GroupSelectProps>();
+const options = ref<SelectOption[]>(
+  props.initialSelected ? [props.initialSelected] : []
+);
+const cache = ref<SelectOption[]>([...options.value]);
 const variables = ref<GroupsQueryVariables>({
   first: 5,
 });
@@ -60,6 +63,7 @@ const onFilter: AppAutocompleteProps["onFilter"] = (val, update) => {
     :on-filter="onFilter"
     :on-change="onChange"
     :rules="rules"
+    :initial-selected="initialSelected"
   />
 </template>
 
