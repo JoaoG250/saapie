@@ -4,6 +4,7 @@ import {
   UserWithGroupsType,
   PageInfo,
   PaginationArgs,
+  UserWhereInput,
 } from "src/interfaces";
 
 export const ME_QUERY = gql`
@@ -53,8 +54,20 @@ export interface UserQueryVariables {
 }
 
 export const USERS_QUERY = gql`
-  query users($after: String, $before: String, $first: Int, $last: Int) {
-    users(after: $after, before: $before, first: $first, last: $last) {
+  query users(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $where: UserWhereInput
+  ) {
+    users(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      where: $where
+    ) {
       pageInfo {
         startCursor
         endCursor
@@ -88,4 +101,6 @@ export interface UsersQueryResult {
   };
 }
 
-export type UsersQueryVariables = PaginationArgs;
+export interface UsersQueryVariables extends PaginationArgs {
+  where?: UserWhereInput;
+}

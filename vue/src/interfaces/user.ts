@@ -36,3 +36,7 @@ export interface CreateUserInput {
 }
 
 export type UpdateUserInput = Omit<CreateUserInput, "password">;
+
+export interface UserWhereInput {
+  email?: string;
+}
