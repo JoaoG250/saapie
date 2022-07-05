@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
-import { Process } from "src/interfaces";
+import { Process, SelectOption } from "src/interfaces";
 import { computed, ref, watch } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { processRules } from "src/validation/process";
 import { useProcessStore } from "src/stores/process";
+import GroupSelect, { GroupSelectProps } from "./GroupSelect.vue";
+import { cannotMatch } from "src/validation";
 
 const itemName = "Processo";
 const defaultItem: Process = {
@@ -74,6 +76,15 @@ const formTitle = computed(() => {
     ? `Novo ${itemNameLowerCase.value}`
     : `Editar ${itemNameLowerCase.value}`;
 });
+const forwardToGroupRules = [
+  (value: SelectOption | null) =>
+    cannotMatch({
+      value: value?.value,
+      target: editedItem.value.targetGroupId,
+      valueLabel: "Grupo de encaminhamento",
+      targetLabel: "Grupo de destino",
+    }),
+];
 
 watch(editedItem, (item) => {
   extraData.value.form = {
@@ -95,6 +106,22 @@ watch(forwardFor, (val) => {
 
 const onRequest: QTableProps["onRequest"] = (requestProp) => {
   processStore.actions.paginate(requestProp.pagination);
+};
+
+const setTargetGroup: GroupSelectProps["onChange"] = (option) => {
+  if (option) {
+    editedItem.value.targetGroupId = option.value;
+  } else {
+    editedItem.value.targetGroupId = "";
+  }
+};
+
+const setForwardToGroup: GroupSelectProps["onChange"] = (option) => {
+  if (option) {
+    editedItem.value.forwardToGroupId = option.value;
+  } else {
+    editedItem.value.forwardToGroupId = undefined;
+  }
 };
 </script>
 
@@ -120,7 +147,11 @@ const onRequest: QTableProps["onRequest"] = (requestProp) => {
               type="textarea"
               :rules="processRules.description"
             />
-            <q-input v-model="editedItem.targetGroupId" label="Grupo alvo" />
+            <GroupSelect
+              label="Grupo alvo"
+              :on-change="setTargetGroup"
+              :rules="processRules.targetGroup"
+            />
             <q-input
               v-model="extraData.form.name"
               label="Nome do formulário"
@@ -137,10 +168,11 @@ const onRequest: QTableProps["onRequest"] = (requestProp) => {
               class="q-mt-md"
               label="Emcaminhar para grupo?"
             />
-            <q-input
+            <GroupSelect
               v-if="showForwardFor"
-              v-model="editedItem.forwardToGroupId"
-              label="Encaminhar para"
+              label="Grupo de encaminhamento"
+              :on-change="setForwardToGroup"
+              :rules="forwardToGroupRules"
             />
           </q-card-section>
           <q-separator />

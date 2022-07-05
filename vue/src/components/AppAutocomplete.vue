@@ -9,6 +9,7 @@ export interface AppAutocompleteProps {
   options: SelectOption[];
   onFilter: QSelectProps["onFilter"];
   onChange: QSelectProps["onUpdate:modelValue"];
+  rules?: QSelectProps["rules"];
 }
 
 defineProps<AppAutocompleteProps>();
@@ -24,6 +25,7 @@ const model = ref<SelectOption | null>(null);
     clearable
     :loading="loading"
     :options="options"
+    :rules="rules"
     @filter="onFilter"
     @update:model-value="onChange"
   >

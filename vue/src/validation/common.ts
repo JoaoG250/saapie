@@ -31,3 +31,16 @@ export function matches({
   }
   return `${valueLabel} deve ser igual a ${targetLabel}`;
 }
+
+export function cannotMatch({
+  value,
+  target,
+  valueLabel = "value",
+  targetLabel = "target",
+}: MatchesArgs) {
+  const match = value === target;
+  if (!match) {
+    return true;
+  }
+  return `${valueLabel} não deve ser igual a ${targetLabel}`;
+}

@@ -14,6 +14,7 @@ import AppAutocomplete, {
 export interface GroupSelectProps {
   label: string;
   onChange: (option: SelectOption | null | undefined) => void;
+  rules?: AppAutocompleteProps["rules"];
 }
 
 defineProps<GroupSelectProps>();
@@ -58,6 +59,7 @@ const onFilter: AppAutocompleteProps["onFilter"] = (val, update) => {
     :options="options"
     :on-filter="onFilter"
     :on-change="onChange"
+    :rules="rules"
   />
 </template>
 

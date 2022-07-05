@@ -1,3 +1,4 @@
+import { SelectOption } from "src/interfaces";
 import * as yup from "yup";
 import { validateRules } from "./common";
 
@@ -36,6 +37,15 @@ function validateFormDefinition(value: unknown) {
   return validateRules(rules, value);
 }
 
+function validateTargetGroup(value: SelectOption | null) {
+  const message = "Grupo de destino é obrigatório";
+  if (value === null) {
+    return message;
+  }
+  const rules = yup.string().required(message);
+  return validateRules(rules, value.value);
+}
+
 export const processRules = {
   name: [(value: string) => validateName(value)],
   description: [(value: string) => validateDescription(value)],
@@ -43,4 +53,5 @@ export const processRules = {
     name: [(value: string) => validateFormName(value)],
     definition: [(value: unknown) => validateFormDefinition(value)],
   },
+  targetGroup: [(value: SelectOption | null) => validateTargetGroup(value)],
 };
