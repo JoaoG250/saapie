@@ -51,6 +51,10 @@ type GroupEdge {
   node: Group!
 }
 
+input GroupWhereInput {
+  name: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -139,6 +143,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    where: GroupWhereInput
   ): QueryGroups_Connection!
   me: User!
   process(id: ID!): Process

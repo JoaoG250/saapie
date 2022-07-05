@@ -21,3 +21,10 @@ export const UpdateGroupInput = inputObjectType({
     t.string("name");
   },
 });
+
+export const GroupWhereInput = inputObjectType({
+  name: "GroupWhereInput",
+  definition(t) {
+    t.nullable.string("name");
+  },
+});
