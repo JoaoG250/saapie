@@ -1,3 +1,5 @@
+import { GroupType } from "./group";
+
 export interface ProcessForm {
   id: string;
   name: string;
@@ -12,6 +14,8 @@ export interface Process {
   targetGroupId: string;
   forwardToGroupId: string | null | undefined;
   form: ProcessForm;
+  targetGroup: GroupType;
+  forwardToGroup?: GroupType;
 }
 
 export type ProcessWithoutForm = Omit<Process, "form">;
@@ -28,8 +32,10 @@ export interface ProcessType {
   slug: string;
   description: string;
   targetGroupId: string;
-  forwardToGroupId: string;
+  forwardToGroupId: string | null | undefined;
   form: ProcessFormType;
+  targetGroup: GroupType;
+  forwardToGroup?: GroupType;
 }
 
 export interface CreateProcessFormInput {

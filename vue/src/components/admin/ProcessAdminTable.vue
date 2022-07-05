@@ -21,6 +21,14 @@ const defaultItem: Process = {
     name: "",
     definition: {},
   },
+  targetGroup: {
+    id: "",
+    name: "",
+  },
+  forwardToGroup: {
+    id: "",
+    name: "",
+  },
 };
 const columns: NonNullable<QTableProps["columns"]> = [
   {
@@ -63,7 +71,7 @@ const {
   store: processStore,
   extraCreateData: extraData,
   extraUpdateData: extraData,
-  omitOnSave: ["slug"],
+  omitOnSave: ["slug", "targetGroup", "forwardToGroup"],
 });
 
 const forwardFor = ref(!!editedItem.value.forwardToGroupId);

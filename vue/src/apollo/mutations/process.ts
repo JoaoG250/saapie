@@ -19,6 +19,14 @@ export const CREATE_PROCESS_MUTATION = gql`
         name
         definition
       }
+      targetGroup {
+        id
+        name
+      }
+      forwardToGroup {
+        id
+        name
+      }
     }
   }
 `;
@@ -45,6 +53,14 @@ export const UPDATE_PROCESS_MUTATION = gql`
         name
         definition
       }
+      targetGroup {
+        id
+        name
+      }
+      forwardToGroup {
+        id
+        name
+      }
     }
   }
 `;
@@ -67,6 +83,14 @@ export const DELETE_PROCESS_MUTATION = gql`
       description
       targetGroupId
       forwardToGroupId
+      targetGroup {
+        id
+        name
+      }
+      forwardToGroup {
+        id
+        name
+      }
     }
   }
 `;

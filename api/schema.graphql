@@ -108,10 +108,12 @@ type PageInfo {
 type Process {
   description: String!
   form: ProcessForm
+  forwardToGroup: Group
   forwardToGroupId: String
   id: ID!
   name: String!
   slug: String!
+  targetGroup: Group!
   targetGroupId: String!
 }
 

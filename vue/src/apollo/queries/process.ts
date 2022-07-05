@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { ProcessType, PageInfo, PaginationArgs } from "src/interfaces";
+import { PageInfo, PaginationArgs, ProcessType } from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
   query process($id: ID!) {
@@ -14,6 +14,14 @@ export const PROCESS_QUERY = gql`
         id
         name
         definition
+      }
+      targetGroup {
+        id
+        name
+      }
+      forwardToGroup {
+        id
+        name
       }
     }
   }
@@ -49,6 +57,14 @@ export const PROCESSES_QUERY = gql`
             id
             name
             definition
+          }
+          targetGroup {
+            id
+            name
+          }
+          forwardToGroup {
+            id
+            name
           }
         }
       }
