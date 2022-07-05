@@ -13,3 +13,7 @@ export interface CreateGroupInput {
 }
 
 export type UpdateGroupInput = CreateGroupInput;
+
+export interface GroupWhereInput {
+  name?: string;
+}
