@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
 import { AuthenticationError } from "apollo-server-express";
-import { extendType, idArg } from "nexus";
+import { arg, extendType, idArg, nullable } from "nexus";
 import { UserNotFoundError } from "../../errors";
 import { getUsersUseCase, getUserUseCase } from "../../useCases/user";
 import { parsePaginationArgs } from "../../utils";
@@ -31,9 +32,19 @@ export const userQueries = extendType({
     });
     t.connectionField("users", {
       type: "User",
+      additionalArgs: {
+        where: nullable(arg({ type: "UserWhereInput" })),
+      },
       nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
-        return getUsersUseCase.execute({ ...pagination });
+        let where: Prisma.UserWhereInput | undefined;
+        if (args.where) {
+          where = {};
+          if (args.where.email) {
+            where.email = { contains: args.where.email, mode: "insensitive" };
+          }
+        }
+        return getUsersUseCase.execute({ where, ...pagination });
       },
       extendConnection(t) {
         t.int("totalCount", {

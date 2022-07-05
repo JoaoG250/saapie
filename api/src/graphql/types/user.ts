@@ -44,3 +44,10 @@ export const UpdateUserInput = inputObjectType({
     t.boolean("isVerified");
   },
 });
+
+export const UserWhereInput = inputObjectType({
+  name: "UserWhereInput",
+  definition(t) {
+    t.nullable.string("email");
+  },
+});

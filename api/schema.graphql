@@ -175,6 +175,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    where: UserWhereInput
   ): QueryUsers_Connection!
 }
 
@@ -258,4 +259,8 @@ type UserEdge {
 
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: User!
+}
+
+input UserWhereInput {
+  email: String
 }
