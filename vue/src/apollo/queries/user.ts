@@ -5,6 +5,7 @@ import {
   PageInfo,
   PaginationArgs,
   UserWhereInput,
+  GroupType,
 } from "src/interfaces";
 
 export const ME_QUERY = gql`
@@ -104,3 +105,22 @@ export interface UsersQueryResult {
 export interface UsersQueryVariables extends PaginationArgs {
   where?: UserWhereInput;
 }
+
+export const GET_USER_GROUPS_QUERY = gql`
+  query getUserGroups($id: ID!) {
+    user(id: $id) {
+      groups {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export interface GetUserGroupsQueryResult {
+  user: {
+    groups: GroupType[];
+  };
+}
+
+export type GetUserGroupsQueryVariables = UserQueryVariables;

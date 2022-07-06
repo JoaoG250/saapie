@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { userRules } from "src/validation/user";
 import { useUserStore } from "src/stores/user";
+import EditUserGroups from "./EditUserGroups.vue";
 
 const itemName = "Usuário";
 const defaultItem: User = {
@@ -62,6 +63,7 @@ const columns: NonNullable<QTableProps["columns"]> = [
 ];
 
 const userStore = useUserStore();
+const editGroups = ref(false);
 const extraCreateData = ref({
   password: "",
 });
@@ -135,6 +137,14 @@ const onRequest: QTableProps["onRequest"] = (requestProp) => {
               />
               <q-checkbox v-model="editedItem.isVerified" label="Verificado" />
             </div>
+            <q-btn
+              v-if="editedIndex > -1"
+              class="q-my-sm full-width"
+              color="secondary"
+              label="Editar grupos"
+              @click="editGroups = !editGroups"
+            />
+            <EditUserGroups v-if="editGroups" :user="editedItem" />
           </q-card-section>
           <q-separator />
           <q-card-actions align="right">

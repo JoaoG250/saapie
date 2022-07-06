@@ -81,16 +81,29 @@ export function useCrudAdminTable<T extends { id: string }>({
       message: `Deseja realmente excluir o ${itemName.toLowerCase()}?`,
       cancel: true,
       persistent: true,
-    })
-      .onOk(async () => {
-        if (!store.actions.deleteItem) return;
+    }).onOk(async () => {
+      if (!store.actions.deleteItem) return;
+      try {
         await store.actions.deleteItem({ id: item.id });
+        $q.notify({
+          position: "top",
+          color: "positive",
+          message: `${itemName} excluído com sucesso!`,
+          icon: "check",
+        });
         store.state.items.splice(editedIndex.value, 1);
-        closeDialog();
-      })
-      .onCancel(() => {
-        closeDialog();
-      });
+      } catch (err) {
+        if (err instanceof Error) {
+          $q.notify({
+            position: "top",
+            color: "negative",
+            message: err.message,
+            icon: "report_problem",
+          });
+        }
+        throw err;
+      }
+    });
   }
 
   async function save() {
@@ -104,12 +117,24 @@ export function useCrudAdminTable<T extends { id: string }>({
           id,
           data: { ...cleanedData, ...extraData },
         });
+        $q.notify({
+          position: "top",
+          color: "positive",
+          message: `${itemName} atualizado com sucesso!`,
+          icon: "check",
+        });
         store.state.items[editedIndex.value] = item;
       } else {
         if (!store.actions.createItem) return;
         const extraData = extraCreateData?.value || {};
         const item = await store.actions.createItem({
           data: { ...cleanedData, ...extraData },
+        });
+        $q.notify({
+          position: "top",
+          color: "positive",
+          message: `${itemName} criado com sucesso!`,
+          icon: "check",
         });
         store.state.items.push(item);
       }
