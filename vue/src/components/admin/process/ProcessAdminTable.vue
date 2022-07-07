@@ -5,7 +5,9 @@ import { computed, ref, watch } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { processRules } from "src/validation/process";
 import { useProcessStore } from "src/stores/process";
-import GroupSelect, { GroupSelectProps } from "./GroupSelect.vue";
+import GroupSelect, {
+  GroupSelectProps,
+} from "components/admin/group/GroupSelect.vue";
 import { cannotMatch } from "src/validation";
 
 const itemName = "Processo";

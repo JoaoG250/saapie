@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UserAdminTable from "src/components/admin/UserAdminTable.vue";
-import UserFilter from "../../components/admin/UserFilter.vue";
+import UserAdminTable from "components/admin/user/UserAdminTable.vue";
+import UserFilter from "components/admin/user/UserFilter.vue";
 </script>
 
 <template>

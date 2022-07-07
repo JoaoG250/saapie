@@ -4,7 +4,7 @@ import { useRouter, RouterLink } from "vue-router";
 import { useAuthStore } from "stores/auth";
 import { useQuasar } from "quasar";
 import { userRules } from "src/validation/user";
-import SendEmailDialog from "src/components/auth/SendEmailDialog.vue";
+import SendEmailDialog from "components/auth/SendEmailDialog.vue";
 
 const $q = useQuasar();
 const router = useRouter();

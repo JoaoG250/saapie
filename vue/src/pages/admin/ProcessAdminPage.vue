@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ProcessAdminTable from "src/components/admin/ProcessAdminTable.vue";
+import ProcessAdminTable from "components/admin/process/ProcessAdminTable.vue";
 </script>
 
 <template>

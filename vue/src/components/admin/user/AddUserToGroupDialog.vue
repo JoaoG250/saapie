@@ -8,7 +8,9 @@ import {
 } from "src/apollo/mutations";
 import { Group, User } from "src/interfaces";
 import { ref } from "vue";
-import GroupSelect, { GroupSelectProps } from "./GroupSelect.vue";
+import GroupSelect, {
+  GroupSelectProps,
+} from "components/admin/group/GroupSelect.vue";
 
 interface AddUserToGroupDialogProps {
   user: User;

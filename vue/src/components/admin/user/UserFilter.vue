@@ -21,7 +21,7 @@ function filter() {
     <div class="col-12 col-sm-3">
       <q-btn
         class="full-width full-height"
-        label="Filtrar"
+        label="Buscar"
         type="submit"
         icon="search"
         push

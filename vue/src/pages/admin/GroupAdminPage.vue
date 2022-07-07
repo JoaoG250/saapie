@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupAdminTable from "src/components/admin/GroupAdminTable.vue";
+import GroupAdminTable from "components/admin/group/GroupAdminTable.vue";
 </script>
 
 <template>
