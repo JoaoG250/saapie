@@ -58,15 +58,17 @@ const extraData = ref({
 const {
   dialogOpen,
   loading,
-  editedIndex,
   editedItem,
+  itemNameLowerCase,
+  formTitle,
+  onRequest,
   openDialog,
   closeDialog,
   editItem,
   deleteItem,
   save,
 } = useCrudAdminTable<Process>({
-  itemName: itemName,
+  itemName,
   defaultItem: defaultItem,
   store: processStore,
   extraCreateData: extraData,
@@ -77,12 +79,6 @@ const {
 const forwardFor = ref(!!editedItem.value.forwardToGroupId);
 const showForwardFor = computed(() => {
   return !!editedItem.value.forwardToGroupId || forwardFor.value;
-});
-const itemNameLowerCase = computed(() => itemName.toLowerCase());
-const formTitle = computed(() => {
-  return editedIndex.value === -1
-    ? `Novo ${itemNameLowerCase.value}`
-    : `Editar ${itemNameLowerCase.value}`;
 });
 const forwardToGroupRules = [
   (value: SelectOption | null) =>
@@ -111,10 +107,6 @@ watch(forwardFor, (val) => {
     }
   }
 });
-
-const onRequest: QTableProps["onRequest"] = (requestProp) => {
-  processStore.actions.paginate(requestProp.pagination);
-};
 
 const setTargetGroup: GroupSelectProps["onChange"] = (option) => {
   if (option) {
@@ -216,6 +208,7 @@ const forwardToGroupInitial = computed(() => {
       :loading="loading"
       :rows="processStore.state.items"
       :columns="columns"
+      :no-data-label="`Nenhum ${itemNameLowerCase} encontrado`"
       row-key="name"
       @request="onRequest"
     >

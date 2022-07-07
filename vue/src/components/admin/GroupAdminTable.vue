@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
 import { Group } from "src/interfaces";
-import { computed } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { groupRules } from "src/validation/group";
 import { useGroupStore } from "stores/group";
@@ -33,29 +32,20 @@ const groupStore = useGroupStore();
 const {
   dialogOpen,
   loading,
-  editedIndex,
   editedItem,
+  itemNameLowerCase,
+  formTitle,
+  onRequest,
   openDialog,
   closeDialog,
   editItem,
   deleteItem,
   save,
 } = useCrudAdminTable<Group>({
-  itemName: itemName,
+  itemName,
   defaultItem: defaultItem,
   store: groupStore,
 });
-
-const itemNameLowerCase = computed(() => itemName.toLowerCase());
-const formTitle = computed(() => {
-  return editedIndex.value === -1
-    ? `Novo ${itemNameLowerCase.value}`
-    : `Editar ${itemNameLowerCase.value}`;
-});
-
-const onRequest: QTableProps["onRequest"] = (requestProp) => {
-  groupStore.actions.paginate(requestProp.pagination);
-};
 </script>
 
 <template>
@@ -88,6 +78,7 @@ const onRequest: QTableProps["onRequest"] = (requestProp) => {
       :loading="loading"
       :rows="groupStore.state.items"
       :columns="columns"
+      :no-data-label="`Nenhum ${itemNameLowerCase} encontrado`"
       row-key="name"
       @request="onRequest"
     >

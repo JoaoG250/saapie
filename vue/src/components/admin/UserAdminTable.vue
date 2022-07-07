@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
 import { User } from "src/interfaces";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { userRules } from "src/validation/user";
 import { useUserStore } from "src/stores/user";
@@ -72,28 +72,20 @@ const {
   loading,
   editedIndex,
   editedItem,
+  itemNameLowerCase,
+  formTitle,
+  onRequest,
   openDialog,
   closeDialog,
   editItem,
   deleteItem,
   save,
 } = useCrudAdminTable<User>({
-  itemName: itemName,
+  itemName,
   defaultItem: defaultItem,
   store: userStore,
   extraCreateData,
 });
-
-const itemNameLowerCase = computed(() => itemName.toLowerCase());
-const formTitle = computed(() => {
-  return editedIndex.value === -1
-    ? `Novo ${itemNameLowerCase.value}`
-    : `Editar ${itemNameLowerCase.value}`;
-});
-
-const onRequest: QTableProps["onRequest"] = (requestProp) => {
-  userStore.actions.paginate(requestProp.pagination);
-};
 </script>
 
 <template>
@@ -158,6 +150,7 @@ const onRequest: QTableProps["onRequest"] = (requestProp) => {
       :loading="loading"
       :rows="userStore.state.items"
       :columns="columns"
+      :no-data-label="`Nenhum ${itemNameLowerCase} encontrado`"
       row-key="name"
       @request="onRequest"
     >

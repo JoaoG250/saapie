@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { useQuasar } from "quasar";
-import { Ref, ref, watch } from "vue";
+import { QTableProps, useQuasar } from "quasar";
+import { computed, Ref, ref, watch } from "vue";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface AdminStore<T> {
@@ -8,6 +8,12 @@ interface AdminStore<T> {
     items: T[];
   };
   actions: {
+    paginate: (paginate: {
+      sortBy: string;
+      descending: boolean;
+      page: number;
+      rowsPerPage: number;
+    }) => void;
     createItem?: (args: any) => Promise<T>;
     deleteItem?: (args: any) => Promise<T>;
     updateItem?: (args: any) => Promise<T>;
@@ -44,6 +50,16 @@ export function useCrudAdminTable<T extends { id: string }>({
   const dialogOpen = ref(false);
   const editedIndex = ref<number>(-1);
   const editedItem = ref<T>({ ...defaultItem }) as Ref<T>;
+  const itemNameLowerCase = computed(() => itemName.toLowerCase());
+  const formTitle = computed(() => {
+    return editedIndex.value === -1
+      ? `Novo ${itemNameLowerCase.value}`
+      : `Editar ${itemNameLowerCase.value}`;
+  });
+
+  const onRequest: QTableProps["onRequest"] = (requestProp) => {
+    store.actions.paginate(requestProp.pagination);
+  };
 
   watch(dialogOpen, (val) => {
     if (!val) {
@@ -78,7 +94,7 @@ export function useCrudAdminTable<T extends { id: string }>({
     };
     $q.dialog({
       title: "Confirmação",
-      message: `Deseja realmente excluir o ${itemName.toLowerCase()}?`,
+      message: `Deseja realmente excluir o ${itemNameLowerCase.value}?`,
       cancel: true,
       persistent: true,
     }).onOk(async () => {
@@ -157,6 +173,9 @@ export function useCrudAdminTable<T extends { id: string }>({
     dialogOpen,
     editedIndex,
     editedItem,
+    itemNameLowerCase,
+    formTitle,
+    onRequest,
     openDialog,
     closeDialog,
     editItem,

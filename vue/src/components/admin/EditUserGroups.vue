@@ -104,7 +104,12 @@ async function removeUserFromGroup(group: Group) {
       />
     </template>
   </AddUserToGroupDialog>
-  <q-table :rows="groups" :columns="columns" row-key="name">
+  <q-table
+    :rows="groups"
+    :columns="columns"
+    row-key="name"
+    no-data-label="Nenhum grupo encontrado"
+  >
     <template #body-cell-actions="slotItem">
       <q-td :props="slotItem">
         <q-btn
