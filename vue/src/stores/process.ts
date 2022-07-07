@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import { defineStore } from "pinia";
 import {
   CreateProcessMutationResult,
@@ -16,6 +16,7 @@ import {
   ProcessesQueryVariables,
   PROCESSES_QUERY,
 } from "src/apollo/queries";
+import { useAsyncQuery } from "src/composables";
 import {
   Process,
   PageInfo,
@@ -23,7 +24,7 @@ import {
   TablePaginateArgs,
   TablePagination,
 } from "src/interfaces";
-import { reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { tablePaginate } from "./helpers";
 
 interface ProcessStoreState {
@@ -49,28 +50,37 @@ export const useProcessStore = defineStore("process", () => {
       rowsPerPage: 10,
     },
   });
+  const loading = ref(false);
   const fetchVariables = ref<PaginationArgs>({
     first: state.pagination.rowsPerPage,
   });
-  const { onResult, loading: queryLoading } = useQuery<
-    ProcessesQueryResult,
-    ProcessesQueryVariables
-  >(PROCESSES_QUERY, fetchVariables, { fetchPolicy: "network-only" });
-  const loading = ref(queryLoading.value);
 
-  watch(queryLoading, (val) => {
-    loading.value = val;
+  onMounted(() => {
+    fetch();
   });
 
-  onResult((result) => {
-    state.items = result.data.processes.edges.map(({ node }) => node);
-    state.pageInfo = result.data.processes.pageInfo;
-    state.totalCount = result.data.processes.totalCount;
-    state.pagination.rowsNumber = result.data.processes.totalCount;
-  });
+  async function fetch() {
+    try {
+      loading.value = true;
+      const data = await useAsyncQuery<
+        ProcessesQueryResult,
+        ProcessesQueryVariables
+      >(PROCESSES_QUERY, {
+        variables: fetchVariables.value,
+        fetchPolicy: "network-only",
+      });
+      state.items = data.processes.edges.map(({ node }) => node);
+      state.pageInfo = data.processes.pageInfo;
+      state.totalCount = data.processes.totalCount;
+      state.pagination.rowsNumber = data.processes.totalCount;
+    } finally {
+      loading.value = false;
+    }
+  }
 
   function paginate(paginate: TablePaginateArgs) {
     tablePaginate(state, paginate, fetchVariables);
+    fetch();
   }
 
   async function createItem(args: CreateProcessMutationVariables) {
@@ -127,7 +137,6 @@ export const useProcessStore = defineStore("process", () => {
   return {
     loading,
     state,
-    fetchVariables,
     actions: {
       paginate,
       createItem,

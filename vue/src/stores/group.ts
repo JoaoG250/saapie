@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import { defineStore } from "pinia";
 import {
   CreateGroupMutationResult,
@@ -16,6 +16,7 @@ import {
   GroupsQueryVariables,
   GROUPS_QUERY,
 } from "src/apollo/queries";
+import { useAsyncQuery } from "src/composables";
 import {
   Group,
   PageInfo,
@@ -23,7 +24,7 @@ import {
   PaginationArgs,
   TablePagination,
 } from "src/interfaces";
-import { reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { tablePaginate } from "./helpers";
 
 interface GroupStoreState {
@@ -49,28 +50,37 @@ export const useGroupStore = defineStore("group", () => {
       rowsPerPage: 10,
     },
   });
+  const loading = ref(false);
   const fetchVariables = ref<PaginationArgs>({
     first: state.pagination.rowsPerPage,
   });
-  const { onResult, loading: queryLoading } = useQuery<
-    GroupsQueryResult,
-    GroupsQueryVariables
-  >(GROUPS_QUERY, fetchVariables, { fetchPolicy: "network-only" });
-  const loading = ref(queryLoading.value);
 
-  watch(queryLoading, (val) => {
-    loading.value = val;
+  onMounted(() => {
+    fetch();
   });
 
-  onResult((result) => {
-    state.items = result.data.groups.edges.map(({ node }) => node);
-    state.pageInfo = result.data.groups.pageInfo;
-    state.totalCount = result.data.groups.totalCount;
-    state.pagination.rowsNumber = result.data.groups.totalCount;
-  });
+  async function fetch() {
+    try {
+      loading.value = true;
+      const data = await useAsyncQuery<GroupsQueryResult, GroupsQueryVariables>(
+        GROUPS_QUERY,
+        {
+          variables: fetchVariables.value,
+          fetchPolicy: "network-only",
+        }
+      );
+      state.items = data.groups.edges.map(({ node }) => node);
+      state.pageInfo = data.groups.pageInfo;
+      state.totalCount = data.groups.totalCount;
+      state.pagination.rowsNumber = data.groups.totalCount;
+    } finally {
+      loading.value = false;
+    }
+  }
 
   function paginate(paginate: TablePaginateArgs) {
     tablePaginate(state, paginate, fetchVariables);
+    fetch();
   }
 
   async function createItem(args: CreateGroupMutationVariables) {
@@ -127,7 +137,6 @@ export const useGroupStore = defineStore("group", () => {
   return {
     loading,
     state,
-    fetchVariables,
     actions: {
       paginate,
       createItem,

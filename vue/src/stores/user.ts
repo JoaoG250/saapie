@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import { defineStore } from "pinia";
 import {
   CreateUserMutationResult,
@@ -16,6 +16,7 @@ import {
   UsersQueryVariables,
   USERS_QUERY,
 } from "src/apollo/queries";
+import { useAsyncQuery } from "src/composables";
 import {
   User,
   PageInfo,
@@ -23,7 +24,7 @@ import {
   TablePaginateArgs,
   TablePagination,
 } from "src/interfaces";
-import { reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { tablePaginate } from "./helpers";
 
 interface UserStoreState {
@@ -49,28 +50,34 @@ export const useUserStore = defineStore("user", () => {
       rowsPerPage: 10,
     },
   });
+  const loading = ref(false);
   const fetchVariables = ref<UsersQueryVariables>({
     first: state.pagination.rowsPerPage,
   });
-  const { onResult, loading: queryLoading } = useQuery<
-    UsersQueryResult,
-    UsersQueryVariables
-  >(USERS_QUERY, fetchVariables, { fetchPolicy: "network-only" });
-  const loading = ref(queryLoading.value);
 
-  watch(queryLoading, (val) => {
-    loading.value = val;
+  onMounted(() => {
+    fetch();
   });
 
-  onResult((result) => {
-    state.items = result.data.users.edges.map(({ node }) => node);
-    state.pageInfo = result.data.users.pageInfo;
-    state.totalCount = result.data.users.totalCount;
-    state.pagination.rowsNumber = result.data.users.totalCount;
-  });
+  async function fetch() {
+    try {
+      loading.value = true;
+      const data = await useAsyncQuery<UsersQueryResult, UsersQueryVariables>(
+        USERS_QUERY,
+        { variables: fetchVariables.value, fetchPolicy: "network-only" }
+      );
+      state.items = data.users.edges.map(({ node }) => node);
+      state.pageInfo = data.users.pageInfo;
+      state.totalCount = data.users.totalCount;
+      state.pagination.rowsNumber = data.users.totalCount;
+    } finally {
+      loading.value = false;
+    }
+  }
 
   function paginate(paginate: TablePaginateArgs) {
     tablePaginate(state, paginate, fetchVariables);
+    fetch();
   }
 
   function filter(filter: UserWhereInput) {
@@ -79,6 +86,7 @@ export const useUserStore = defineStore("user", () => {
     } else {
       fetchVariables.value.where = undefined;
     }
+    fetch();
   }
 
   async function createItem(args: CreateUserMutationVariables) {
@@ -137,7 +145,6 @@ export const useUserStore = defineStore("user", () => {
   return {
     loading,
     state,
-    fetchVariables,
     actions: {
       filter,
       paginate,
