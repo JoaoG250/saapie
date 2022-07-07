@@ -16,7 +16,7 @@ import {
   UsersQueryVariables,
   USERS_QUERY,
 } from "src/apollo/queries";
-import { User, PageInfo, PaginationArgs } from "src/interfaces";
+import { User, PageInfo, UserWhereInput } from "src/interfaces";
 import { reactive, ref, watch } from "vue";
 
 interface UserStoreState {
@@ -48,7 +48,7 @@ export const useUserStore = defineStore("user", () => {
       rowsPerPage: 10,
     },
   });
-  const fetchVariables = ref<PaginationArgs>({
+  const fetchVariables = ref<UsersQueryVariables>({
     first: state.pagination.rowsPerPage,
   });
   const { onResult, loading: queryLoading } = useQuery<
@@ -98,6 +98,14 @@ export const useUserStore = defineStore("user", () => {
         fetchVariables.value.last = paginate.rowsPerPage;
       }
       state.pagination = { ...state.pagination, ...paginate };
+    }
+  }
+
+  function filter(filter: UserWhereInput) {
+    if (filter.email) {
+      fetchVariables.value.where = { email: filter.email };
+    } else {
+      fetchVariables.value.where = undefined;
     }
   }
 
@@ -159,6 +167,7 @@ export const useUserStore = defineStore("user", () => {
     state,
     fetchVariables,
     actions: {
+      filter,
       paginate,
       createItem,
       updateItem,
