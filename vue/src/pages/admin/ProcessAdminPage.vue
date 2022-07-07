@@ -3,7 +3,7 @@ import ProcessAdminTable from "src/components/admin/ProcessAdminTable.vue";
 </script>
 
 <template>
-  <q-page>
+  <q-page class="q-pa-md">
     <ProcessAdminTable />
   </q-page>
 </template>

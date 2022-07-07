@@ -3,7 +3,7 @@ import GroupAdminTable from "src/components/admin/GroupAdminTable.vue";
 </script>
 
 <template>
-  <q-page>
+  <q-page class="q-pa-md">
     <GroupAdminTable />
   </q-page>
 </template>
