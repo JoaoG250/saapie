@@ -46,7 +46,6 @@ export function useCrudAdminTable<T extends { id: string }>({
   omitOnSave = [],
 }: UseCrudAdminTableArgs<T>) {
   const $q = useQuasar();
-  const loading = ref(false);
   const dialogOpen = ref(false);
   const editedIndex = ref<number>(-1);
   const editedItem = ref<T>({ ...defaultItem }) as Ref<T>;
@@ -169,7 +168,6 @@ export function useCrudAdminTable<T extends { id: string }>({
   }
 
   return {
-    loading,
     dialogOpen,
     editedIndex,
     editedItem,

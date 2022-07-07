@@ -69,7 +69,6 @@ const extraCreateData = ref({
 });
 const {
   dialogOpen,
-  loading,
   editedIndex,
   editedItem,
   itemNameLowerCase,
@@ -141,16 +140,22 @@ const {
           <q-separator />
           <q-card-actions align="right">
             <q-btn label="Cancelar" @click="closeDialog" />
-            <q-btn color="primary" label="Salvar" type="submit" />
+            <q-btn
+              :loading="userStore.loading"
+              color="primary"
+              label="Salvar"
+              type="submit"
+            />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
     <q-table
-      :loading="loading"
+      :loading="userStore.loading"
       :rows="userStore.state.items"
       :columns="columns"
       :no-data-label="`Nenhum ${itemNameLowerCase} encontrado`"
+      loading-label="Carregando..."
       row-key="name"
       @request="onRequest"
     >

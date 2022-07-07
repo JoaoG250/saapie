@@ -20,7 +20,6 @@ import { Process, PageInfo, PaginationArgs } from "src/interfaces";
 import { reactive, ref, watch } from "vue";
 
 interface ProcessStoreState {
-  loading: boolean;
   items: Process[];
   pageInfo: PageInfo;
   totalCount: number;
@@ -35,7 +34,6 @@ interface ProcessStoreState {
 
 export const useProcessStore = defineStore("process", () => {
   const state = reactive<ProcessStoreState>({
-    loading: false,
     items: [],
     pageInfo: {
       startCursor: "",
@@ -50,7 +48,6 @@ export const useProcessStore = defineStore("process", () => {
       rowsPerPage: 10,
     },
   });
-
   const fetchVariables = ref<PaginationArgs>({
     first: state.pagination.rowsPerPage,
   });
@@ -58,9 +55,10 @@ export const useProcessStore = defineStore("process", () => {
     ProcessesQueryResult,
     ProcessesQueryVariables
   >(PROCESSES_QUERY, fetchVariables, { fetchPolicy: "network-only" });
+  const loading = ref(queryLoading.value);
 
   watch(queryLoading, (val) => {
-    state.loading = val;
+    loading.value = val;
   });
 
   onResult((result) => {
@@ -104,42 +102,58 @@ export const useProcessStore = defineStore("process", () => {
   }
 
   async function createItem(args: CreateProcessMutationVariables) {
-    const { mutate } = await useMutation<
-      CreateProcessMutationResult,
-      CreateProcessMutationVariables
-    >(CREATE_PROCESS_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error creating process");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        CreateProcessMutationResult,
+        CreateProcessMutationVariables
+      >(CREATE_PROCESS_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error creating process");
+      }
+      return response.data.createProcess;
+    } finally {
+      loading.value = false;
     }
-    return response.data.createProcess;
   }
 
   async function updateItem(args: UpdateProcessMutationVariables) {
-    const { mutate } = await useMutation<
-      UpdateProcessMutationResult,
-      UpdateProcessMutationVariables
-    >(UPDATE_PROCESS_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error updating process");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        UpdateProcessMutationResult,
+        UpdateProcessMutationVariables
+      >(UPDATE_PROCESS_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error updating process");
+      }
+      return response.data.updateProcess;
+    } finally {
+      loading.value = false;
     }
-    return response.data.updateProcess;
   }
 
   async function deleteItem(args: DeleteProcessMutationVariables) {
-    const { mutate } = await useMutation<
-      DeleteProcessMutationResult,
-      DeleteProcessMutationVariables
-    >(DELETE_PROCESS_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error deleting process");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        DeleteProcessMutationResult,
+        DeleteProcessMutationVariables
+      >(DELETE_PROCESS_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error deleting process");
+      }
+      return response.data.deleteProcess;
+    } finally {
+      loading.value = false;
     }
-    return response.data.deleteProcess;
   }
 
   return {
+    loading,
     state,
     fetchVariables,
     actions: {

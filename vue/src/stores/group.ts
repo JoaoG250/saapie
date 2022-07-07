@@ -20,7 +20,6 @@ import { Group, PageInfo, PaginationArgs } from "src/interfaces";
 import { reactive, ref, watch } from "vue";
 
 interface GroupStoreState {
-  loading: boolean;
   items: Group[];
   pageInfo: PageInfo;
   totalCount: number;
@@ -35,7 +34,6 @@ interface GroupStoreState {
 
 export const useGroupStore = defineStore("group", () => {
   const state = reactive<GroupStoreState>({
-    loading: false,
     items: [],
     pageInfo: {
       startCursor: "",
@@ -50,7 +48,6 @@ export const useGroupStore = defineStore("group", () => {
       rowsPerPage: 10,
     },
   });
-
   const fetchVariables = ref<PaginationArgs>({
     first: state.pagination.rowsPerPage,
   });
@@ -58,9 +55,10 @@ export const useGroupStore = defineStore("group", () => {
     GroupsQueryResult,
     GroupsQueryVariables
   >(GROUPS_QUERY, fetchVariables, { fetchPolicy: "network-only" });
+  const loading = ref(queryLoading.value);
 
   watch(queryLoading, (val) => {
-    state.loading = val;
+    loading.value = val;
   });
 
   onResult((result) => {
@@ -104,42 +102,58 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function createItem(args: CreateGroupMutationVariables) {
-    const { mutate } = await useMutation<
-      CreateGroupMutationResult,
-      CreateGroupMutationVariables
-    >(CREATE_GROUP_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error creating group");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        CreateGroupMutationResult,
+        CreateGroupMutationVariables
+      >(CREATE_GROUP_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error creating group");
+      }
+      return response.data.createGroup;
+    } finally {
+      loading.value = false;
     }
-    return response.data.createGroup;
   }
 
   async function updateItem(args: UpdateGroupMutationVariables) {
-    const { mutate } = await useMutation<
-      UpdateGroupMutationResult,
-      UpdateGroupMutationVariables
-    >(UPDATE_GROUP_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error updating group");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        UpdateGroupMutationResult,
+        UpdateGroupMutationVariables
+      >(UPDATE_GROUP_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error updating group");
+      }
+      return response.data.updateGroup;
+    } finally {
+      loading.value = false;
     }
-    return response.data.updateGroup;
   }
 
   async function deleteItem(args: DeleteGroupMutationVariables) {
-    const { mutate } = await useMutation<
-      DeleteGroupMutationResult,
-      DeleteGroupMutationVariables
-    >(DELETE_GROUP_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error deleting group");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        DeleteGroupMutationResult,
+        DeleteGroupMutationVariables
+      >(DELETE_GROUP_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error deleting group");
+      }
+      return response.data.deleteGroup;
+    } finally {
+      loading.value = false;
     }
-    return response.data.deleteGroup;
   }
 
   return {
+    loading,
     state,
     fetchVariables,
     actions: {

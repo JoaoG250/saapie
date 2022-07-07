@@ -39,7 +39,7 @@ const columns: NonNullable<QTableProps["columns"]> = [
     },
   },
 ];
-const { onResult } = useQuery<
+const { onResult, loading } = useQuery<
   GetUserGroupsQueryResult,
   GetUserGroupsQueryVariables
 >(
@@ -105,8 +105,10 @@ async function removeUserFromGroup(group: Group) {
     </template>
   </AddUserToGroupDialog>
   <q-table
+    :loading="loading"
     :rows="groups"
     :columns="columns"
+    loading-label="Carregando..."
     row-key="name"
     no-data-label="Nenhum grupo encontrado"
   >

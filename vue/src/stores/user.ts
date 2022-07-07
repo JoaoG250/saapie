@@ -20,7 +20,6 @@ import { User, PageInfo, PaginationArgs } from "src/interfaces";
 import { reactive, ref, watch } from "vue";
 
 interface UserStoreState {
-  loading: boolean;
   items: User[];
   pageInfo: PageInfo;
   totalCount: number;
@@ -35,7 +34,6 @@ interface UserStoreState {
 
 export const useUserStore = defineStore("user", () => {
   const state = reactive<UserStoreState>({
-    loading: false,
     items: [],
     pageInfo: {
       startCursor: "",
@@ -50,7 +48,6 @@ export const useUserStore = defineStore("user", () => {
       rowsPerPage: 10,
     },
   });
-
   const fetchVariables = ref<PaginationArgs>({
     first: state.pagination.rowsPerPage,
   });
@@ -58,9 +55,10 @@ export const useUserStore = defineStore("user", () => {
     UsersQueryResult,
     UsersQueryVariables
   >(USERS_QUERY, fetchVariables, { fetchPolicy: "network-only" });
+  const loading = ref(queryLoading.value);
 
   watch(queryLoading, (val) => {
-    state.loading = val;
+    loading.value = val;
   });
 
   onResult((result) => {
@@ -104,44 +102,60 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function createItem(args: CreateUserMutationVariables) {
-    const { mutate } = await useMutation<
-      CreateUserMutationResult,
-      CreateUserMutationVariables
-    >(CREATE_USER_MUTATION, {
-      variables: args,
-    });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error creating user");
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        CreateUserMutationResult,
+        CreateUserMutationVariables
+      >(CREATE_USER_MUTATION, {
+        variables: args,
+      });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error creating user");
+      }
+      return response.data.createUser;
+    } finally {
+      loading.value = false;
     }
-    return response.data.createUser;
   }
 
   async function updateItem(args: UpdateUserMutationVariables) {
-    const { mutate } = useMutation<
-      UpdateUserMutationResult,
-      UpdateUserMutationVariables
-    >(UPDATE_USER_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error updating user");
+    try {
+      loading.value = true;
+      const { mutate } = useMutation<
+        UpdateUserMutationResult,
+        UpdateUserMutationVariables
+      >(UPDATE_USER_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error updating user");
+      }
+      return response.data.updateUser;
+    } finally {
+      loading.value = false;
     }
-    return response.data.updateUser;
   }
 
   async function deleteItem(args: DeleteUserMutationVariables) {
-    const { mutate } = useMutation<
-      DeleteUserMutationResult,
-      DeleteUserMutationVariables
-    >(DELETE_USER_MUTATION, { variables: args });
-    const response = await mutate();
-    if (!response?.data) {
-      throw new Error("Error deleting user");
+    try {
+      loading.value = true;
+      const { mutate } = useMutation<
+        DeleteUserMutationResult,
+        DeleteUserMutationVariables
+      >(DELETE_USER_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error deleting user");
+      }
+      return response.data.deleteUser;
+    } finally {
+      loading.value = false;
     }
-    return response.data.deleteUser;
   }
 
   return {
+    loading,
     state,
     fetchVariables,
     actions: {

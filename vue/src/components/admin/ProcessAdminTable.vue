@@ -57,7 +57,6 @@ const extraData = ref({
 });
 const {
   dialogOpen,
-  loading,
   editedItem,
   itemNameLowerCase,
   formTitle,
@@ -199,16 +198,22 @@ const forwardToGroupInitial = computed(() => {
           <q-separator />
           <q-card-actions align="right">
             <q-btn label="Cancelar" @click="closeDialog" />
-            <q-btn color="primary" label="Salvar" type="submit" />
+            <q-btn
+              :loading="processStore.loading"
+              color="primary"
+              label="Salvar"
+              type="submit"
+            />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
     <q-table
-      :loading="loading"
+      :loading="processStore.loading"
       :rows="processStore.state.items"
       :columns="columns"
       :no-data-label="`Nenhum ${itemNameLowerCase} encontrado`"
+      loading-label="Carregando..."
       row-key="name"
       @request="onRequest"
     >
