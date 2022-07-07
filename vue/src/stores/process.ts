@@ -16,20 +16,21 @@ import {
   ProcessesQueryVariables,
   PROCESSES_QUERY,
 } from "src/apollo/queries";
-import { Process, PageInfo, PaginationArgs } from "src/interfaces";
+import {
+  Process,
+  PageInfo,
+  PaginationArgs,
+  TablePaginateArgs,
+  TablePagination,
+} from "src/interfaces";
 import { reactive, ref, watch } from "vue";
+import { tablePaginate } from "./helpers";
 
 interface ProcessStoreState {
   items: Process[];
   pageInfo: PageInfo;
   totalCount: number;
-  pagination: {
-    page: number;
-    rowsNumber: number;
-    descending?: boolean;
-    rowsPerPage?: number;
-    sortBy?: string;
-  };
+  pagination: TablePagination;
 }
 
 export const useProcessStore = defineStore("process", () => {
@@ -68,37 +69,8 @@ export const useProcessStore = defineStore("process", () => {
     state.pagination.rowsNumber = result.data.processes.totalCount;
   });
 
-  function paginate(paginate: {
-    sortBy: string;
-    descending: boolean;
-    page: number;
-    rowsPerPage: number;
-  }) {
-    const goingForward = paginate.page > state.pagination.page;
-    const goingBackward = paginate.page < state.pagination.page;
-    if (goingForward && state.pageInfo.hasNextPage) {
-      fetchVariables.value = {
-        first: paginate.rowsPerPage,
-        after: state.pageInfo.endCursor,
-      };
-      state.pagination = { ...state.pagination, ...paginate };
-    } else if (goingBackward && state.pageInfo.hasPreviousPage) {
-      fetchVariables.value = {
-        last: paginate.rowsPerPage,
-        before: state.pageInfo.startCursor,
-      };
-      state.pagination = { ...state.pagination, ...paginate };
-    } else if (
-      !!paginate.rowsPerPage &&
-      paginate.rowsPerPage !== state.pagination.rowsPerPage
-    ) {
-      if (fetchVariables.value.first) {
-        fetchVariables.value.first = paginate.rowsPerPage;
-      } else {
-        fetchVariables.value.last = paginate.rowsPerPage;
-      }
-      state.pagination = { ...state.pagination, ...paginate };
-    }
+  function paginate(paginate: TablePaginateArgs) {
+    tablePaginate(state, paginate, fetchVariables);
   }
 
   async function createItem(args: CreateProcessMutationVariables) {

@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import { QTableProps, useQuasar } from "quasar";
+import { TablePaginateArgs } from "src/interfaces";
 import { computed, Ref, ref, watch } from "vue";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -8,12 +9,7 @@ interface AdminStore<T> {
     items: T[];
   };
   actions: {
-    paginate: (paginate: {
-      sortBy: string;
-      descending: boolean;
-      page: number;
-      rowsPerPage: number;
-    }) => void;
+    paginate: (paginate: TablePaginateArgs) => void;
     createItem?: (args: any) => Promise<T>;
     deleteItem?: (args: any) => Promise<T>;
     updateItem?: (args: any) => Promise<T>;
