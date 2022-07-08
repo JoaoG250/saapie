@@ -90,7 +90,8 @@ export function useCrudAdminTable<T extends { id: string }>({
     $q.dialog({
       title: "Confirmação",
       message: `Deseja realmente excluir o ${itemNameLowerCase.value}?`,
-      cancel: true,
+      ok: { label: "Ok" },
+      cancel: { flat: true, label: "Cancelar" },
       persistent: true,
     }).onOk(async () => {
       if (!store.actions.deleteItem) return;

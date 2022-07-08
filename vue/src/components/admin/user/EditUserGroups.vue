@@ -65,7 +65,8 @@ async function removeUserFromGroup(group: Group) {
   $q.dialog({
     title: "Confirmação",
     message: "Deseja realmente remover o usuário do grupo?",
-    cancel: true,
+    ok: { label: "Ok" },
+    cancel: { flat: true, label: "Cancelar" },
     persistent: true,
   }).onOk(async () => {
     try {
