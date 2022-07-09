@@ -36,9 +36,8 @@ onResult((result) => {
   process.value = result.data.process;
 });
 
-function submitHandler(event: Event) {
-  event.preventDefault();
-  console.log(event);
+function submitHandler(data: unknown) {
+  console.log(data);
 }
 </script>
 

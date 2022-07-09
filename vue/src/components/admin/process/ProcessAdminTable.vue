@@ -146,8 +146,8 @@ const forwardToGroupInitial = computed(() => {
 </script>
 
 <template>
-  <q-dialog v-model="dialogOpen" persistent>
-    <q-card style="width: 400px">
+  <q-dialog v-model="dialogOpen" maximized persistent>
+    <q-card>
       <q-form @submit="save">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6 q-mr-md">{{ formTitle }}</div>
