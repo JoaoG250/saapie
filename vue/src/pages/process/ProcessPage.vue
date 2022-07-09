@@ -19,10 +19,10 @@ const schema = computed<FormKitSchemaNode[]>(() => {
   }
   return [];
 });
-const processId = computed<string>(() => {
-  const id = route.params.id;
-  if (typeof id === "string") {
-    return id;
+const processSlug = computed<string>(() => {
+  const slug = route.params.slug;
+  if (typeof slug === "string") {
+    return slug;
   } else {
     throw new Error("Invalid id");
   }
@@ -31,7 +31,7 @@ const processId = computed<string>(() => {
 const { onResult, loading } = useQuery<
   ProcessQueryResult,
   ProcessQueryVariables
->(PROCESS_QUERY, { id: processId.value }, { fetchPolicy: "network-only" });
+>(PROCESS_QUERY, { slug: processSlug.value }, { fetchPolicy: "network-only" });
 onResult((result) => {
   process.value = result.data.process;
 });

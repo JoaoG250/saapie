@@ -1,6 +1,7 @@
-import { extendType, idArg } from "nexus";
+import { UserInputError } from "apollo-server-express";
+import { extendType, idArg, nullable, stringArg } from "nexus";
 import { getProcessesUseCase, getProcessUseCase } from "../../useCases/process";
-import { parsePaginationArgs } from "../../utils";
+import { parsePaginationArgs, removeNullability } from "../../utils";
 
 export const processQueries = extendType({
   type: "Query",
@@ -8,10 +9,17 @@ export const processQueries = extendType({
     t.nullable.field("process", {
       type: "Process",
       args: {
-        id: idArg(),
+        id: nullable(idArg()),
+        slug: nullable(stringArg()),
       },
       resolve(_root, args) {
-        return getProcessUseCase.execute(args);
+        if (!args.id && !args.slug) {
+          throw new UserInputError("Must provide an id or slug");
+        }
+        return getProcessUseCase.execute({
+          id: removeNullability(args.id),
+          slug: removeNullability(args.slug),
+        });
       },
     });
     t.connectionField("processes", {

@@ -27,7 +27,7 @@ onResult((result) => {
         <div class="col-12 col-md-4">
           <router-link
             class="muted-link"
-            :to="{ name: 'process', params: { id: process.id } }"
+            :to="{ name: 'process', params: { slug: process.slug } }"
           >
             <q-card>
               <q-card-section>

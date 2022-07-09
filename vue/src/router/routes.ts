@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/process/ProcessesPage.vue"),
       },
       {
-        path: "/processes/:id",
+        path: "/processes/:slug",
         name: "process",
         component: () => import("pages/process/ProcessPage.vue"),
       },

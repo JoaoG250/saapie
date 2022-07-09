@@ -148,7 +148,7 @@ type Query {
     where: GroupWhereInput
   ): QueryGroups_Connection!
   me: User!
-  process(id: ID!): Process
+  process(id: ID, slug: String): Process
   processes(
     """Returns the elements in the list that come after the specified cursor"""
     after: String

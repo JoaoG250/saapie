@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 import { PageInfo, PaginationArgs, ProcessType } from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
-  query process($id: ID!) {
-    process(id: $id) {
+  query process($id: ID, $slug: String) {
+    process(id: $id, slug: $slug) {
       id
       name
       slug
@@ -32,7 +32,8 @@ export interface ProcessQueryResult {
 }
 
 export interface ProcessQueryVariables {
-  id: string;
+  id?: string;
+  slug?: string;
 }
 
 export const PROCESSES_QUERY = gql`
