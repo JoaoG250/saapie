@@ -36,6 +36,10 @@ module.exports = configure(function (/* ctx */) {
         server: false,
         path: "auth-store",
       },
+      {
+        server: false,
+        path: "form-kit",
+      },
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
