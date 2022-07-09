@@ -32,11 +32,25 @@ db_setup() {
     echo "\n${green}${h_spacer} Migrations applied ${h_spacer}${reset}\n"
 }
 
+create_administrator() {
+    cd ${work_dir}
+
+    echo "\n${white}${h_spacer} Creating administrator ${h_spacer}${reset}\n"
+    yarn ts-node src/commands/createAdministrator.ts
+    if [ $? -ne 0 ]; then
+        echo "\n${red}${e_spacer} Error creating administrator ${e_spacer}${reset}\n"
+        exit 1
+    fi
+
+    echo "\n${green}${h_spacer} Administrator created ${h_spacer}${reset}\n"
+}
+
 case $1 in
 
 setup)
     yarn_install
     db_setup
+    create_administrator
     ;;
 
 development)
