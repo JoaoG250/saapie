@@ -27,7 +27,7 @@ describe("CreateProcessUseCase", () => {
       description: "Test Form Description",
       form: {
         name: "Test Form",
-        definition: {},
+        definition: [],
       },
       targetGroupId: "1",
       forwardToGroupId: "2",
@@ -109,7 +109,7 @@ describe("CreateProcessUseCase", () => {
       description: "Test Form Description",
       form: {
         name: "Test Form",
-        definition: {},
+        definition: [],
       },
       targetGroupId: "1",
       forwardToGroupId: "2",
@@ -136,7 +136,7 @@ describe("CreateProcessUseCase", () => {
       description: "Test Form Description",
       form: {
         name: "Test Form",
-        definition: {},
+        definition: [],
       },
       targetGroupId: "1",
     };

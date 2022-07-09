@@ -5,7 +5,7 @@ export interface UpdateProcessDto {
     description: string;
     form: {
       name: string;
-      definition: object;
+      definition: object[];
     };
     targetGroupId: string;
     forwardToGroupId?: string;

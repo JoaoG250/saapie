@@ -21,7 +21,7 @@ const defaultItem: Process = {
   form: {
     id: "",
     name: "",
-    definition: {},
+    definition: [],
   },
   targetGroup: {
     id: "",

@@ -10,6 +10,16 @@ const routes: RouteRecordRaw[] = [
         name: "index",
         component: () => import("pages/IndexPage.vue"),
       },
+      {
+        path: "/processes",
+        name: "processes",
+        component: () => import("pages/process/ProcessesPage.vue"),
+      },
+      {
+        path: "/processes/:id",
+        name: "process",
+        component: () => import("pages/process/ProcessPage.vue"),
+      },
     ],
     meta: {
       authRequired: true,

@@ -3,7 +3,7 @@ export interface CreateProcessDto {
   description: string;
   form: {
     name: string;
-    definition: object;
+    definition: object[];
   };
   targetGroupId: string;
   forwardToGroupId?: string;

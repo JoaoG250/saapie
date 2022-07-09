@@ -19,13 +19,7 @@ function filter() {
       <q-input v-model="userFilter.email" label="Email" outlined />
     </div>
     <div class="col-12 col-sm-3">
-      <q-btn
-        class="full-width full-height"
-        label="Buscar"
-        type="submit"
-        icon="search"
-        push
-      />
+      <q-btn class="fit" label="Buscar" type="submit" icon="search" push />
     </div>
   </q-form>
 </template>

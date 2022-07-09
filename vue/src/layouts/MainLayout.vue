@@ -6,6 +6,13 @@ import { RouterLink, useRouter } from "vue-router";
 const leftDrawerOpen = ref(false);
 const authStore = useAuthStore();
 const router = useRouter();
+const menuList = [
+  {
+    icon: "account_tree",
+    label: "Processos",
+    to: { name: "processes" },
+  },
+];
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -25,8 +32,16 @@ async function handleSignout() {
         <q-toolbar-title>
           <router-link :to="{ name: 'index' }">SAAPIE</router-link>
         </q-toolbar-title>
+
+        <q-tabs>
+          <template v-for="(item, index) in menuList" :key="index">
+            <q-route-tab :label="item.label" :to="item.to" exact />
+          </template>
+        </q-tabs>
+
         <q-btn
           v-if="authStore.state.user"
+          class="q-ml-md"
           color="primary"
           icon="menu"
           :label="authStore.state.user.firstName"
@@ -69,7 +84,18 @@ async function handleSignout() {
       behavior="mobile"
       bordered
     >
-      <!-- drawer content -->
+      <q-list>
+        <template v-for="(item, index) in menuList" :key="index">
+          <q-item :to="item.to" exact clickable>
+            <q-item-section avatar>
+              <q-icon :name="item.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ item.label }}
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-list>
     </q-drawer>
 
     <q-page-container>

@@ -3,7 +3,7 @@ import { GroupType } from "./group";
 export interface ProcessForm {
   id: string;
   name: string;
-  definition: object;
+  definition: object[];
 }
 
 export interface Process {
@@ -23,7 +23,7 @@ export type ProcessWithoutForm = Omit<Process, "form">;
 export interface ProcessFormType {
   id: string;
   name: string;
-  definition: object;
+  definition: object[];
 }
 
 export interface ProcessType {
@@ -40,7 +40,7 @@ export interface ProcessType {
 
 export interface CreateProcessFormInput {
   name: string;
-  definition: object;
+  definition: object[];
 }
 
 export interface CreateProcessInput {

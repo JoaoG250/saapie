@@ -33,7 +33,7 @@ function validateFormName(value: string) {
 }
 
 function validateFormDefinition(value: unknown) {
-  const rules = yup.object().required();
+  const rules = yup.array().of(yup.object()).required();
   return validateRules(rules, value);
 }
 
