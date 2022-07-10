@@ -1,6 +1,7 @@
 import { PageInfo } from "./relay";
 
 export * from "./relay";
+export * from "./formkit";
 export * from "./user";
 export * from "./group";
 export * from "./process";
