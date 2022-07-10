@@ -1,4 +1,4 @@
-import { inputObjectType, objectType } from "nexus";
+import { enumType, inputObjectType, objectType } from "nexus";
 
 export const ProcessForm = objectType({
   name: "ProcessForm",
@@ -55,6 +55,21 @@ export const Process = objectType({
   },
 });
 
+export const ProcessRequestStatus = enumType({
+  name: "ProcessRequestStatus",
+  members: ["OPEN", "PENDING_CHANGE", "CLOSED"],
+});
+
+export const ProcessRequest = objectType({
+  name: "ProcessRequest",
+  definition(t) {
+    t.id("id");
+    t.field("status", { type: "ProcessRequestStatus" });
+    t.string("processId");
+    t.string("userId");
+  },
+});
+
 export const CreateProcessFormInput = inputObjectType({
   name: "CreateProcessFormInput",
   definition(t) {
@@ -90,5 +105,14 @@ export const UpdateProcessInput = inputObjectType({
     t.id("targetGroupId");
     t.nullable.id("forwardToGroupId");
     t.field("form", { type: "UpdateProcessFormInput" });
+  },
+});
+
+export const CreateProcessRequestInput = inputObjectType({
+  name: "CreateProcessRequestInput",
+  definition(t) {
+    t.string("processId");
+    t.string("userId");
+    t.json("data");
   },
 });

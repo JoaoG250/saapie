@@ -1,5 +1,6 @@
 import { UserInputError } from "apollo-server-express";
-import { arg, extendType, idArg } from "nexus";
+import { FileUpload } from "graphql-upload";
+import { arg, extendType, idArg, list } from "nexus";
 import { ValidationError } from "yup";
 import {
   GroupNotFoundError,
@@ -87,6 +88,22 @@ export const ProcessMutations = extendType({
           }
           throw err;
         }
+      },
+    });
+    t.field("createProcessRequest", {
+      type: "ProcessRequest",
+      args: {
+        data: arg({ type: "CreateProcessRequestInput" }),
+        attachments: list(arg({ type: "Upload" })),
+      },
+      async resolve(_root, args) {
+        console.log(args.data);
+
+        args.attachments.map(async (attachment: FileUpload) => {
+          const { createReadStream, filename, mimetype, encoding } =
+            await attachment;
+          console.log(filename);
+        });
       },
     });
   },
