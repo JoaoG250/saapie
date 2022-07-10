@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import express, { NextFunction, Request, Response } from "express";
 import { ApolloServer } from "apollo-server-express";
+import { graphqlUploadExpress } from "graphql-upload";
 import { expressjwt, UnauthorizedError } from "express-jwt";
 import { schema } from "./schema";
 import { buildContext } from "./context";
@@ -48,6 +49,7 @@ async function startServer(): Promise<void> {
   });
 
   await apolloServer.start();
+  app.use(graphqlUploadExpress());
   apolloServer.applyMiddleware({ app });
 
   app.listen(port);
