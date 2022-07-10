@@ -107,12 +107,3 @@ export const UpdateProcessInput = inputObjectType({
     t.field("form", { type: "UpdateProcessFormInput" });
   },
 });
-
-export const CreateProcessRequestInput = inputObjectType({
-  name: "CreateProcessRequestInput",
-  definition(t) {
-    t.string("processId");
-    t.string("userId");
-    t.json("data");
-  },
-});

@@ -24,12 +24,6 @@ input CreateProcessInput {
   targetGroupId: ID!
 }
 
-input CreateProcessRequestInput {
-  data: JSON!
-  processId: String!
-  userId: String!
-}
-
 input CreateUserInput {
   email: String!
   firstName: String!
@@ -71,7 +65,7 @@ type Mutation {
   addUserToGroup(groupId: ID!, userId: ID!): Boolean!
   createGroup(data: CreateGroupInput!): Group!
   createProcess(data: CreateProcessInput!): Process!
-  createProcessRequest(attachments: [Upload!]!, data: CreateProcessRequestInput!): ProcessRequest!
+  createProcessRequest(attachments: [Upload!], data: JSON!, processId: ID, processSlug: String): ProcessRequest!
   createUser(data: CreateUserInput!): User!
   deleteGroup(id: ID!): Group!
   deleteProcess(id: ID!): Process!

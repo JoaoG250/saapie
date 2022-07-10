@@ -1,6 +1,6 @@
 import { UserInputError } from "apollo-server-express";
 import { FileUpload } from "graphql-upload";
-import { arg, extendType, idArg, list } from "nexus";
+import { arg, extendType, idArg, list, nullable, stringArg } from "nexus";
 import { ValidationError } from "yup";
 import {
   GroupNotFoundError,
@@ -93,17 +93,26 @@ export const ProcessMutations = extendType({
     t.field("createProcessRequest", {
       type: "ProcessRequest",
       args: {
-        data: arg({ type: "CreateProcessRequestInput" }),
-        attachments: list(arg({ type: "Upload" })),
+        processId: nullable(idArg()),
+        processSlug: nullable(stringArg()),
+        data: arg({ type: "JSON" }),
+        attachments: nullable(list(arg({ type: "Upload" }))),
       },
       async resolve(_root, args) {
+        if (!args.processId && !args.processSlug) {
+          throw new UserInputError(
+            "Must provide either a processId or processSlug"
+          );
+        }
         console.log(args.data);
 
-        args.attachments.map(async (attachment: FileUpload) => {
-          const { createReadStream, filename, mimetype, encoding } =
-            await attachment;
-          console.log(filename);
-        });
+        if (args.attachments) {
+          args.attachments.map(async (attachment: FileUpload) => {
+            const { createReadStream, filename, mimetype, encoding } =
+              await attachment;
+            console.log(filename);
+          });
+        }
       },
     });
   },

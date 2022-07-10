@@ -1,7 +1,6 @@
 import gql from "graphql-tag";
 import {
   CreateProcessInput,
-  CreateProcessRequestInput,
   ProcessRequestType,
   ProcessType,
   UpdateProcessInput,
@@ -107,10 +106,17 @@ export interface DeleteProcessMutationVariables {
 
 export const CREATE_PROCESS_REQUEST_MUTATION = gql`
   mutation createProcessRequest(
-    $data: CreateProcessRequestInput!
-    $attachments: [Upload!]!
+    $processId: ID
+    $processSlug: String
+    $data: JSON!
+    $attachments: [Upload!]
   ) {
-    createProcessRequest(data: $data, attachments: $attachments) {
+    createProcessRequest(
+      processId: $processId
+      processSlug: $processSlug
+      data: $data
+      attachments: $attachments
+    ) {
       id
       status
       processId
@@ -124,6 +130,8 @@ export interface CreateProcessRequestMutationResult {
 }
 
 export interface CreateProcessRequestMutationVariables {
-  data: CreateProcessRequestInput;
-  attachments: File[];
+  processId?: string;
+  processSlug?: string;
+  data: object | object[];
+  attachments?: File[];
 }

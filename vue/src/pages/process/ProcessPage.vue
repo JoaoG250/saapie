@@ -102,7 +102,8 @@ async function submitHandler(data: FormKitData) {
     CreateProcessRequestMutationVariables
   >(CREATE_PROCESS_REQUEST_MUTATION, {
     variables: {
-      data: { data, processId: "", userId: "" },
+      data,
+      processSlug: processSlug.value,
       attachments: files,
     },
   });

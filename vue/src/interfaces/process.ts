@@ -59,9 +59,3 @@ export interface ProcessRequestType {
   processId: string;
   userId: string;
 }
-
-export interface CreateProcessRequestInput {
-  processId: string;
-  userId: string;
-  data: object | object[];
-}
