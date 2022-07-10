@@ -1,6 +1,8 @@
 import gql from "graphql-tag";
 import {
   CreateProcessInput,
+  CreateProcessRequestInput,
+  ProcessRequestType,
   ProcessType,
   UpdateProcessInput,
 } from "src/interfaces";
@@ -101,4 +103,27 @@ export interface DeleteProcessMutationResult {
 
 export interface DeleteProcessMutationVariables {
   id: string;
+}
+
+export const CREATE_PROCESS_REQUEST_MUTATION = gql`
+  mutation createProcessRequest(
+    $data: CreateProcessRequestInput!
+    $attachments: [Upload!]!
+  ) {
+    createProcessRequest(data: $data, attachments: $attachments) {
+      id
+      status
+      processId
+      userId
+    }
+  }
+`;
+
+export interface CreateProcessRequestMutationResult {
+  createProcessRequest: ProcessRequestType;
+}
+
+export interface CreateProcessRequestMutationVariables {
+  data: CreateProcessRequestInput;
+  attachments: File[];
 }
