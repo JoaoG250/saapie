@@ -25,7 +25,6 @@ services:
     volumes:
       - ./api:/home/node/saapie/api
     ports:
-      - "4000:4000"
       - "5555:5555" # Prisma studio
     depends_on:
       - db
@@ -41,7 +40,16 @@ services:
     command: development
     volumes:
       - ./vue:/home/node/saapie/vue
-    ports:
-      - "9000:9000"
     depends_on:
       - api
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./logs/nginx:/var/log/nginx
+      - ./api/public:/usr/share/nginx/html/public
+    ports:
+      - "9000:80"
+    depends_on:
+      - vue

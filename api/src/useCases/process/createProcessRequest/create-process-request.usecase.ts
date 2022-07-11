@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import config from "config";
 import { Process, ProcessRequest, User } from "@prisma/client";
 import {
   IntegrityError,
@@ -16,6 +17,9 @@ import {
 } from "../../../interfaces";
 import { CreateProcessRequestDto } from "./create-process-request.dto";
 import { FileUpload } from "graphql-upload";
+
+const publicUrl: string = config.get("server.publicUrl");
+const publicDir: string = config.get("server.publicDir");
 
 export class CreateProcessRequestUseCase
   implements IUseCase<CreateProcessRequestDto, ProcessRequest>
@@ -57,7 +61,7 @@ export class CreateProcessRequestUseCase
   }
 
   async saveFile(stream: fs.ReadStream, filename: string): Promise<string> {
-    const filePath = path.resolve(__dirname, "../../../../uploads", filename);
+    const filePath = path.join(publicDir, filename);
     return new Promise((resolve, reject) => {
       stream
         .pipe(fs.createWriteStream(filePath))
@@ -86,14 +90,15 @@ export class CreateProcessRequestUseCase
         const { createReadStream, filename, mimetype } = await attachment;
         if (!filename) throw new Error("No file uploaded");
         const stream = createReadStream();
-        const path = await this.saveFile(stream, filename);
+        await this.saveFile(stream, filename);
+        const fileUrl = path.join(publicUrl, filename);
         await this.processRequestAttachmentRepository.create({
           name: filename,
           type: this.getFileType(mimetype),
-          url: path,
+          url: fileUrl,
           processRequest: { connect: { id: processRequest.id } },
         });
-        files[filename] = [...(files[filename] || []), { name: path }];
+        files[filename] = [...(files[filename] || []), { name: fileUrl }];
       })
     );
     return files;

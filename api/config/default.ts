@@ -1,3 +1,4 @@
+import path from "path";
 function getEnvironmentVariable(name: string): string {
   const value = process.env[name];
   if (!value) {
@@ -8,12 +9,18 @@ function getEnvironmentVariable(name: string): string {
 
 const accessTokenSecret = getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET");
 const refreshTokenSecret = getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET");
+const rootDir = path.resolve(__dirname, "../");
+const publicUrl = "/public/";
+const publicDir = path.join(rootDir, publicUrl);
 
 export default {
   server: {
     domain: getEnvironmentVariable("DOMAIN"),
     protocol: getEnvironmentVariable("PROTOCOL"),
     port: 4000,
+    rootDir,
+    publicUrl,
+    publicDir,
   },
   mail: {
     userName: getEnvironmentVariable("MAIL_USER_NAME"),
