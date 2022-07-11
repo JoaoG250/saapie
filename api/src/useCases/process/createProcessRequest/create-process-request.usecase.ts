@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import config from "config";
+import cuid from "cuid";
 import { Process, ProcessRequest, User } from "@prisma/client";
 import {
   IntegrityError,
@@ -62,6 +63,9 @@ export class CreateProcessRequestUseCase
 
   async saveFile(stream: fs.ReadStream, filename: string): Promise<string> {
     const filePath = path.join(publicDir, filename);
+    if (!fs.existsSync(path.dirname(filePath))) {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    }
     return new Promise((resolve, reject) => {
       stream
         .pipe(fs.createWriteStream(filePath))
@@ -90,10 +94,16 @@ export class CreateProcessRequestUseCase
         const { createReadStream, filename, mimetype } = await attachment;
         if (!filename) throw new Error("No file uploaded");
         const stream = createReadStream();
-        await this.saveFile(stream, filename);
-        const fileUrl = path.join(publicUrl, filename);
+        const date = new Date();
+        const newFileName = path.join(
+          date.getFullYear().toString(),
+          (date.getMonth() + 1).toString(),
+          cuid() + path.extname(filename)
+        );
+        await this.saveFile(stream, newFileName);
+        const fileUrl = path.join(publicUrl, newFileName);
         await this.processRequestAttachmentRepository.create({
-          name: filename,
+          name: newFileName,
           type: this.getFileType(mimetype),
           url: fileUrl,
           processRequest: { connect: { id: processRequest.id } },
