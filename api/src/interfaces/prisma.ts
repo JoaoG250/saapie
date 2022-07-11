@@ -10,4 +10,4 @@ export interface PrismaPaginationArgs {
   skip?: PrismaPaginationSkip;
 }
 
-export type JsonValue = NonNullable<Prisma.JsonValue>;
+export type JsonValue = Prisma.JsonObject | Prisma.JsonArray;

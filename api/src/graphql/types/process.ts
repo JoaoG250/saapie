@@ -67,6 +67,7 @@ export const ProcessRequest = objectType({
     t.field("status", { type: "ProcessRequestStatus" });
     t.string("processId");
     t.string("userId");
+    t.json("data");
   },
 });
 

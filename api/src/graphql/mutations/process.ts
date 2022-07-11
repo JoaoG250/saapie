@@ -1,13 +1,14 @@
-import { UserInputError } from "apollo-server-express";
-import { FileUpload } from "graphql-upload";
+import { AuthenticationError, UserInputError } from "apollo-server-express";
 import { arg, extendType, idArg, list, nullable, stringArg } from "nexus";
 import { ValidationError } from "yup";
 import {
   GroupNotFoundError,
   IntegrityError,
   ProcessNotFoundError,
+  UserNotFoundError,
 } from "../../errors";
 import {
+  createProcessRequestUseCase,
   createProcessUseCase,
   deleteProcessUseCase,
   updateProcessUseCase,
@@ -98,20 +99,35 @@ export const ProcessMutations = extendType({
         data: arg({ type: "JSON" }),
         attachments: nullable(list(arg({ type: "Upload" }))),
       },
-      async resolve(_root, args) {
+      async resolve(_root, args, ctx) {
+        if (!ctx.user) {
+          throw new AuthenticationError("Not Authorised!");
+        }
         if (!args.processId && !args.processSlug) {
           throw new UserInputError(
             "Must provide either a processId or processSlug"
           );
         }
-        console.log(args.data);
 
-        if (args.attachments) {
-          args.attachments.map(async (attachment: FileUpload) => {
-            const { createReadStream, filename, mimetype, encoding } =
-              await attachment;
-            console.log(filename);
+        try {
+          return await createProcessRequestUseCase.execute({
+            processId: removeNullability(args.processId),
+            processSlug: removeNullability(args.processSlug),
+            attachments: removeNullability(args.attachments),
+            userId: ctx.user.id,
+            data: args.data,
           });
+        } catch (err) {
+          if (err instanceof UserNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof ProcessNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
         }
       },
     });

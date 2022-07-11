@@ -122,6 +122,7 @@ export const CREATE_PROCESS_REQUEST_MUTATION = gql`
       status
       processId
       userId
+      data
     }
   }
 `;

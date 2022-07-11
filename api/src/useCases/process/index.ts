@@ -1,5 +1,12 @@
-import { groupRepository, processRepository } from "../../repositories";
+import {
+  groupRepository,
+  processRepository,
+  processRequestAttachmentRepository,
+  processRequestRepository,
+  userRepository,
+} from "../../repositories";
 import { CreateProcessUseCase } from "./createProcess/create-process.usecase";
+import { CreateProcessRequestUseCase } from "./createProcessRequest/create-process-request.usecase";
 import { DeleteProcessUseCase } from "./deleteProcess/delete-process.usecase";
 import { GetProcessUseCase } from "./getProcess/get-process.usecase";
 import { GetProcessesUseCase } from "./getProcesses/get-processes.usecase";
@@ -16,6 +23,12 @@ const updateProcessUseCase = new UpdateProcessUseCase(
   groupRepository
 );
 const deleteProcessUseCase = new DeleteProcessUseCase(processRepository);
+const createProcessRequestUseCase = new CreateProcessRequestUseCase(
+  processRequestRepository,
+  processRequestAttachmentRepository,
+  processRepository,
+  userRepository
+);
 
 export {
   getProcessUseCase,
@@ -23,4 +36,5 @@ export {
   createProcessUseCase,
   updateProcessUseCase,
   deleteProcessUseCase,
+  createProcessRequestUseCase,
 };

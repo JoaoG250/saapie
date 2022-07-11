@@ -1,3 +1,4 @@
+import { JsonValue } from ".";
 import { GroupType } from "./group";
 
 export interface ProcessForm {
@@ -58,4 +59,5 @@ export interface ProcessRequestType {
   status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
   processId: string;
   userId: string;
+  data: JsonValue;
 }

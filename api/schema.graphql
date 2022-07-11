@@ -133,6 +133,7 @@ type ProcessForm {
 }
 
 type ProcessRequest {
+  data: JSON!
   id: ID!
   processId: String!
   status: ProcessRequestStatus!
