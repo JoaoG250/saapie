@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import {
   CreateProcessInput,
+  JsonValue,
   ProcessRequestType,
   ProcessType,
   UpdateProcessInput,
@@ -132,6 +133,6 @@ export interface CreateProcessRequestMutationResult {
 export interface CreateProcessRequestMutationVariables {
   processId?: string;
   processSlug?: string;
-  data: object | object[];
+  data: JsonValue;
   attachments?: File[];
 }

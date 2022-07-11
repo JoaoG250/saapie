@@ -6,6 +6,13 @@ export * from "./user";
 export * from "./group";
 export * from "./process";
 
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | { [Key in string]?: JsonValue }
+  | Array<JsonValue>;
+
 export interface SelectOption {
   label: string;
   value: string;
