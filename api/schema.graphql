@@ -141,6 +141,7 @@ type ProcessRequest {
 
 enum ProcessRequestStatus {
   CLOSED
+  FORWARDED
   OPEN
   PENDING_CHANGE
 }

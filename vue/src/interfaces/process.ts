@@ -55,7 +55,7 @@ export type UpdateProcessInput = CreateProcessInput;
 
 export interface ProcessRequestType {
   id: string;
-  status: "OPEN" | "PENDING_CHANGE" | "CLOSED";
+  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
   processId: string;
   userId: string;
 }

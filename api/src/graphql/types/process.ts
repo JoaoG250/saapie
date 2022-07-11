@@ -57,7 +57,7 @@ export const Process = objectType({
 
 export const ProcessRequestStatus = enumType({
   name: "ProcessRequestStatus",
-  members: ["OPEN", "PENDING_CHANGE", "CLOSED"],
+  members: ["OPEN", "FORWARDED", "PENDING_CHANGE", "CLOSED"],
 });
 
 export const ProcessRequest = objectType({

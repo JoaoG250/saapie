@@ -9,6 +9,7 @@ generator client {
 
 enum ProcessRequestStatus {
     OPEN
+    FORWARDED
     PENDING_CHANGE
     CLOSED
 }
@@ -77,6 +78,7 @@ model ProcessRequest {
     processId      String
     user           User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId         String
+    data           Json
     attachments    ProcessRequestAttachment[]
     changeRequests ProcessRequestChangeRequest[]
 }
