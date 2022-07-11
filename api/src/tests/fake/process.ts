@@ -1,7 +1,5 @@
-import { Process } from "@prisma/client";
-import { faker } from "@faker-js/faker";
-
-faker.lorem.paragraph;
+import { Process, ProcessRequest } from "@prisma/client";
+import { JsonValue } from "../../interfaces";
 
 const fakeProcesses: Process[] = [
   {
@@ -72,6 +70,63 @@ const fakeProcesses: Process[] = [
   },
 ];
 
+const fakeProccessRequests: ProcessRequest[] = [
+  {
+    id: "8ae2d983-c210-4f75-8400-898b3ad1b35e",
+    createdAt: new Date("2022-01-09T05:14:53.931Z"),
+    updatedAt: new Date("2022-07-10T22:18:49.427Z"),
+    processId: "706a6826-29f3-42c0-aa9e-ed8242941d23",
+    status: "PENDING_CHANGE",
+    userId: "64d35d81-154e-49ad-929b-daa09386ed1b",
+    data: {},
+  },
+  {
+    id: "f16921e9-9a86-4545-85a5-8690c463ead7",
+    createdAt: new Date("2021-07-29T19:52:59.972Z"),
+    updatedAt: new Date("2022-07-10T06:03:33.016Z"),
+    processId: "f06d165b-6705-4dfa-8796-2da53b9d1628",
+    status: "PENDING_CHANGE",
+    userId: "91fd9e92-2dbf-4431-8f38-34c203195e0d",
+    data: {},
+  },
+  {
+    id: "5364c017-6ffe-474e-a6c6-fb08dcff8d78",
+    createdAt: new Date("2022-03-19T15:58:58.210Z"),
+    updatedAt: new Date("2022-07-10T00:55:39.369Z"),
+    processId: "9e3c70be-4594-48c1-be79-84d616b7aa6e",
+    status: "PENDING_CHANGE",
+    userId: "f4ab5773-e0fe-45b8-96fe-43c16f18cf3d",
+    data: {},
+  },
+  {
+    id: "b862bc2d-7aa2-4b16-8091-5c52407e3262",
+    createdAt: new Date("2022-06-17T02:48:48.864Z"),
+    updatedAt: new Date("2022-07-10T15:47:30.206Z"),
+    processId: "acdf9c81-87bd-4666-9278-92208348c177",
+    status: "FORWARDED",
+    userId: "26696fde-b363-4945-952a-64a2e4ea50b9",
+    data: {},
+  },
+  {
+    id: "ffdf9d8d-d0bb-40e4-be2d-a8b525c7e1f9",
+    createdAt: new Date("2021-12-27T19:07:31.341Z"),
+    updatedAt: new Date("2022-07-10T18:10:01.767Z"),
+    processId: "55453946-2bac-4736-b443-7fce2afd974b",
+    status: "CLOSED",
+    userId: "80db709b-7a0e-477e-935e-52e7d2b86dc3",
+    data: {},
+  },
+  {
+    id: "2393784f-5f41-46cc-8a12-f7999f9d36b2",
+    createdAt: new Date("2021-10-07T10:33:42.733Z"),
+    updatedAt: new Date("2022-07-10T20:14:51.519Z"),
+    processId: "892fc74c-e422-4485-b88c-c006db8ca559",
+    status: "FORWARDED",
+    userId: "8c733f06-28fa-450b-b98a-43106c30f928",
+    data: {},
+  },
+];
+
 interface CreateFakeProcessArgs {
   id?: string;
   createdAt?: Date;
@@ -89,6 +144,27 @@ export function createFakeProcess(
   const process = fakeProcesses[seed % fakeProcesses.length];
   return {
     ...process,
+    ...args,
+  };
+}
+
+interface CreateFakeProcessRequestArgs {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  processId?: string;
+  userId?: string;
+  data?: JsonValue;
+}
+
+export function createFakeProcessRequest(
+  args: CreateFakeProcessRequestArgs,
+  seed: number
+): ProcessRequest {
+  const processRequest =
+    fakeProccessRequests[seed % fakeProccessRequests.length];
+  return {
+    ...processRequest,
     ...args,
   };
 }
