@@ -1,6 +1,13 @@
-import { Prisma, PrismaClient, Process, ProcessRequest } from "@prisma/client";
+import {
+  Prisma,
+  PrismaClient,
+  Process,
+  ProcessRequest,
+  ProcessRequestAttachment,
+} from "@prisma/client";
 import {
   IProcessRepository,
+  IProcessRequestAttachmentRepository,
   IProcessRequestRepository,
   ProcessWithGroups,
 } from "../interfaces";
@@ -85,5 +92,46 @@ export class ProcessRequestRepository implements IProcessRequestRepository {
     where: Prisma.ProcessRequestWhereUniqueInput
   ): Promise<ProcessRequest> {
     return this.prisma.processRequest.delete({ where });
+  }
+}
+
+export class ProcessRequestAttachmentRepository
+  implements IProcessRequestAttachmentRepository
+{
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async findOne(
+    where: Prisma.ProcessRequestAttachmentWhereUniqueInput
+  ): Promise<ProcessRequestAttachment | null> {
+    return this.prisma.processRequestAttachment.findUnique({ where });
+  }
+
+  async findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProcessRequestAttachmentWhereUniqueInput;
+    where?: Prisma.ProcessRequestAttachmentWhereInput;
+    orderBy?: Prisma.ProcessRequestAttachmentOrderByWithRelationInput;
+  }): Promise<ProcessRequestAttachment[]> {
+    return this.prisma.processRequestAttachment.findMany(args);
+  }
+
+  async create(
+    data: Prisma.ProcessRequestAttachmentCreateInput
+  ): Promise<ProcessRequestAttachment> {
+    return this.prisma.processRequestAttachment.create({ data });
+  }
+
+  async update(
+    where: Prisma.ProcessRequestAttachmentWhereUniqueInput,
+    data: Prisma.ProcessRequestAttachmentUpdateInput
+  ): Promise<ProcessRequestAttachment> {
+    return this.prisma.processRequestAttachment.update({ where, data });
+  }
+
+  async delete(
+    where: Prisma.ProcessRequestAttachmentWhereUniqueInput
+  ): Promise<ProcessRequestAttachment> {
+    return this.prisma.processRequestAttachment.delete({ where });
   }
 }

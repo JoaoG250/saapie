@@ -1,4 +1,10 @@
-import { Group, Prisma, Process, ProcessRequest } from "@prisma/client";
+import {
+  Group,
+  Prisma,
+  Process,
+  ProcessRequest,
+  ProcessRequestAttachment,
+} from "@prisma/client";
 import { IRepository } from ".";
 
 export type ProcessWithGroups = Process & {
@@ -43,4 +49,28 @@ export interface IProcessRequestRepository extends IRepository<ProcessRequest> {
     data: Prisma.ProcessRequestUpdateInput
   ): Promise<ProcessRequest>;
   delete(where: Prisma.ProcessRequestWhereUniqueInput): Promise<ProcessRequest>;
+}
+
+export interface IProcessRequestAttachmentRepository
+  extends IRepository<ProcessRequestAttachment> {
+  findOne(
+    where: Prisma.ProcessRequestAttachmentWhereUniqueInput
+  ): Promise<ProcessRequestAttachment | null>;
+  findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProcessRequestAttachmentWhereUniqueInput;
+    where?: Prisma.ProcessRequestAttachmentWhereInput;
+    orderBy?: Prisma.ProcessRequestAttachmentOrderByWithRelationInput;
+  }): Promise<ProcessRequestAttachment[]>;
+  create(
+    data: Prisma.ProcessRequestAttachmentCreateInput
+  ): Promise<ProcessRequestAttachment>;
+  update(
+    where: Prisma.ProcessRequestAttachmentWhereUniqueInput,
+    data: Prisma.ProcessRequestAttachmentUpdateInput
+  ): Promise<ProcessRequestAttachment>;
+  delete(
+    where: Prisma.ProcessRequestAttachmentWhereUniqueInput
+  ): Promise<ProcessRequestAttachment>;
 }
