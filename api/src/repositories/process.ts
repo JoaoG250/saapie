@@ -1,5 +1,9 @@
-import { Prisma, PrismaClient, Process } from "@prisma/client";
-import { IProcessRepository, ProcessWithGroups } from "../interfaces";
+import { Prisma, PrismaClient, Process, ProcessRequest } from "@prisma/client";
+import {
+  IProcessRepository,
+  IProcessRequestRepository,
+  ProcessWithGroups,
+} from "../interfaces";
 
 export class ProcessRepository implements IProcessRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -42,5 +46,44 @@ export class ProcessRepository implements IProcessRepository {
       where,
       include: { targetGroup: true, forwardToGroup: true },
     });
+  }
+}
+
+export class ProcessRequestRepository implements IProcessRequestRepository {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async findOne(
+    where: Prisma.ProcessRequestWhereUniqueInput
+  ): Promise<ProcessRequest | null> {
+    return this.prisma.processRequest.findUnique({ where });
+  }
+
+  async findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProcessRequestWhereUniqueInput;
+    where?: Prisma.ProcessRequestWhereInput;
+    orderBy?: Prisma.ProcessRequestOrderByWithRelationInput;
+  }): Promise<ProcessRequest[]> {
+    return this.prisma.processRequest.findMany(args);
+  }
+
+  async create(
+    data: Prisma.ProcessRequestCreateInput
+  ): Promise<ProcessRequest> {
+    return this.prisma.processRequest.create({ data });
+  }
+
+  async update(
+    where: Prisma.ProcessRequestWhereUniqueInput,
+    data: Prisma.ProcessRequestUpdateInput
+  ): Promise<ProcessRequest> {
+    return this.prisma.processRequest.update({ where, data });
+  }
+
+  async delete(
+    where: Prisma.ProcessRequestWhereUniqueInput
+  ): Promise<ProcessRequest> {
+    return this.prisma.processRequest.delete({ where });
   }
 }

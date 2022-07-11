@@ -1,4 +1,4 @@
-import { Group, Prisma, Process } from "@prisma/client";
+import { Group, Prisma, Process, ProcessRequest } from "@prisma/client";
 import { IRepository } from ".";
 
 export type ProcessWithGroups = Process & {
@@ -24,4 +24,23 @@ export interface IProcessRepository extends IRepository<Process> {
   findOneWithGroups(
     where: Prisma.ProcessWhereUniqueInput
   ): Promise<ProcessWithGroups | null>;
+}
+
+export interface IProcessRequestRepository extends IRepository<ProcessRequest> {
+  findOne(
+    where: Prisma.ProcessRequestWhereUniqueInput
+  ): Promise<ProcessRequest | null>;
+  findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProcessRequestWhereUniqueInput;
+    where?: Prisma.ProcessRequestWhereInput;
+    orderBy?: Prisma.ProcessRequestOrderByWithRelationInput;
+  }): Promise<ProcessRequest[]>;
+  create(data: Prisma.ProcessRequestCreateInput): Promise<ProcessRequest>;
+  update(
+    where: Prisma.ProcessRequestWhereUniqueInput,
+    data: Prisma.ProcessRequestUpdateInput
+  ): Promise<ProcessRequest>;
+  delete(where: Prisma.ProcessRequestWhereUniqueInput): Promise<ProcessRequest>;
 }
