@@ -6,5 +6,6 @@ module.exports = {
   setupFilesAfterEnv: [
     "<rootDir>/src/tests/mock/prisma.ts",
     "<rootDir>/src/tests/mock/nodemailer.ts",
+    "<rootDir>/src/tests/mock/fs.ts",
   ],
 };

@@ -1,6 +1,8 @@
 import { ProcessNotFoundError, UserNotFoundError } from "../../../errors";
+import { FsStorageProvider } from "../../../providers/storage";
 import {
   ProcessRepository,
+  ProcessRequestAttachmentRepository,
   ProcessRequestRepository,
 } from "../../../repositories/process";
 import { UserRepository } from "../../../repositories/user";
@@ -9,6 +11,7 @@ import {
   createFakeProcessRequest,
 } from "../../../tests/fake/process";
 import { createFakeUser } from "../../../tests/fake/user";
+import { fsMock } from "../../../tests/mock/fs";
 import { prismaMock } from "../../../tests/mock/prisma";
 import { CreateProcessRequestDto } from "./create-process-request.dto";
 import { CreateProcessRequestUseCase } from "./create-process-request.usecase";
@@ -17,12 +20,17 @@ function buildSUT(): {
   createProcessRequestUseCase: CreateProcessRequestUseCase;
 } {
   const processRequestRepository = new ProcessRequestRepository(prismaMock);
+  const processRequestAttachmentRepository =
+    new ProcessRequestAttachmentRepository(prismaMock);
   const processRepository = new ProcessRepository(prismaMock);
   const userRepository = new UserRepository(prismaMock);
+  const storageProvider = new FsStorageProvider(fsMock);
   const createProcessRequestUseCase = new CreateProcessRequestUseCase(
     processRequestRepository,
+    processRequestAttachmentRepository,
     processRepository,
-    userRepository
+    userRepository,
+    storageProvider
   );
   return { createProcessRequestUseCase };
 }

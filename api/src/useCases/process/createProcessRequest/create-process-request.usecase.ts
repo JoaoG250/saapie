@@ -1,4 +1,3 @@
-import fs from "fs";
 import path from "path";
 import config from "config";
 import cuid from "cuid";
@@ -18,9 +17,9 @@ import {
 } from "../../../interfaces";
 import { CreateProcessRequestDto } from "./create-process-request.dto";
 import { FileUpload } from "graphql-upload";
+import { IStorageProvider } from "../../../interfaces/storage";
 
 const publicUrl: string = config.get("server.publicUrl");
-const publicDir: string = config.get("server.publicDir");
 
 export class CreateProcessRequestUseCase
   implements IUseCase<CreateProcessRequestDto, ProcessRequest>
@@ -29,7 +28,8 @@ export class CreateProcessRequestUseCase
     private readonly processRequestRepository: IProcessRequestRepository,
     private readonly processRequestAttachmentRepository: IProcessRequestAttachmentRepository,
     private readonly processRepository: IProcessRepository,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
+    private readonly storageProvider: IStorageProvider
   ) {}
 
   async getProcess(id?: string, slug?: string): Promise<Process> {
@@ -61,19 +61,6 @@ export class CreateProcessRequestUseCase
     return requests.length > 0;
   }
 
-  async saveFile(stream: fs.ReadStream, filename: string): Promise<string> {
-    const filePath = path.join(publicDir, filename);
-    if (!fs.existsSync(path.dirname(filePath))) {
-      fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    }
-    return new Promise((resolve, reject) => {
-      stream
-        .pipe(fs.createWriteStream(filePath))
-        .on("error", (err) => reject(err))
-        .on("finish", () => resolve(filePath));
-    });
-  }
-
   getFileType(mimetype: string): "IMAGE" | "PDF" {
     if (mimetype.includes("image")) {
       return "IMAGE";
@@ -100,7 +87,7 @@ export class CreateProcessRequestUseCase
           (date.getMonth() + 1).toString(),
           cuid() + path.extname(filename)
         );
-        await this.saveFile(stream, newFileName);
+        await this.storageProvider.saveFileFromStream(stream, newFileName);
         const fileUrl = path.join(publicUrl, newFileName);
         await this.processRequestAttachmentRepository.create({
           name: newFileName,
