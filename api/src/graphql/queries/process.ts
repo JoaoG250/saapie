@@ -1,4 +1,9 @@
-import { UserInputError } from "apollo-server-express";
+import { Prisma } from "@prisma/client";
+import {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError,
+} from "apollo-server-express";
 import { extendType, idArg, nullable, stringArg } from "nexus";
 import {
   getProcessesUseCase,
@@ -44,15 +49,36 @@ export const processQueries = extendType({
       args: {
         id: idArg(),
       },
-      resolve(_root, args) {
-        return getProcessRequestUseCase.execute(args);
+      async resolve(_root, args, ctx) {
+        if (!ctx.user) {
+          throw new AuthenticationError("Not Authorised!");
+        }
+        const processRequest = await getProcessRequestUseCase.execute(args);
+        if (!processRequest) {
+          return null;
+        }
+        if (!ctx.user.groups.includes("ADMINISTRATORS")) {
+          if (processRequest.userId !== ctx.user.id) {
+            throw new ForbiddenError("Not Authorised!");
+          }
+        }
+        return processRequest;
       },
     });
     t.connectionField("processRequests", {
       type: "ProcessRequest",
-      nodes(_root, args) {
+      nodes(_root, args, ctx) {
+        if (!ctx.user) {
+          throw new AuthenticationError("Not Authorised!");
+        }
         const pagination = parsePaginationArgs(args);
-        return getProcessRequestsUseCase.execute({ ...pagination });
+        let where: Prisma.ProcessRequestWhereInput | undefined = undefined;
+        if (!ctx.user.groups.includes("ADMINISTRATORS")) {
+          where = {
+            userId: ctx.user.id,
+          };
+        }
+        return getProcessRequestsUseCase.execute({ ...pagination, where });
       },
       extendConnection(t) {
         t.int("totalCount", {

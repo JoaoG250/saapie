@@ -30,6 +30,8 @@ export const permissions = shield(
       groups: and(isAuthenticated, isAdmin),
       process: and(isAuthenticated, isAdmin),
       processes: and(isAuthenticated, isAdmin),
+      processRequest: isAuthenticated,
+      processRequests: isAuthenticated,
     },
     Mutation: {
       createUser: and(isAuthenticated, isAdmin),
@@ -43,6 +45,7 @@ export const permissions = shield(
       createProcess: and(isAuthenticated, isAdmin),
       updateProcess: and(isAuthenticated, isAdmin),
       deleteProcess: and(isAuthenticated, isAdmin),
+      createProcessRequest: isAuthenticated,
     },
   },
   {
