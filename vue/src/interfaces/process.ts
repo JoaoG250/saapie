@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GroupType } from "./group";
+import { User } from "./user";
 
 export interface ProcessForm {
   id: string;
@@ -68,4 +69,10 @@ export interface ProcessRequest {
   processId: string;
   userId: string;
   data: any;
+}
+
+export interface ProcessRequestWithProcessAndUser
+  extends Omit<ProcessRequest, "processId" | "userId"> {
+  process: Omit<Process, "targetGroupId" | "forwardToGroupId">;
+  user: User;
 }

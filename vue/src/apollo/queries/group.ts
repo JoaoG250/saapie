@@ -1,10 +1,5 @@
 import gql from "graphql-tag";
-import {
-  GroupType,
-  GroupWhereInput,
-  PageInfo,
-  PaginationArgs,
-} from "src/interfaces";
+import { GroupWhereInput, PageInfo, PaginationArgs } from "src/interfaces";
 
 export const GROUP_QUERY = gql`
   query group($id: ID!) {
@@ -16,7 +11,10 @@ export const GROUP_QUERY = gql`
 `;
 
 export interface GroupQueryResult {
-  group: GroupType;
+  group: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface GroupQueryVariables {
@@ -61,7 +59,10 @@ export interface GroupsQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: GroupType;
+      node: {
+        id: string;
+        name: string;
+      };
     }[];
     totalCount: number;
   };

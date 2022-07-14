@@ -1,12 +1,5 @@
 import gql from "graphql-tag";
-import {
-  UserType,
-  UserWithGroupsType,
-  PageInfo,
-  PaginationArgs,
-  UserWhereInput,
-  GroupType,
-} from "src/interfaces";
+import { PageInfo, PaginationArgs, UserWhereInput } from "src/interfaces";
 
 export const ME_QUERY = gql`
   query me {
@@ -26,7 +19,18 @@ export const ME_QUERY = gql`
 `;
 
 export interface MeQueryResult {
-  me: UserWithGroupsType;
+  me: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+    isVerified: boolean;
+    groups: {
+      id: string;
+      name: string;
+    }[];
+  };
 }
 
 export const USER_QUERY = gql`
@@ -47,7 +51,18 @@ export const USER_QUERY = gql`
 `;
 
 export interface UserQueryResult {
-  user: UserWithGroupsType;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+    isVerified: boolean;
+    groups: {
+      id: string;
+      name: string;
+    }[];
+  };
 }
 
 export interface UserQueryVariables {
@@ -96,7 +111,14 @@ export interface UsersQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: UserType;
+      node: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        isActive: boolean;
+        isVerified: boolean;
+      };
     }[];
     totalCount: number;
   };
@@ -119,7 +141,10 @@ export const GET_USER_GROUPS_QUERY = gql`
 
 export interface GetUserGroupsQueryResult {
   user: {
-    groups: GroupType[];
+    groups: {
+      id: string;
+      name: string;
+    }[];
   };
 }
 

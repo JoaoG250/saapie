@@ -1,10 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import gql from "graphql-tag";
-import {
-  PageInfo,
-  PaginationArgs,
-  ProcessRequestType,
-  ProcessType,
-} from "src/interfaces";
+import { PageInfo, PaginationArgs } from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
   query process($id: ID, $slug: String) {
@@ -33,7 +29,27 @@ export const PROCESS_QUERY = gql`
 `;
 
 export interface ProcessQueryResult {
-  process: ProcessType;
+  process: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    targetGroupId: string;
+    forwardToGroupId: string;
+    form: {
+      id: string;
+      name: string;
+      definition: any;
+    };
+    targetGroup: {
+      id: string;
+      name: string;
+    };
+    forwardToGroup: {
+      id: string;
+      name: string;
+    };
+  };
 }
 
 export interface ProcessQueryVariables {
@@ -84,7 +100,27 @@ export interface ProcessesQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: ProcessType;
+      node: {
+        id: string;
+        name: string;
+        slug: string;
+        description: string;
+        targetGroupId: string;
+        forwardToGroupId: string;
+        form: {
+          id: string;
+          name: string;
+          definition: any;
+        };
+        targetGroup: {
+          id: string;
+          name: string;
+        };
+        forwardToGroup: {
+          id: string;
+          name: string;
+        };
+      };
     }[];
     totalCount: number;
   };
@@ -97,15 +133,71 @@ export const PROCESS_REQUEST_QUERY = gql`
     processRequest(id: $id) {
       id
       status
-      processId
-      userId
       data
+      process {
+        id
+        name
+        slug
+        description
+        targetGroup {
+          id
+          name
+        }
+        forwardToGroup {
+          id
+          name
+        }
+        form {
+          id
+          name
+          definition
+        }
+      }
+      user {
+        id
+        firstName
+        lastName
+        email
+        isActive
+        isVerified
+      }
     }
   }
 `;
 
 export interface ProcessRequestQueryResult {
-  processRequest: ProcessRequestType;
+  processRequest: {
+    id: string;
+    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    data: any;
+    process: {
+      id: string;
+      name: string;
+      slug: string;
+      description: string;
+      targetGroup: {
+        id: string;
+        name: string;
+      };
+      forwardToGroup: {
+        id: string;
+        name: string;
+      };
+      form: {
+        id: string;
+        name: string;
+        definition: any;
+      };
+    };
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      isActive: boolean;
+      isVerified: boolean;
+    };
+  };
 }
 
 export interface ProcessRequestQueryVariables {
@@ -151,7 +243,13 @@ export interface ProcessRequestsQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: ProcessRequestType;
+      node: {
+        id: string;
+        status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+        processId: string;
+        userId: string;
+        data: any;
+      };
     }[];
     totalCount: number;
   };
