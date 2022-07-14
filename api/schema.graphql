@@ -140,6 +140,14 @@ type ProcessRequest {
   userId: String!
 }
 
+type ProcessRequestEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: ProcessRequest!
+}
+
 enum ProcessRequestStatus {
   CLOSED
   FORWARDED
@@ -165,6 +173,20 @@ type Query {
   ): QueryGroups_Connection!
   me: User!
   process(id: ID, slug: String): Process
+  processRequest(id: ID!): ProcessRequest
+  processRequests(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the last n elements from the list."""
+    last: Int
+  ): QueryProcessRequests_Connection!
   processes(
     """Returns the elements in the list that come after the specified cursor"""
     after: String
@@ -200,6 +222,19 @@ type QueryGroups_Connection {
   https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
   """
   edges: [GroupEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryProcessRequests_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ProcessRequestEdge!]!
 
   """
   https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
