@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
       target: api
-    image: saapie-api:latest
+    image: saapie:api
     env_file:
       - ./dotenv/api.env
     command: development
@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
       target: vue
-    image: saapie-vue:latest
+    image: saapie:vue
     env_file:
       - ./dotenv/vue.env
     command: development

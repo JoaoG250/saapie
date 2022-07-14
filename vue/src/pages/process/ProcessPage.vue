@@ -7,7 +7,7 @@ import {
 } from "src/apollo/queries";
 import { Process, FormKitData } from "src/interfaces";
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { FormKit, FormKitSchema } from "@formkit/vue";
 import { FormKitSchemaNode } from "@formkit/core";
 import {
@@ -15,8 +15,11 @@ import {
   CreateProcessRequestMutationVariables,
   CREATE_PROCESS_REQUEST_MUTATION,
 } from "src/apollo/mutations";
+import { useQuasar } from "quasar";
 
 const route = useRoute();
+const router = useRouter();
+const $q = useQuasar();
 const process = ref<Process>();
 const schema = computed<FormKitSchemaNode[]>(() => {
   if (process.value) {
@@ -76,20 +79,15 @@ function getFilesFromFormKitData(
   const files: File[] = [];
   for (const key in data) {
     const value = data[key];
-    if (value instanceof Array) {
-      for (const fileValue of value) {
-        if (typeof fileValue === "object") {
-          if (fileValue.file) {
-            const file = renameWithKey
-              ? changeFileName(fileValue.file, key)
-              : fileValue.file;
-            files.push(file);
-            if (removeKeys) {
-              delete data[key];
-            }
-          }
-        }
-      }
+    if (!(value instanceof Array)) continue;
+    for (const fileValue of value) {
+      if (!(typeof fileValue === "object")) continue;
+      if (!fileValue.file) continue;
+      const file = renameWithKey
+        ? changeFileName(fileValue.file, key)
+        : fileValue.file;
+      files.push(file);
+      if (removeKeys) delete data[key];
     }
   }
   return files;
@@ -107,7 +105,27 @@ async function submitHandler(data: FormKitData) {
       attachments: files,
     },
   });
-  await mutate();
+
+  try {
+    await mutate();
+    $q.notify({
+      position: "top",
+      color: "positive",
+      message: "Pedido de abertura de processo enviado com sucesso!",
+      icon: "check",
+    });
+    await router.push({ name: "process-requests" });
+  } catch (err) {
+    if (err instanceof Error) {
+      $q.notify({
+        position: "top",
+        color: "negative",
+        message: err.message,
+        icon: "report_problem",
+      });
+    }
+    throw err;
+  }
 }
 </script>
 
@@ -121,11 +139,19 @@ async function submitHandler(data: FormKitData) {
         <q-spinner-hourglass color="primary" size="5em" />
         <div class="text-h5 text-center">Carregando...</div>
       </div>
-      <FormKit v-else type="form" @submit="submitHandler">
-        <FormKitSchema :data="formData" :schema="schema" />
-      </FormKit>
+      <div v-if="process" class="column">
+        <div class="text-h4 text-weight-bold q-mt-md">{{ process.name }}</div>
+        <div class="text-subtitle1 q-mb-lg">{{ process.description }}</div>
+        <FormKit type="form" @submit="submitHandler">
+          <FormKitSchema :data="formData" :schema="schema" />
+        </FormKit>
+      </div>
     </div>
   </q-page>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.container :deep(.formkit-form) {
+  --fk-max-width-input: 100%;
+}
+</style>
