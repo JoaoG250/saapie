@@ -21,9 +21,7 @@ export const Process = objectType({
       type: "Group",
       async resolve(root, _args, ctx) {
         const group = await ctx.prisma.process
-          .findUnique({
-            where: { id: root.id },
-          })
+          .findUnique({ where: { id: root.id } })
           .targetGroup();
         if (!group) {
           throw new Error("Target group not found");
@@ -36,9 +34,7 @@ export const Process = objectType({
       type: "Group",
       resolve(root, _args, ctx) {
         return ctx.prisma.process
-          .findUnique({
-            where: { id: root.id },
-          })
+          .findUnique({ where: { id: root.id } })
           .forwardToGroup();
       },
     });
@@ -66,7 +62,31 @@ export const ProcessRequest = objectType({
     t.id("id");
     t.field("status", { type: "ProcessRequestStatus" });
     t.string("processId");
+    t.field("process", {
+      type: "Process",
+      async resolve(root, _args, ctx) {
+        const process = await ctx.prisma.processRequest
+          .findUnique({ where: { id: root.id } })
+          .process();
+        if (!process) {
+          throw new Error("Process not found");
+        }
+        return process;
+      },
+    });
     t.string("userId");
+    t.field("user", {
+      type: "User",
+      async resolve(root, _args, ctx) {
+        const user = await ctx.prisma.processRequest
+          .findUnique({ where: { id: root.id } })
+          .user();
+        if (!user) {
+          throw new Error("User not found");
+        }
+        return user;
+      },
+    });
     t.json("data");
   },
 });
