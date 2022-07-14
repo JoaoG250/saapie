@@ -12,6 +12,11 @@ const menuList = [
     label: "Processos",
     to: { name: "processes" },
   },
+  {
+    icon: "assignment",
+    label: "Requisições",
+    to: { name: "process-requests" },
+  },
 ];
 
 function toggleLeftDrawer() {

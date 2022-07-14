@@ -21,7 +21,7 @@ const menuList = [
     to: { name: "admin:process" },
   },
   {
-    icon: "view_list",
+    icon: "assignment",
     label: "Pedido de abertura de processo",
     to: { name: "admin:process-request" },
   },

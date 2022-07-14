@@ -27,7 +27,7 @@ const models: Model[] = [
   },
   {
     name: "Pedidos de abertura de processo",
-    icon: "view_list",
+    icon: "assignment",
     description: "Página de administração dos pedidos de abertura de processo",
     to: { name: "admin:process-request" },
   },
