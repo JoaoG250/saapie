@@ -20,6 +20,11 @@ const menuList = [
     label: "Processo",
     to: { name: "admin:process" },
   },
+  {
+    icon: "view_list",
+    label: "Pedido de abertura de processo",
+    to: { name: "admin:process-request" },
+  },
 ];
 
 function toggleMini() {

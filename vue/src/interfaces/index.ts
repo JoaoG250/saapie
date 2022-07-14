@@ -6,15 +6,6 @@ export * from "./user";
 export * from "./group";
 export * from "./process";
 
-type JsonTypes =
-  | string
-  | number
-  | boolean
-  | { [Key in string]?: JsonTypes }
-  | Array<JsonTypes>;
-
-export type JsonValue = { [Key in string]?: JsonTypes } | Array<JsonTypes>;
-
 export interface SelectOption {
   label: string;
   value: string;

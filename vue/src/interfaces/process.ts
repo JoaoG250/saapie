@@ -1,4 +1,4 @@
-import { JsonValue } from ".";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GroupType } from "./group";
 
 export interface ProcessForm {
@@ -59,5 +59,13 @@ export interface ProcessRequestType {
   status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
   processId: string;
   userId: string;
-  data: JsonValue;
+  data: any;
+}
+
+export interface ProcessRequest {
+  id: string;
+  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+  processId: string;
+  userId: string;
+  data: any;
 }

@@ -25,6 +25,12 @@ const models: Model[] = [
     description: "Página de administração do modelo de processo",
     to: { name: "admin:process" },
   },
+  {
+    name: "Pedidos de abertura de processo",
+    icon: "view_list",
+    description: "Página de administração dos pedidos de abertura de processo",
+    to: { name: "admin:process-request" },
+  },
 ];
 </script>
 

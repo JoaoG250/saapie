@@ -1,5 +1,10 @@
 import gql from "graphql-tag";
-import { PageInfo, PaginationArgs, ProcessType } from "src/interfaces";
+import {
+  PageInfo,
+  PaginationArgs,
+  ProcessRequestType,
+  ProcessType,
+} from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
   query process($id: ID, $slug: String) {
@@ -86,3 +91,70 @@ export interface ProcessesQueryResult {
 }
 
 export type ProcessesQueryVariables = PaginationArgs;
+
+export const PROCESS_REQUEST_QUERY = gql`
+  query processRequest($id: ID!) {
+    processRequest(id: $id) {
+      id
+      status
+      processId
+      userId
+      data
+    }
+  }
+`;
+
+export interface ProcessRequestQueryResult {
+  processRequest: ProcessRequestType;
+}
+
+export interface ProcessRequestQueryVariables {
+  id: string;
+}
+
+export const PROCESS_REQUESTS_QUERY = gql`
+  query processRequests(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    processRequests(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          status
+          processId
+          userId
+          data
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
+export interface ProcessRequestsQueryResult {
+  processRequests: {
+    pageInfo: PageInfo;
+    edges: {
+      cursor: string;
+      node: ProcessRequestType;
+    }[];
+    totalCount: number;
+  };
+}
+
+export type ProcessRequestsQueryVariables = PaginationArgs;
