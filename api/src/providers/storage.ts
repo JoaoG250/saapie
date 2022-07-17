@@ -24,4 +24,8 @@ export class FsStorageProvider implements IStorageProvider {
         .on("finish", () => resolve(filePath));
     });
   }
+
+  async deleteFile(filename: string): Promise<void> {
+    this.fs.unlinkSync(path.join(publicDir, filename));
+  }
 }

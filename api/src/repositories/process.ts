@@ -11,6 +11,7 @@ import {
   IProcessRequestRepository,
   ProcessWithGroups,
 } from "../interfaces";
+import { IStorageProvider } from "../interfaces/storage";
 
 export class ProcessRepository implements IProcessRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -57,7 +58,10 @@ export class ProcessRepository implements IProcessRepository {
 }
 
 export class ProcessRequestRepository implements IProcessRequestRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly storateProvider: IStorageProvider
+  ) {}
 
   async findOne(
     where: Prisma.ProcessRequestWhereUniqueInput
@@ -91,6 +95,14 @@ export class ProcessRequestRepository implements IProcessRequestRepository {
   async delete(
     where: Prisma.ProcessRequestWhereUniqueInput
   ): Promise<ProcessRequest> {
+    const attachments = await this.prisma.processRequestAttachment.findMany({
+      where: { processRequestId: where.id },
+    });
+    await Promise.all(
+      attachments.map(async (attachment) => {
+        await this.storateProvider.deleteFile(attachment.name);
+      })
+    );
     return this.prisma.processRequest.delete({ where });
   }
 }

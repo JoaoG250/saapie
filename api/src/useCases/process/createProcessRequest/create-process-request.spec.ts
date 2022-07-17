@@ -19,12 +19,15 @@ import { CreateProcessRequestUseCase } from "./create-process-request.usecase";
 function buildSUT(): {
   createProcessRequestUseCase: CreateProcessRequestUseCase;
 } {
-  const processRequestRepository = new ProcessRequestRepository(prismaMock);
+  const storageProvider = new FsStorageProvider(fsMock);
+  const processRequestRepository = new ProcessRequestRepository(
+    prismaMock,
+    storageProvider
+  );
   const processRequestAttachmentRepository =
     new ProcessRequestAttachmentRepository(prismaMock);
   const processRepository = new ProcessRepository(prismaMock);
   const userRepository = new UserRepository(prismaMock);
-  const storageProvider = new FsStorageProvider(fsMock);
   const createProcessRequestUseCase = new CreateProcessRequestUseCase(
     processRequestRepository,
     processRequestAttachmentRepository,

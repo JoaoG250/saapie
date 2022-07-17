@@ -46,3 +46,10 @@ export class ProcessNotFoundError extends Error {
     this.name = "ProcessNotFoundError";
   }
 }
+
+export class ProcessRequestNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ProcessRequestNotFoundError";
+  }
+}
