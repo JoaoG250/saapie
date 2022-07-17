@@ -71,6 +71,11 @@ export interface ProcessRequest {
   data: any;
 }
 
+export interface ProcessRequestWithProcess
+  extends Omit<ProcessRequest, "processId"> {
+  process: Pick<Process, "id" | "name" | "slug">;
+}
+
 export interface ProcessRequestWithProcessAndUser
   extends Omit<ProcessRequest, "processId" | "userId"> {
   process: Omit<Process, "targetGroupId" | "forwardToGroupId">;

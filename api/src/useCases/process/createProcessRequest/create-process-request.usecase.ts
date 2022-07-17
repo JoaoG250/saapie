@@ -82,10 +82,11 @@ export class CreateProcessRequestUseCase
         if (!filename) throw new Error("No file uploaded");
         const stream = createReadStream();
         const date = new Date();
+        const ext = path.extname(filename);
         const newFileName = path.join(
           date.getFullYear().toString(),
           (date.getMonth() + 1).toString(),
-          cuid() + path.extname(filename)
+          cuid() + ext
         );
         await this.storageProvider.saveFileFromStream(stream, newFileName);
         const fileUrl = path.join(publicUrl, newFileName);
@@ -95,7 +96,8 @@ export class CreateProcessRequestUseCase
           url: fileUrl,
           processRequest: { connect: { id: processRequest.id } },
         });
-        files[filename] = [...(files[filename] || []), { name: fileUrl }];
+        const field = path.basename(filename, ext);
+        files[field] = [...(files[field] || []), { name: fileUrl }];
       })
     );
     return files;

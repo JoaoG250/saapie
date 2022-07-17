@@ -44,27 +44,6 @@ onResult((result) => {
   process.value = result.data.process;
 });
 
-const formData = ref({
-  nome: {
-    value: "John Doe",
-  },
-  cpf: {
-    value: "12345678901",
-  },
-  email: {
-    value: "john@doe.com",
-  },
-  curso: {
-    value: "Engenharia de Software",
-  },
-  matricula: {
-    value: 123456789,
-  },
-  telefone: {
-    value: "99999999999",
-  },
-});
-
 function changeFileName(file: File, name: string): File {
   const extention = file.name.split(".").pop();
   const newName = `${name}.${extention}`;
@@ -143,7 +122,7 @@ async function submitHandler(data: FormKitData) {
         <div class="text-h4 text-weight-bold q-mt-md">{{ process.name }}</div>
         <div class="text-subtitle1 q-mb-lg">{{ process.description }}</div>
         <FormKit type="form" @submit="submitHandler">
-          <FormKitSchema :data="formData" :schema="schema" />
+          <FormKitSchema :schema="schema" />
         </FormKit>
       </div>
     </div>

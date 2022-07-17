@@ -13,6 +13,7 @@ import { FormKitSchemaNode } from "@formkit/core";
 
 const route = useRoute();
 const processRequest = ref<ProcessRequestWithProcessAndUser>();
+const editing = ref(false);
 const processId = computed<string>(() => {
   const id = route.params.id;
   if (typeof id === "string") {
@@ -40,9 +41,27 @@ const formData = computed(() => {
     const data = processRequest.value.data;
     if (typeof data === "object") {
       for (const key in data) {
-        computedData[key] = {
-          value: data[key],
-        };
+        const value = data[key];
+        if (
+          Array.isArray(value) &&
+          value.length &&
+          typeof value[0] === "object"
+        ) {
+          computedData[key] = {
+            value: value,
+            help: "Visualizar o arquivo",
+            "sections-schema": {
+              help: {
+                $el: "a",
+                attrs: { href: value[0].name, target: "_blank" },
+              },
+            },
+          };
+        } else {
+          computedData[key] = {
+            value: value,
+          };
+        }
       }
     }
   }
@@ -59,12 +78,23 @@ const schema = computed<FormKitSchemaNode[]>(() => {
 
 <template>
   <q-page class="container">
-    <div class="text-h4 text-weight-bold q-my-md">
-      Pedido de abertura de processo
-    </div>
-    <div v-if="processRequest">
-      <FormKitSchema :data="formData" :schema="schema" />
-    </div>
+    <template v-if="processRequest">
+      <div class="text-h4 text-weight-bold q-my-md">
+        {{ processRequest.process.name }}
+      </div>
+      <div class="row">
+        <q-space />
+        <q-toggle v-model="editing" label="Ativar edição" left-label />
+      </div>
+      <FormKit
+        type="form"
+        submit-label="Salvar"
+        :actions="editing"
+        :disabled="!editing"
+      >
+        <FormKitSchema :data="formData" :schema="schema" />
+      </FormKit>
+    </template>
   </q-page>
 </template>
 
