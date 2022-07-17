@@ -5,11 +5,13 @@ import {
   GroupNotFoundError,
   IntegrityError,
   ProcessNotFoundError,
+  ProcessRequestNotFoundError,
   UserNotFoundError,
 } from "../../errors";
 import {
   createProcessRequestUseCase,
   createProcessUseCase,
+  deleteProcessRequestUseCase,
   deleteProcessUseCase,
   updateProcessUseCase,
 } from "../../useCases/process";
@@ -125,6 +127,22 @@ export const ProcessMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("deleteProcessRequest", {
+      type: "ProcessRequest",
+      args: {
+        id: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await deleteProcessRequestUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessRequestNotFoundError) {
             throw new UserInputError(err.message);
           }
           throw err;

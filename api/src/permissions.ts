@@ -46,6 +46,7 @@ export const permissions = shield(
       updateProcess: and(isAuthenticated, isAdmin),
       deleteProcess: and(isAuthenticated, isAdmin),
       createProcessRequest: isAuthenticated,
+      deleteProcessRequest: and(isAuthenticated, isAdmin),
     },
   },
   {

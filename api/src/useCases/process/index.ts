@@ -9,6 +9,7 @@ import {
 import { CreateProcessUseCase } from "./createProcess/create-process.usecase";
 import { CreateProcessRequestUseCase } from "./createProcessRequest/create-process-request.usecase";
 import { DeleteProcessUseCase } from "./deleteProcess/delete-process.usecase";
+import { DeleteProcessRequestUseCase } from "./deleteProcessRequest/delete-process-request";
 import { GetProcessUseCase } from "./getProcess/get-process.usecase";
 import { GetProcessesUseCase } from "./getProcesses/get-processes.usecase";
 import { GetProcessRequestUseCase } from "./getProcessRequest/get-process-request.usecase";
@@ -39,6 +40,9 @@ const createProcessRequestUseCase = new CreateProcessRequestUseCase(
   userRepository,
   storageProvider
 );
+const deleteProcessRequestUseCase = new DeleteProcessRequestUseCase(
+  processRequestRepository
+);
 
 export {
   getProcessUseCase,
@@ -49,4 +53,5 @@ export {
   getProcessRequestUseCase,
   getProcessRequestsUseCase,
   createProcessRequestUseCase,
+  deleteProcessRequestUseCase,
 };
