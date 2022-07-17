@@ -34,6 +34,14 @@ const columns: NonNullable<QTableProps["columns"]> = [
     align: "center",
     sortable: true,
   },
+  {
+    name: "actions",
+    label: "Ações",
+    align: "right",
+    field: () => {
+      return;
+    },
+  },
 ];
 
 const processRequestStore = useProcessRequestStore();
@@ -44,6 +52,7 @@ const {
   onRequest,
   openDialog,
   closeDialog,
+  deleteItem,
   save,
 } = useCrudAdminTable<ProcessRequest>({
   itemName,
@@ -94,6 +103,17 @@ const {
         color="primary"
         @click="openDialog"
       />
+    </template>
+    <template #body-cell-actions="slotItem">
+      <q-td :props="slotItem">
+        <q-btn
+          class="q-ml-sm"
+          round
+          icon="delete"
+          size="xs"
+          @click="deleteItem(slotItem.row)"
+        />
+      </q-td>
     </template>
     <template #pagination="scope">
       <q-btn

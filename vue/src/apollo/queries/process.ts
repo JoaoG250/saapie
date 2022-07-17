@@ -228,6 +228,7 @@ export const PROCESS_REQUESTS_QUERY = gql`
         node {
           id
           status
+          processId
           process {
             id
             name
@@ -250,6 +251,7 @@ export interface ProcessRequestsQueryResult {
       node: {
         id: string;
         status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+        processId: string;
         process: {
           id: string;
           name: string;

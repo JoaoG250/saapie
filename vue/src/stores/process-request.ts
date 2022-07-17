@@ -1,4 +1,10 @@
+import { useMutation } from "@vue/apollo-composable";
 import { defineStore } from "pinia";
+import {
+  DeleteProcessRequestMutationResult,
+  DeleteProcessRequestMutationVariables,
+  DELETE_PROCESS_REQUEST_MUTATION,
+} from "src/apollo/mutations";
 import {
   ProcessRequestsQueryResult,
   ProcessRequestsQueryVariables,
@@ -71,11 +77,29 @@ export const useProcessRequestStore = defineStore("process-request", () => {
     fetch();
   }
 
+  async function deleteItem(args: DeleteProcessRequestMutationVariables) {
+    try {
+      loading.value = true;
+      const { mutate } = await useMutation<
+        DeleteProcessRequestMutationResult,
+        DeleteProcessRequestMutationVariables
+      >(DELETE_PROCESS_REQUEST_MUTATION, { variables: args });
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error deleting process request");
+      }
+      return response.data.deleteProcessRequest;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     loading,
     state,
     actions: {
       paginate,
+      deleteItem,
     },
   };
 });

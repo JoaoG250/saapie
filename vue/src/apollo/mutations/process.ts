@@ -137,3 +137,23 @@ export interface CreateProcessRequestMutationVariables {
   data: FormKitData;
   attachments?: File[];
 }
+
+export const DELETE_PROCESS_REQUEST_MUTATION = gql`
+  mutation deleteProcessRequest($id: ID!) {
+    deleteProcessRequest(id: $id) {
+      id
+      status
+      processId
+      userId
+      data
+    }
+  }
+`;
+
+export interface DeleteProcessRequestMutationResult {
+  deleteProcessRequest: ProcessRequestType;
+}
+
+export interface DeleteProcessRequestMutationVariables {
+  id: string;
+}

@@ -71,8 +71,7 @@ export interface ProcessRequest {
   data: any;
 }
 
-export interface ProcessRequestWithProcess
-  extends Omit<ProcessRequest, "processId"> {
+export interface ProcessRequestWithProcess extends ProcessRequest {
   process: Pick<Process, "id" | "name" | "slug">;
 }
 
