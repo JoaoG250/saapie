@@ -89,7 +89,7 @@ export const useUserStore = defineStore("user", () => {
     fetch();
   }
 
-  async function createItem(args: CreateUserMutationVariables) {
+  async function createItem(args: CreateUserMutationVariables): Promise<User> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<
@@ -108,7 +108,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  async function updateItem(args: UpdateUserMutationVariables) {
+  async function updateItem(args: UpdateUserMutationVariables): Promise<User> {
     try {
       loading.value = true;
       const { mutate } = useMutation<
@@ -125,7 +125,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  async function deleteItem(args: DeleteUserMutationVariables) {
+  async function deleteItem(args: DeleteUserMutationVariables): Promise<User> {
     try {
       loading.value = true;
       const { mutate } = useMutation<

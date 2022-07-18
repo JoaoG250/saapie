@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { CreateUserInput, UpdateUserInput, UserType } from "src/interfaces";
+import { CreateUserInput, UpdateUserInput } from "src/interfaces";
 
 export const CREATE_USER_MUTATION = gql`
   mutation createUser($data: CreateUserInput!) {
@@ -15,7 +15,14 @@ export const CREATE_USER_MUTATION = gql`
 `;
 
 export interface CreateUserMutationResult {
-  createUser: UserType;
+  createUser: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+    isVerified: boolean;
+  };
 }
 
 export interface CreateUserMutationVariables {
@@ -36,7 +43,14 @@ export const UPDATE_USER_MUTATION = gql`
 `;
 
 export interface UpdateUserMutationResult {
-  updateUser: UserType;
+  updateUser: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+    isVerified: boolean;
+  };
 }
 
 export interface UpdateUserMutationVariables {
@@ -58,7 +72,14 @@ export const DELETE_USER_MUTATION = gql`
 `;
 
 export interface DeleteUserMutationResult {
-  deleteUser: UserType;
+  deleteUser: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+    isVerified: boolean;
+  };
 }
 
 export interface DeleteUserMutationVariables {

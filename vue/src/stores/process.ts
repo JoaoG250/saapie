@@ -83,7 +83,9 @@ export const useProcessStore = defineStore("process", () => {
     fetch();
   }
 
-  async function createItem(args: CreateProcessMutationVariables) {
+  async function createItem(
+    args: CreateProcessMutationVariables
+  ): Promise<Process> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<
@@ -100,7 +102,9 @@ export const useProcessStore = defineStore("process", () => {
     }
   }
 
-  async function updateItem(args: UpdateProcessMutationVariables) {
+  async function updateItem(
+    args: UpdateProcessMutationVariables
+  ): Promise<Process> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<
@@ -117,7 +121,9 @@ export const useProcessStore = defineStore("process", () => {
     }
   }
 
-  async function deleteItem(args: DeleteProcessMutationVariables) {
+  async function deleteItem(
+    args: DeleteProcessMutationVariables
+  ): Promise<Process> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<

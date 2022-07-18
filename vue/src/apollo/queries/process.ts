@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import gql from "graphql-tag";
-import { PageInfo, PaginationArgs } from "src/interfaces";
+import { FormKitData, PageInfo, PaginationArgs } from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
   query process($id: ID, $slug: String) {
@@ -169,7 +169,7 @@ export interface ProcessRequestQueryResult {
   processRequest: {
     id: string;
     status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
-    data: any;
+    data: FormKitData;
     process: {
       id: string;
       name: string;
@@ -258,7 +258,7 @@ export interface ProcessRequestsQueryResult {
           slug: string;
         };
         userId: string;
-        data: any;
+        data: FormKitData;
       };
     }[];
     totalCount: number;

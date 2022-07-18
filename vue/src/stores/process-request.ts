@@ -77,7 +77,9 @@ export const useProcessRequestStore = defineStore("process-request", () => {
     fetch();
   }
 
-  async function deleteItem(args: DeleteProcessRequestMutationVariables) {
+  async function deleteItem(
+    args: DeleteProcessRequestMutationVariables
+  ): Promise<ProcessRequest> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<

@@ -2,8 +2,6 @@ import gql from "graphql-tag";
 import {
   CreateProcessInput,
   FormKitData,
-  ProcessRequestType,
-  ProcessType,
   UpdateProcessInput,
 } from "src/interfaces";
 
@@ -34,7 +32,30 @@ export const CREATE_PROCESS_MUTATION = gql`
 `;
 
 export interface CreateProcessMutationResult {
-  createProcess: ProcessType;
+  createProcess: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    targetGroupId: string;
+    forwardToGroupId: string | null | undefined;
+    form: {
+      id: string;
+      name: string;
+      definition: object[];
+    };
+    targetGroup: {
+      id: string;
+      name: string;
+    };
+    forwardToGroup:
+      | {
+          id: string;
+          name: string;
+        }
+      | null
+      | undefined;
+  };
 }
 
 export interface CreateProcessMutationVariables {
@@ -68,7 +89,30 @@ export const UPDATE_PROCESS_MUTATION = gql`
 `;
 
 export interface UpdateProcessMutationResult {
-  updateProcess: ProcessType;
+  updateProcess: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    targetGroupId: string;
+    forwardToGroupId: string | null | undefined;
+    form: {
+      id: string;
+      name: string;
+      definition: object[];
+    };
+    targetGroup: {
+      id: string;
+      name: string;
+    };
+    forwardToGroup:
+      | {
+          id: string;
+          name: string;
+        }
+      | null
+      | undefined;
+  };
 }
 
 export interface UpdateProcessMutationVariables {
@@ -85,6 +129,11 @@ export const DELETE_PROCESS_MUTATION = gql`
       description
       targetGroupId
       forwardToGroupId
+      form {
+        id
+        name
+        definition
+      }
       targetGroup {
         id
         name
@@ -98,7 +147,30 @@ export const DELETE_PROCESS_MUTATION = gql`
 `;
 
 export interface DeleteProcessMutationResult {
-  deleteProcess: ProcessType;
+  deleteProcess: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    targetGroupId: string;
+    forwardToGroupId: string | null | undefined;
+    form: {
+      id: string;
+      name: string;
+      definition: object[];
+    };
+    targetGroup: {
+      id: string;
+      name: string;
+    };
+    forwardToGroup:
+      | {
+          id: string;
+          name: string;
+        }
+      | null
+      | undefined;
+  };
 }
 
 export interface DeleteProcessMutationVariables {
@@ -128,7 +200,13 @@ export const CREATE_PROCESS_REQUEST_MUTATION = gql`
 `;
 
 export interface CreateProcessRequestMutationResult {
-  createProcessRequest: ProcessRequestType;
+  createProcessRequest: {
+    id: string;
+    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    processId: string;
+    userId: string;
+    data: FormKitData;
+  };
 }
 
 export interface CreateProcessRequestMutationVariables {
@@ -155,7 +233,13 @@ export const UPDATE_PROCESS_REQUEST_MUTATION = gql`
 `;
 
 export interface UpdateProcessRequestMutationResult {
-  updateProcessRequest: ProcessRequestType;
+  updateProcessRequest: {
+    id: string;
+    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    processId: string;
+    userId: string;
+    data: FormKitData;
+  };
 }
 
 export interface UpdateProcessRequestMutationVariables {
@@ -177,7 +261,13 @@ export const DELETE_PROCESS_REQUEST_MUTATION = gql`
 `;
 
 export interface DeleteProcessRequestMutationResult {
-  deleteProcessRequest: ProcessRequestType;
+  deleteProcessRequest: {
+    id: string;
+    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    processId: string;
+    userId: string;
+    data: FormKitData;
+  };
 }
 
 export interface DeleteProcessRequestMutationVariables {

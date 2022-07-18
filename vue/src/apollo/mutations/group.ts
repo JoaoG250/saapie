@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { CreateGroupInput, GroupType, UpdateGroupInput } from "src/interfaces";
+import { CreateGroupInput, UpdateGroupInput } from "src/interfaces";
 
 export const CREATE_GROUP_MUTATION = gql`
   mutation createGroup($data: CreateGroupInput!) {
@@ -11,7 +11,10 @@ export const CREATE_GROUP_MUTATION = gql`
 `;
 
 export interface CreateGroupMutationResult {
-  createGroup: GroupType;
+  createGroup: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface CreateGroupMutationVariables {
@@ -28,7 +31,10 @@ export const UPDATE_GROUP_MUTATION = gql`
 `;
 
 export interface UpdateGroupMutationResult {
-  updateGroup: GroupType;
+  updateGroup: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface UpdateGroupMutationVariables {
@@ -46,7 +52,10 @@ export const DELETE_GROUP_MUTATION = gql`
 `;
 
 export interface DeleteGroupMutationResult {
-  deleteGroup: GroupType;
+  deleteGroup: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface DeleteGroupMutationVariables {

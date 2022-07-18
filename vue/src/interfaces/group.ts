@@ -3,11 +3,6 @@ export interface Group {
   name: string;
 }
 
-export interface GroupType {
-  id: string;
-  name: string;
-}
-
 export interface CreateGroupInput {
   name: string;
 }

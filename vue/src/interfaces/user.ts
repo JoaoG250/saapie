@@ -1,4 +1,4 @@
-import { Group, GroupType } from "./group";
+import { Group } from "./group";
 
 export interface User {
   id: string;
@@ -11,19 +11,6 @@ export interface User {
 
 export interface UserWithGroups extends User {
   groups: Group[];
-}
-
-export interface UserType {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  isActive: boolean;
-  isVerified: boolean;
-}
-
-export interface UserWithGroupsType extends UserType {
-  groups: GroupType[];
 }
 
 export interface CreateUserInput {

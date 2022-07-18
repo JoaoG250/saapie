@@ -83,7 +83,9 @@ export const useGroupStore = defineStore("group", () => {
     fetch();
   }
 
-  async function createItem(args: CreateGroupMutationVariables) {
+  async function createItem(
+    args: CreateGroupMutationVariables
+  ): Promise<Group> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<
@@ -100,7 +102,9 @@ export const useGroupStore = defineStore("group", () => {
     }
   }
 
-  async function updateItem(args: UpdateGroupMutationVariables) {
+  async function updateItem(
+    args: UpdateGroupMutationVariables
+  ): Promise<Group> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<
@@ -117,7 +121,9 @@ export const useGroupStore = defineStore("group", () => {
     }
   }
 
-  async function deleteItem(args: DeleteGroupMutationVariables) {
+  async function deleteItem(
+    args: DeleteGroupMutationVariables
+  ): Promise<Group> {
     try {
       loading.value = true;
       const { mutate } = await useMutation<

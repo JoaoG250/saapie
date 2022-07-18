@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as _ from "lodash";
 import { QTableProps, useQuasar } from "quasar";
 import { TablePaginateArgs } from "src/interfaces";
 import { computed, Ref, ref, watch } from "vue";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 interface AdminStore<T> {
   state: {
     items: T[];
@@ -15,7 +15,6 @@ interface AdminStore<T> {
     updateItem?: (args: any) => Promise<T>;
   };
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 type ExtraDataTypes =
   | string
