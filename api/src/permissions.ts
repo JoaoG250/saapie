@@ -3,8 +3,9 @@ import {
   AuthenticationError,
   ForbiddenError,
 } from "apollo-server-express";
-import { and, rule, shield } from "graphql-shield";
+import { and, or, rule, shield } from "graphql-shield";
 import { GraphQLContext } from "./types";
+import { userIsAdmin } from "./utils";
 
 const isAuthenticated = rule()((_root, _args, ctx: GraphQLContext) => {
   if (ctx.user) {
@@ -14,11 +15,23 @@ const isAuthenticated = rule()((_root, _args, ctx: GraphQLContext) => {
 });
 
 const isAdmin = rule()((_root, _args, ctx: GraphQLContext) => {
-  if (ctx.user?.groups.includes("ADMINISTRATORS")) {
+  if (ctx.user && userIsAdmin(ctx.user)) {
     return true;
   }
   return new ForbiddenError("Not Authorised!");
 });
+
+const isProcessRequestOwner = rule()(
+  async (_root, args, ctx: GraphQLContext) => {
+    const processRequest = await ctx.prisma.processRequest.findUnique({
+      where: { id: args.id },
+    });
+    if (processRequest?.userId === ctx.user?.id) {
+      return true;
+    }
+    return new ForbiddenError("Not Authorised!");
+  }
+);
 
 export const permissions = shield(
   {
@@ -30,7 +43,7 @@ export const permissions = shield(
       groups: and(isAuthenticated, isAdmin),
       process: and(isAuthenticated, isAdmin),
       processes: and(isAuthenticated, isAdmin),
-      processRequest: isAuthenticated,
+      processRequest: and(isAuthenticated, or(isAdmin, isProcessRequestOwner)),
       processRequests: isAuthenticated,
     },
     Mutation: {
@@ -46,6 +59,10 @@ export const permissions = shield(
       updateProcess: and(isAuthenticated, isAdmin),
       deleteProcess: and(isAuthenticated, isAdmin),
       createProcessRequest: isAuthenticated,
+      updateProcessRequest: and(
+        isAuthenticated,
+        or(isAdmin, isProcessRequestOwner)
+      ),
       deleteProcessRequest: and(isAuthenticated, isAdmin),
     },
   },
