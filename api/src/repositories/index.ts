@@ -19,4 +19,4 @@ export const processRequestRepository = new ProcessRequestRepository(
   storageProvider
 );
 export const processRequestAttachmentRepository =
-  new ProcessRequestAttachmentRepository(prisma);
+  new ProcessRequestAttachmentRepository(prisma, storageProvider);

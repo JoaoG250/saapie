@@ -16,6 +16,7 @@ import {
   CREATE_PROCESS_REQUEST_MUTATION,
 } from "src/apollo/mutations";
 import { useQuasar } from "quasar";
+import { getFilesFromFormKitData } from "src/common/forms";
 
 const route = useRoute();
 const router = useRouter();
@@ -44,44 +45,16 @@ onResult((result) => {
   process.value = result.data.process;
 });
 
-function changeFileName(file: File, name: string): File {
-  const extention = file.name.split(".").pop();
-  const newName = `${name}.${extention}`;
-  return new File([file], newName, { type: file.type });
-}
-
-function getFilesFromFormKitData(
-  data: FormKitData,
-  removeKeys = true,
-  renameWithKey = true
-): File[] {
-  const files: File[] = [];
-  for (const key in data) {
-    const value = data[key];
-    if (!(value instanceof Array)) continue;
-    for (const fileValue of value) {
-      if (!(typeof fileValue === "object")) continue;
-      if (!fileValue.file) continue;
-      const file = renameWithKey
-        ? changeFileName(fileValue.file, key)
-        : fileValue.file;
-      files.push(file);
-      if (removeKeys) delete data[key];
-    }
-  }
-  return files;
-}
-
 async function submitHandler(data: FormKitData) {
-  const files = getFilesFromFormKitData(data, true);
+  const attachments = getFilesFromFormKitData(data, true);
   const { mutate } = useMutation<
     CreateProcessRequestMutationResult,
     CreateProcessRequestMutationVariables
   >(CREATE_PROCESS_REQUEST_MUTATION, {
     variables: {
       data,
+      attachments,
       processSlug: processSlug.value,
-      attachments: files,
     },
   });
 

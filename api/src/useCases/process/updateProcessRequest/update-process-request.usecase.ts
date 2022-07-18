@@ -108,9 +108,10 @@ export class UpdateProcessRequestUseCase
       files = await this.handleAttachments(processRequest, args.attachments);
       await this.deleteReplacedAttachments(processRequest, files);
     }
+    const data = processRequest.data as FormKitData;
     return this.processRequestRepository.update(
       { id: processRequest.id },
-      { data: { ...args.data, ...files } }
+      { data: { ...data, ...args.data, ...files } }
     );
   }
 }

@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { useQuery } from "@vue/apollo-composable";
+import { useMutation, useQuery } from "@vue/apollo-composable";
 import {
   ProcessRequestQueryResult,
   ProcessRequestQueryVariables,
   PROCESS_REQUEST_QUERY,
 } from "src/apollo/queries";
 import { FormKitSchema } from "@formkit/vue";
-import { ProcessRequestWithProcessAndUser } from "src/interfaces";
+import { FormKitData, ProcessRequestWithProcessAndUser } from "src/interfaces";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { FormKitSchemaNode } from "@formkit/core";
+import { getFilesFromFormKitData } from "src/common/forms";
+import {
+  UpdateProcessRequestMutationResult,
+  UpdateProcessRequestMutationVariables,
+  UPDATE_PROCESS_REQUEST_MUTATION,
+} from "src/apollo/mutations";
+import { useQuasar } from "quasar";
 
 const route = useRoute();
+const $q = useQuasar();
 const processRequest = ref<ProcessRequestWithProcessAndUser>();
 const editing = ref(false);
 const processId = computed<string>(() => {
@@ -74,6 +82,44 @@ const schema = computed<FormKitSchemaNode[]>(() => {
   }
   return [];
 });
+
+async function submitHandler(data: FormKitData) {
+  if (!processRequest.value) return;
+  const attachments = getFilesFromFormKitData(data, true);
+  const { mutate } = useMutation<
+    UpdateProcessRequestMutationResult,
+    UpdateProcessRequestMutationVariables
+  >(UPDATE_PROCESS_REQUEST_MUTATION, {
+    variables: { id: processRequest.value.id, data, attachments },
+  });
+
+  try {
+    const response = await mutate();
+    if (!response?.data) {
+      throw new Error("Error updating process request");
+    }
+    processRequest.value = {
+      ...processRequest.value,
+      ...response.data.updateProcessRequest,
+    };
+    $q.notify({
+      position: "top",
+      color: "positive",
+      message: "Pedido de abertura de processo atualizado com sucesso!",
+      icon: "check",
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      $q.notify({
+        position: "top",
+        color: "negative",
+        message: err.message,
+        icon: "report_problem",
+      });
+    }
+    throw err;
+  }
+}
 </script>
 
 <template>
@@ -84,13 +130,19 @@ const schema = computed<FormKitSchemaNode[]>(() => {
       </div>
       <div class="row">
         <q-space />
-        <q-toggle v-model="editing" label="Ativar edição" left-label />
+        <q-toggle
+          v-model="editing"
+          label="Ativar edição"
+          left-label
+          :disable="processRequest.status === 'CLOSED'"
+        />
       </div>
       <FormKit
         type="form"
         submit-label="Salvar"
         :actions="editing"
         :disabled="!editing"
+        @submit="submitHandler"
       >
         <FormKitSchema :data="formData" :schema="schema" />
       </FormKit>

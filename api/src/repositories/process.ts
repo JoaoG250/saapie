@@ -96,7 +96,7 @@ export class ProcessRequestRepository implements IProcessRequestRepository {
     where: Prisma.ProcessRequestWhereUniqueInput
   ): Promise<ProcessRequest> {
     const attachments = await this.prisma.processRequestAttachment.findMany({
-      where: { processRequestId: where.id },
+      where: { processRequest: where },
     });
     await Promise.all(
       attachments.map(async (attachment) => {
@@ -110,7 +110,10 @@ export class ProcessRequestRepository implements IProcessRequestRepository {
 export class ProcessRequestAttachmentRepository
   implements IProcessRequestAttachmentRepository
 {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly storateProvider: IStorageProvider
+  ) {}
 
   async findOne(
     where: Prisma.ProcessRequestAttachmentWhereUniqueInput
@@ -144,6 +147,9 @@ export class ProcessRequestAttachmentRepository
   async delete(
     where: Prisma.ProcessRequestAttachmentWhereUniqueInput
   ): Promise<ProcessRequestAttachment> {
-    return this.prisma.processRequestAttachment.delete({ where });
+    const processRequestAttachment =
+      await this.prisma.processRequestAttachment.delete({ where });
+    await this.storateProvider.deleteFile(processRequestAttachment.name);
+    return processRequestAttachment;
   }
 }

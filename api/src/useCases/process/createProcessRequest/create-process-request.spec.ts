@@ -25,7 +25,7 @@ function buildSUT(): {
     storageProvider
   );
   const processRequestAttachmentRepository =
-    new ProcessRequestAttachmentRepository(prismaMock);
+    new ProcessRequestAttachmentRepository(prismaMock, storageProvider);
   const processRepository = new ProcessRepository(prismaMock);
   const userRepository = new UserRepository(prismaMock);
   const createProcessRequestUseCase = new CreateProcessRequestUseCase(
