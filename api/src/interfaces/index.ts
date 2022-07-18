@@ -23,3 +23,14 @@ export interface IRepository<T> {
 export interface IUseCase<IRequest, IResponse> {
   execute(args: IRequest): Promise<IResponse> | IResponse;
 }
+
+export type FormKitValue =
+  | string
+  | number
+  | boolean
+  | string[]
+  | { name: string }[];
+
+export interface FormKitData {
+  [key: string]: FormKitValue;
+}

@@ -1,10 +1,10 @@
 import { FileUpload } from "graphql-upload";
-import { JsonValue } from "../../../interfaces";
+import { FormKitData } from "../../../interfaces";
 
 export interface CreateProcessRequestDto {
   processId?: string;
   processSlug?: string;
   userId: string;
-  data: JsonValue;
+  data: FormKitData;
   attachments?: FileUpload[];
 }

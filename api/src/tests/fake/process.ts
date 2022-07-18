@@ -1,5 +1,5 @@
 import { Process, ProcessRequest } from "@prisma/client";
-import { JsonValue } from "../../interfaces";
+import { FormKitData } from "../../interfaces";
 
 const fakeProcesses: Process[] = [
   {
@@ -154,7 +154,7 @@ interface CreateFakeProcessRequestArgs {
   updatedAt?: Date;
   processId?: string;
   userId?: string;
-  data?: JsonValue;
+  data?: FormKitData;
 }
 
 export function createFakeProcessRequest(

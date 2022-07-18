@@ -8,12 +8,12 @@ import {
   UserNotFoundError,
 } from "../../../errors";
 import {
+  FormKitData,
   IProcessRepository,
   IProcessRequestAttachmentRepository,
   IProcessRequestRepository,
   IUseCase,
   IUserRepository,
-  JsonValue,
 } from "../../../interfaces";
 import { CreateProcessRequestDto } from "./create-process-request.dto";
 import { FileUpload } from "graphql-upload";
@@ -118,7 +118,7 @@ export class CreateProcessRequestUseCase
     });
     if (args.attachments) {
       const files = await this.handleAttachments(request, args.attachments);
-      const data = request.data as JsonValue;
+      const data = request.data as FormKitData;
       request = await this.processRequestRepository.update(
         { id: request.id },
         { data: { ...data, ...files } }
