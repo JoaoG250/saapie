@@ -100,7 +100,7 @@ model ProcessRequestAttachment {
     updatedAt        DateTime                     @updatedAt
     name             String
     type             ProcessRequestAttachmentType
-    url              String
+    url              String                       @unique
     processRequest   ProcessRequest               @relation(fields: [processRequestId], references: [id], onDelete: Cascade)
     processRequestId String
 }
