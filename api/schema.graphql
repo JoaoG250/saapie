@@ -79,6 +79,7 @@ type Mutation {
   signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
   updateGroup(data: UpdateGroupInput!, id: ID!): Group!
   updateProcess(data: UpdateProcessInput!, id: ID!): Process!
+  updateProcessRequest(attachments: [Upload!], data: JSON!, id: ID!): ProcessRequest!
   updateUser(data: UpdateUserInput!, id: ID!): User!
 }
 

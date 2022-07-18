@@ -138,6 +138,32 @@ export interface CreateProcessRequestMutationVariables {
   attachments?: File[];
 }
 
+export const UPDATE_PROCESS_REQUEST_MUTATION = gql`
+  mutation updateProcessRequest(
+    $id: ID!
+    $data: JSON!
+    $attachments: [Upload!]
+  ) {
+    updateProcessRequest(id: $id, data: $data, attachments: $attachments) {
+      id
+      status
+      processId
+      userId
+      data
+    }
+  }
+`;
+
+export interface UpdateProcessRequestMutationResult {
+  updateProcessRequest: ProcessRequestType;
+}
+
+export interface UpdateProcessRequestMutationVariables {
+  id: string;
+  data: FormKitData;
+  attachments?: File[];
+}
+
 export const DELETE_PROCESS_REQUEST_MUTATION = gql`
   mutation deleteProcessRequest($id: ID!) {
     deleteProcessRequest(id: $id) {

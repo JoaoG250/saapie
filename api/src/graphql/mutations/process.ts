@@ -13,6 +13,7 @@ import {
   createProcessUseCase,
   deleteProcessRequestUseCase,
   deleteProcessUseCase,
+  updateProcessRequestUseCase,
   updateProcessUseCase,
 } from "../../useCases/process";
 import { removeNullability } from "../../utils";
@@ -124,6 +125,31 @@ export const ProcessMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof ProcessNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("updateProcessRequest", {
+      type: "ProcessRequest",
+      args: {
+        id: idArg(),
+        data: arg({ type: "JSON" }),
+        attachments: nullable(list(arg({ type: "Upload" }))),
+      },
+      async resolve(_root, args) {
+        try {
+          return await updateProcessRequestUseCase.execute({
+            id: args.id,
+            data: args.data,
+            attachments: removeNullability(args.attachments),
+          });
+        } catch (err) {
+          if (err instanceof ProcessRequestNotFoundError) {
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {
