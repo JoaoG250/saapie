@@ -128,8 +128,8 @@ export interface UsersQueryVariables extends PaginationArgs {
   where?: UserWhereInput;
 }
 
-export const GET_USER_GROUPS_QUERY = gql`
-  query getUserGroups($id: ID!) {
+export const USER_GROUPS_QUERY = gql`
+  query userGroups($id: ID!) {
     user(id: $id) {
       groups {
         id
@@ -139,7 +139,7 @@ export const GET_USER_GROUPS_QUERY = gql`
   }
 `;
 
-export interface GetUserGroupsQueryResult {
+export interface UserGroupsQueryResult {
   user: {
     groups: {
       id: string;
@@ -148,4 +148,4 @@ export interface GetUserGroupsQueryResult {
   };
 }
 
-export type GetUserGroupsQueryVariables = UserQueryVariables;
+export type UserGroupsQueryVariables = UserQueryVariables;

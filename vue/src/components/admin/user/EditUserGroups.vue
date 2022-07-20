@@ -2,9 +2,9 @@
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { Group, User } from "src/interfaces";
 import {
-  GET_USER_GROUPS_QUERY,
-  GetUserGroupsQueryResult,
-  GetUserGroupsQueryVariables,
+  USER_GROUPS_QUERY,
+  UserGroupsQueryResult,
+  UserGroupsQueryVariables,
 } from "src/apollo/queries";
 import { ref } from "vue";
 import { QTableProps, useQuasar } from "quasar";
@@ -40,13 +40,9 @@ const columns: NonNullable<QTableProps["columns"]> = [
   },
 ];
 const { onResult, loading } = useQuery<
-  GetUserGroupsQueryResult,
-  GetUserGroupsQueryVariables
->(
-  GET_USER_GROUPS_QUERY,
-  { id: props.user.id },
-  { fetchPolicy: "network-only" }
-);
+  UserGroupsQueryResult,
+  UserGroupsQueryVariables
+>(USER_GROUPS_QUERY, { id: props.user.id }, { fetchPolicy: "network-only" });
 onResult((result) => {
   groups.value = result.data.user.groups;
 });

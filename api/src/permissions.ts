@@ -45,6 +45,8 @@ export const permissions = shield(
       processes: and(isAuthenticated, isAdmin),
       processRequest: and(isAuthenticated, or(isAdmin, isProcessRequestOwner)),
       processRequests: isAuthenticated,
+      assignedProcessRequests: isAuthenticated,
+      forwardedProcessRequests: isAuthenticated,
     },
     Mutation: {
       createUser: and(isAuthenticated, isAdmin),

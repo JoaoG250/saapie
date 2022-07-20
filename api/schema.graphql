@@ -144,6 +144,18 @@ type ProcessRequest {
   userId: String!
 }
 
+type ProcessRequestConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ProcessRequestEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
 type ProcessRequestEdge {
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
   cursor: String!
@@ -160,6 +172,32 @@ enum ProcessRequestStatus {
 }
 
 type Query {
+  assignedProcessRequests(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the last n elements from the list."""
+    last: Int
+  ): ProcessRequestConnection!
+  forwardedProcessRequests(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the last n elements from the list."""
+    last: Int
+  ): ProcessRequestConnection!
   group(id: ID!): Group
   groups(
     """Returns the elements in the list that come after the specified cursor"""

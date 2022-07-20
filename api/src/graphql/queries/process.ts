@@ -71,5 +71,38 @@ export const processQueries = extendType({
         });
       },
     });
+    t.connectionField("assignedProcessRequests", {
+      type: "ProcessRequest",
+      nodes(_root, args, ctx) {
+        if (!ctx.user) {
+          throw new AuthenticationError("Not Authorised!");
+        }
+        const pagination = parsePaginationArgs(args);
+        const OR = ctx.user.groups.map((group) => {
+          return { name: group };
+        });
+        const where: Prisma.ProcessRequestWhereInput = {
+          process: { targetGroup: { OR } },
+        };
+        return getProcessRequestsUseCase.execute({ ...pagination, where });
+      },
+    });
+    t.connectionField("forwardedProcessRequests", {
+      type: "ProcessRequest",
+      nodes(_root, args, ctx) {
+        if (!ctx.user) {
+          throw new AuthenticationError("Not Authorised!");
+        }
+        const pagination = parsePaginationArgs(args);
+        const OR = ctx.user.groups.map((group) => {
+          return { name: group };
+        });
+        const where: Prisma.ProcessRequestWhereInput = {
+          status: "FORWARDED",
+          process: { forwardToGroup: { OR } },
+        };
+        return getProcessRequestsUseCase.execute({ ...pagination, where });
+      },
+    });
   },
 });
