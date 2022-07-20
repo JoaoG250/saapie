@@ -7,20 +7,26 @@ interface ProcessRequestListProps {
       id: string;
       name: string;
     };
+    user: {
+      id: string;
+      email: string;
+    };
   }[];
 }
 defineProps<ProcessRequestListProps>();
 </script>
 
 <template>
-  <q-list bordered>
+  <q-list class="rounded-borders" bordered>
     <template v-for="(request, index) in processRequests" :key="index">
       <q-item :to="{ name: 'process-request', params: { id: request.id } }">
-        <q-item-section>
+        <q-item-section class="col-2">
           <q-item-label>{{ request.process.name }}</q-item-label>
         </q-item-section>
-
-        <q-item-section side top>
+        <q-item-section>
+          <q-item-label>{{ request.user.email }}</q-item-label>
+        </q-item-section>
+        <q-item-section side>
           <q-item-label caption>{{ request.status }}</q-item-label>
         </q-item-section>
       </q-item>

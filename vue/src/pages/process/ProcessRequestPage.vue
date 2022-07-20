@@ -18,6 +18,7 @@ import {
   UPDATE_PROCESS_REQUEST_MUTATION,
 } from "src/apollo/mutations";
 import { useQuasar } from "quasar";
+import { useAuthStore } from "src/stores/auth";
 import ProcessRequestAttachmentList from "src/components/process/ProcessRequestAttachmentList.vue";
 
 interface Data {
@@ -28,6 +29,7 @@ interface Files {
 }
 
 const route = useRoute();
+const authStore = useAuthStore();
 const $q = useQuasar();
 const processRequest = ref<ProcessRequestWithProcessAndUser>();
 const editing = ref(false);
@@ -82,7 +84,11 @@ const hasAttachments = computed(() => {
   }
   return false;
 });
-
+const allowEdit = computed(() => {
+  if (!authStore.state.user || !processRequest.value) return false;
+  if (processRequest.value.user.id === authStore.state.user.id) return true;
+  return false;
+});
 const schema = computed<FormKitSchemaNode[]>(() => {
   if (processRequest.value) {
     return processRequest.value.process.form.definition as FormKitSchemaNode[];
@@ -141,6 +147,7 @@ async function submitHandler(data: FormKitData) {
       <div class="row">
         <q-space />
         <q-toggle
+          v-if="allowEdit"
           v-model="editing"
           label="Ativar edição"
           left-label
