@@ -30,6 +30,11 @@ const routes: RouteRecordRaw[] = [
         name: "process-request",
         component: () => import("pages/process/ProcessRequestPage.vue"),
       },
+      {
+        path: "/processes/requests/manage",
+        name: "process-request-manage",
+        component: () => import("pages/process/ManageProcessRequestsPage.vue"),
+      },
     ],
     meta: {
       authRequired: true,

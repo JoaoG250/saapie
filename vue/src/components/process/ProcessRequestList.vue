@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ProcessRequestWithProcess } from "src/interfaces";
-
 interface ProcessRequestListProps {
-  processRequests: ProcessRequestWithProcess[];
+  processRequests: {
+    id: string;
+    status: string;
+    process: {
+      id: string;
+      name: string;
+    };
+  }[];
 }
 defineProps<ProcessRequestListProps>();
 </script>

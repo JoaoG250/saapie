@@ -266,3 +266,141 @@ export interface ProcessRequestsQueryResult {
 }
 
 export type ProcessRequestsQueryVariables = PaginationArgs;
+
+export const ASSIGNED_PROCESS_REQUESTS_QUERY = gql`
+  query assignedProcessRequests(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    assignedProcessRequests(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          status
+          process {
+            id
+            name
+            description
+          }
+          user {
+            id
+            firstName
+            lastName
+            email
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface AssignedProcessRequestsNode {
+  id: string;
+  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+  process: {
+    id: string;
+    name: string;
+    description: string;
+  };
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+export interface AssignedProcessRequestsQueryResult {
+  assignedProcessRequests: {
+    pageInfo: PageInfo;
+    edges: {
+      cursor: string;
+      node: AssignedProcessRequestsNode;
+    }[];
+  };
+}
+
+export type AssignedProcessRequestsQueryVariables = PaginationArgs;
+
+export const FORWARDED_PROCESS_REQUESTS_QUERY = gql`
+  query forwardedProcessRequests(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    forwardedProcessRequests(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          status
+          process {
+            id
+            name
+            description
+          }
+          user {
+            id
+            firstName
+            lastName
+            email
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface ForwardedProcessRequestsNode {
+  id: string;
+  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+  process: {
+    id: string;
+    name: string;
+    description: string;
+  };
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+export interface ForwardedProcessRequestsQueryResult {
+  forwardedProcessRequests: {
+    pageInfo: PageInfo;
+    edges: {
+      cursor: string;
+      node: ForwardedProcessRequestsNode;
+    }[];
+  };
+}
+
+export type ForwardedProcessRequestsQueryVariables = PaginationArgs;
