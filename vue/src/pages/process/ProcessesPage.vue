@@ -7,7 +7,7 @@ import {
 } from "src/apollo/queries";
 import { Process } from "src/interfaces";
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import ProcessList from "src/components/process/ProcessList.vue";
 
 const processes = ref<Process[]>([]);
 const { onResult } = useQuery<ProcessesQueryResult, ProcessesQueryVariables>(
@@ -22,25 +22,7 @@ onResult((result) => {
 
 <template>
   <q-page class="container">
-    <div class="row q-col-gutter-md">
-      <template v-for="(process, index) in processes" :key="index">
-        <div class="col-12 col-md-4">
-          <router-link
-            class="muted-link"
-            :to="{ name: 'process', params: { slug: process.slug } }"
-          >
-            <q-card>
-              <q-card-section>
-                <div class="text-h6">{{ process.name }}</div>
-                <div class="q-mt-sm">
-                  {{ process.description }}
-                </div>
-              </q-card-section>
-            </q-card>
-          </router-link>
-        </div>
-      </template>
-    </div>
+    <ProcessList :processes="processes" />
   </q-page>
 </template>
 
