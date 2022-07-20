@@ -1,3 +1,5 @@
+import { userIsAdmin } from "src/common/permissions";
+import { useAuthStore } from "src/stores/auth";
 import { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
@@ -8,7 +10,17 @@ const routes: RouteRecordRaw[] = [
       {
         path: "",
         name: "index",
-        component: () => import("pages/IndexPage.vue"),
+        redirect: () => {
+          const authStore = useAuthStore();
+          const groups = authStore.state.user?.groups;
+          if (groups && groups.length) {
+            if (userIsAdmin(groups)) {
+              return { name: "admin" };
+            }
+            return { name: "process-request-manage" };
+          }
+          return { name: "processes" };
+        },
       },
       {
         path: "/processes",

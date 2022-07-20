@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import AppHeader from "src/components/AppHeader.vue";
 
 const leftDrawerOpen = ref(false);
 const miniState = ref(false);
@@ -45,15 +45,7 @@ function toggle() {
 
 <template>
   <q-layout view="hHh LpR fff">
-    <q-header elevated class="bg-primary text-white">
-      <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggle" />
-
-        <q-toolbar-title>
-          <router-link :to="{ name: 'index' }">SAAPIE</router-link>
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
+    <AppHeader :toggle-left-drawer="toggle" />
 
     <q-drawer
       v-model="leftDrawerOpen"
