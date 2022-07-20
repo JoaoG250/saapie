@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import {
@@ -17,6 +18,13 @@ import {
   UPDATE_PROCESS_REQUEST_MUTATION,
 } from "src/apollo/mutations";
 import { useQuasar } from "quasar";
+
+interface Data {
+  [key: string]: any;
+}
+interface Files {
+  [key: string]: string[];
+}
 
 const route = useRoute();
 const $q = useQuasar();
@@ -43,37 +51,35 @@ onResult((result) => {
 });
 
 const formData = computed(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const computedData: { [key: string]: any } = {};
-  if (processRequest.value) {
-    const data = processRequest.value.data;
-    if (typeof data === "object") {
-      for (const key in data) {
-        const value = data[key];
-        if (
-          Array.isArray(value) &&
-          value.length &&
-          typeof value[0] === "object"
-        ) {
-          computedData[key] = {
-            value: value,
-            help: "Visualizar o arquivo",
-            "sections-schema": {
-              help: {
-                $el: "a",
-                attrs: { href: value[0].name, target: "_blank" },
-              },
-            },
-          };
-        } else {
-          computedData[key] = {
-            value: value,
-          };
+  const data: { data: Data; files: Files } = {
+    data: {},
+    files: {},
+  };
+  if (!processRequest.value) return data;
+  const requestData = processRequest.value.data;
+  for (const key in requestData) {
+    const value = requestData[key];
+    if (Array.isArray(value) && value.length) {
+      for (const item of value) {
+        if (typeof item !== "object") continue;
+        if (!data.files[key]) {
+          data.files[key] = [];
         }
+        data.files[key].push(item.name);
       }
     }
+    data.data[key] = {
+      value: value,
+    };
   }
-  return computedData;
+  return data;
+});
+const hasAttachments = computed(() => {
+  const data = formData.value;
+  for (const key in data.files) {
+    if (data.files[key].length) return true;
+  }
+  return false;
 });
 
 const schema = computed<FormKitSchemaNode[]>(() => {
@@ -108,6 +114,9 @@ async function submitHandler(data: FormKitData) {
       message: "Pedido de abertura de processo atualizado com sucesso!",
       icon: "check",
     });
+    setTimeout(() => {
+      editing.value = false;
+    }, 100);
   } catch (err) {
     if (err instanceof Error) {
       $q.notify({
@@ -119,6 +128,18 @@ async function submitHandler(data: FormKitData) {
     }
     throw err;
   }
+}
+
+function downloadFile(url: string) {
+  const filename = url.split("/").pop();
+  if (!filename) return;
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 </script>
 
@@ -144,14 +165,63 @@ async function submitHandler(data: FormKitData) {
         :disabled="!editing"
         @submit="submitHandler"
       >
-        <FormKitSchema :data="formData" :schema="schema" />
+        <FormKitSchema :data="formData.data" :schema="schema" />
       </FormKit>
+
+      <template v-if="hasAttachments">
+        <div class="text-h4 text-center text-weight-bold q-my-lg">Anexos</div>
+        <q-separator class="q-mb-md" inset />
+        <div class="row">
+          <div
+            v-for="(urls, field) in formData.files"
+            :key="field"
+            class="col-12 col-sm-6 col-md-4"
+          >
+            <q-card>
+              <q-card-section class="bg-primary text-white">
+                <div class="text-h6 text-center">
+                  {{ field.toString().toUpperCase() }}
+                </div>
+              </q-card-section>
+              <q-list>
+                <q-item v-for="(url, index) in urls" :key="index">
+                  <q-item-section avatar>
+                    <q-icon name="description" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Anexo {{ index + 1 }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <div class="q-gutter-xs">
+                      <q-btn
+                        :href="url"
+                        target="_blank"
+                        icon="visibility"
+                        flat
+                        dense
+                        round
+                      />
+                      <q-btn
+                        icon="file_download"
+                        flat
+                        dense
+                        round
+                        @click="downloadFile(url)"
+                      />
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card>
+          </div>
+        </div>
+      </template>
     </template>
   </q-page>
 </template>
 
 <style lang="scss" scoped>
-.container {
+.container :deep(.formkit-form) {
   --fk-max-width-input: 100%;
 }
 </style>
