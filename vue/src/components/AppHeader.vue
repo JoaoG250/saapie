@@ -2,6 +2,7 @@
 import { useMenuList } from "src/composables";
 import { useAuthStore } from "src/stores/auth";
 import { useRouter, RouterLink } from "vue-router";
+import { userIsAdmin } from "src/common/permissions";
 
 interface AppHeaderProps {
   toggleLeftDrawer: () => void;
@@ -42,7 +43,12 @@ async function handleSignout() {
       >
         <q-menu>
           <q-list style="min-width: 100px">
-            <q-item v-close-popup clickable :to="{ name: 'admin' }">
+            <q-item
+              v-if="userIsAdmin(authStore.state.user.groups)"
+              v-close-popup
+              clickable
+              :to="{ name: 'admin' }"
+            >
               <q-item-section>
                 <div class="row justify-between items-center">
                   Admin

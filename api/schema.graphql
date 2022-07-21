@@ -214,6 +214,7 @@ type Query {
     last: Int
     where: GroupWhereInput
   ): QueryGroups_Connection!
+  isEmailAvailable(email: String!): Boolean!
   me: User!
   process(id: ID, slug: String): Process
   processRequest(id: ID!): ProcessRequest

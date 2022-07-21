@@ -19,6 +19,7 @@ async function signin() {
     await authStore.actions.signin(form);
   } catch (err) {
     if (err instanceof Error) {
+      // TODO: error message localization
       $q.notify({
         position: "top",
         color: "negative",

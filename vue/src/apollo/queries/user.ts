@@ -149,3 +149,17 @@ export interface UserGroupsQueryResult {
 }
 
 export type UserGroupsQueryVariables = UserQueryVariables;
+
+export const IS_EMAIL_AVAILABLE_QUERY = gql`
+  query isEmailAvailable($email: String!) {
+    isEmailAvailable(email: $email)
+  }
+`;
+
+export interface IsEmailAvailableQueryResult {
+  isEmailAvailable: boolean;
+}
+
+export type IsEmailAvailableQueryVariables = {
+  email: string;
+};

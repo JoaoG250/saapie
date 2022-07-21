@@ -33,6 +33,13 @@ const isProcessRequestOwner = rule()(
   }
 );
 
+const isUserInGroup = rule()((_root, _args, ctx: GraphQLContext) => {
+  if (ctx.user?.groups.length) {
+    return true;
+  }
+  return new ForbiddenError("Not Authorised!");
+});
+
 export const permissions = shield(
   {
     Query: {
@@ -41,12 +48,12 @@ export const permissions = shield(
       users: and(isAuthenticated, isAdmin),
       group: and(isAuthenticated, isAdmin),
       groups: and(isAuthenticated, isAdmin),
-      process: and(isAuthenticated, isAdmin),
-      processes: and(isAuthenticated, isAdmin),
+      process: isAuthenticated,
+      processes: isAuthenticated,
       processRequest: and(isAuthenticated, or(isAdmin, isProcessRequestOwner)),
       processRequests: isAuthenticated,
-      assignedProcessRequests: isAuthenticated,
-      forwardedProcessRequests: isAuthenticated,
+      assignedProcessRequests: and(isAuthenticated, isUserInGroup),
+      forwardedProcessRequests: and(isAuthenticated, isUserInGroup),
     },
     Mutation: {
       createUser: and(isAuthenticated, isAdmin),
@@ -66,6 +73,7 @@ export const permissions = shield(
         or(isAdmin, isProcessRequestOwner)
       ),
       deleteProcessRequest: and(isAuthenticated, isAdmin),
+      updateProcessRequestStatus: and(isAuthenticated, isUserInGroup),
     },
   },
   {

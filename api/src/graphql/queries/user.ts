@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { AuthenticationError } from "apollo-server-express";
-import { arg, extendType, idArg, nullable } from "nexus";
+import { arg, extendType, idArg, nullable, stringArg } from "nexus";
 import { UserNotFoundError } from "../../errors";
 import { getUsersUseCase, getUserUseCase } from "../../useCases/user";
 import { parsePaginationArgs } from "../../utils";
@@ -50,6 +50,16 @@ export const userQueries = extendType({
         t.int("totalCount", {
           resolve: (_root, _args, ctx) => ctx.prisma.user.count(),
         });
+      },
+    });
+    t.field("isEmailAvailable", {
+      type: "Boolean",
+      args: {
+        email: stringArg(),
+      },
+      async resolve(_root, args) {
+        const user = await getUserUseCase.execute({ email: args.email });
+        return !user;
       },
     });
   },

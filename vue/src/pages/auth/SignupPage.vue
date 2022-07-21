@@ -2,12 +2,16 @@
 import { useQuasar } from "quasar";
 import { useAuthStore } from "stores/auth";
 import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
 import { userRules } from "src/validation/user";
 import { matches } from "src/validation";
+import { useAsyncQuery } from "src/composables";
+import {
+  IsEmailAvailableQueryResult,
+  IsEmailAvailableQueryVariables,
+  IS_EMAIL_AVAILABLE_QUERY,
+} from "src/apollo/queries";
 
 const $q = useQuasar();
-const router = useRouter();
 const authStore = useAuthStore();
 const form = reactive({
   firstName: "",
@@ -15,6 +19,7 @@ const form = reactive({
   email: "",
   password: "",
 });
+const success = ref(false);
 const confirmPassword = ref("");
 const confirmPasswordRules = [
   ...userRules["password"],
@@ -26,11 +31,27 @@ const confirmPasswordRules = [
       targetLabel: "Senha",
     }),
 ];
-// TODO: Email availability check
+
+async function isEmailAvailable(email: string): Promise<boolean> {
+  const data = await useAsyncQuery<
+    IsEmailAvailableQueryResult,
+    IsEmailAvailableQueryVariables
+  >(IS_EMAIL_AVAILABLE_QUERY, { variables: { email } });
+  if (!data.isEmailAvailable) {
+    $q.notify({
+      position: "top",
+      color: "negative",
+      message: "Este email já está sendo usado",
+      icon: "report_problem",
+    });
+  }
+  return data.isEmailAvailable;
+}
 
 async function signup() {
   try {
-    await authStore.actions.signup(form);
+    if (!(await isEmailAvailable(form.email))) return;
+    success.value = await authStore.actions.signup(form);
   } catch (err) {
     if (err instanceof Error) {
       $q.notify({
@@ -48,14 +69,13 @@ async function signup() {
     message: "Cadastro realizado com sucesso!",
     icon: "check",
   });
-  await router.push({ name: "signin" });
 }
 </script>
 
 <template>
   <q-page class="row items-center justify-center">
     <q-card style="width: 450px">
-      <q-form @submit="signup">
+      <q-form v-if="!success" @submit="signup">
         <q-card-section>
           <div class="text-h4 text-center">Cadastro</div>
         </q-card-section>
@@ -112,6 +132,27 @@ async function signup() {
           </div>
         </q-card-section>
       </q-form>
+      <q-card-section v-else>
+        <q-banner rounded class="text-white bg-positive">
+          <template #avatar>
+            <q-icon name="check" color="white" />
+          </template>
+          <div class="text-h6 q-mb-md">Cadastro realizado com sucesso!</div>
+          <p>
+            Antes de você poder autenticar você precisa ativar sua conta.<br />
+            Enviamos um email de ativação.<br />
+            Por favor, verifique sua caixa de entrada e clique no link no email
+            para ativar sua conta.
+          </p>
+          <template #action>
+            <q-btn
+              :to="{ name: 'signin' }"
+              flat
+              label="Voltar para autenticação"
+            />
+          </template>
+        </q-banner>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
