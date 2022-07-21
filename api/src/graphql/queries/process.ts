@@ -82,6 +82,7 @@ export const processQueries = extendType({
           return { name: group };
         });
         const where: Prisma.ProcessRequestWhereInput = {
+          status: { not: "FORWARDED" },
           process: { targetGroup: { OR } },
         };
         return getProcessRequestsUseCase.execute({ ...pagination, where });

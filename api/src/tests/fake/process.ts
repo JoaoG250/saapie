@@ -134,7 +134,7 @@ interface CreateFakeProcessArgs {
   name?: string;
   slug?: string;
   targetGroupId?: string;
-  forwardToGroupId?: string;
+  forwardToGroupId?: string | null;
 }
 
 export function createFakeProcess(
@@ -154,7 +154,7 @@ interface CreateFakeProcessRequestArgs {
   updatedAt?: Date;
   processId?: string;
   userId?: string;
-  status?: `${ProcessRequestStatus}`;
+  status?: ProcessRequestStatus;
   data?: FormKitData;
 }
 
