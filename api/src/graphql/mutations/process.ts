@@ -13,6 +13,7 @@ import {
   createProcessUseCase,
   deleteProcessRequestUseCase,
   deleteProcessUseCase,
+  updateProcessRequestStatusUseCase,
   updateProcessRequestUseCase,
   updateProcessUseCase,
 } from "../../useCases/process";
@@ -169,6 +170,29 @@ export const ProcessMutations = extendType({
           return await deleteProcessRequestUseCase.execute(args);
         } catch (err) {
           if (err instanceof ProcessRequestNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("updateProcessRequestStatus", {
+      type: "ProcessRequest",
+      args: {
+        id: idArg(),
+        status: arg({ type: "ProcessRequestStatus" }),
+      },
+      async resolve(_root, args) {
+        try {
+          return await updateProcessRequestStatusUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessRequestNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof ProcessNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof IntegrityError) {
             throw new UserInputError(err.message);
           }
           throw err;

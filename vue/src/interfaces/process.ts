@@ -9,6 +9,12 @@ export interface ProcessForm {
   definition: object[];
 }
 
+export type ProcessRequestStatus =
+  | "OPEN"
+  | "FORWARDED"
+  | "PENDING_CHANGE"
+  | "CLOSED";
+
 export interface Process {
   id: string;
   name: string;
@@ -40,7 +46,7 @@ export type UpdateProcessInput = CreateProcessInput;
 
 export interface ProcessRequest {
   id: string;
-  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+  status: ProcessRequestStatus;
   processId: string;
   userId: string;
   data: FormKitData;

@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 import {
   CreateProcessInput,
   FormKitData,
+  ProcessRequestStatus,
   UpdateProcessInput,
 } from "src/interfaces";
 
@@ -202,7 +203,7 @@ export const CREATE_PROCESS_REQUEST_MUTATION = gql`
 export interface CreateProcessRequestMutationResult {
   createProcessRequest: {
     id: string;
-    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    status: ProcessRequestStatus;
     processId: string;
     userId: string;
     data: FormKitData;
@@ -235,7 +236,7 @@ export const UPDATE_PROCESS_REQUEST_MUTATION = gql`
 export interface UpdateProcessRequestMutationResult {
   updateProcessRequest: {
     id: string;
-    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    status: ProcessRequestStatus;
     processId: string;
     userId: string;
     data: FormKitData;
@@ -263,7 +264,7 @@ export const DELETE_PROCESS_REQUEST_MUTATION = gql`
 export interface DeleteProcessRequestMutationResult {
   deleteProcessRequest: {
     id: string;
-    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    status: ProcessRequestStatus;
     processId: string;
     userId: string;
     data: FormKitData;
@@ -272,4 +273,34 @@ export interface DeleteProcessRequestMutationResult {
 
 export interface DeleteProcessRequestMutationVariables {
   id: string;
+}
+
+export const UPDATE_PROCESS_REQUEST_STATUS_MUTATION = gql`
+  mutation updateProcessRequestStatus(
+    $id: ID!
+    $status: ProcessRequestStatus!
+  ) {
+    updateProcessRequestStatus(id: $id, status: $status) {
+      id
+      status
+      processId
+      userId
+      data
+    }
+  }
+`;
+
+export interface UpdateProcessRequestStatusMutationResult {
+  updateProcessRequestStatus: {
+    id: string;
+    status: ProcessRequestStatus;
+    processId: string;
+    userId: string;
+    data: FormKitData;
+  };
+}
+
+export interface UpdateProcessRequestStatusMutationVariables {
+  id: string;
+  status: ProcessRequestStatus;
 }

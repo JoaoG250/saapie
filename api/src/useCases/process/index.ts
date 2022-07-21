@@ -16,6 +16,7 @@ import { GetProcessRequestUseCase } from "./getProcessRequest/get-process-reques
 import { GetProcessRequestsUseCase } from "./getProcessRequests/get-process-requests.usecase";
 import { UpdateProcessUseCase } from "./updateProcess/update-process.usecase";
 import { UpdateProcessRequestUseCase } from "./updateProcessRequest/update-process-request.usecase";
+import { UpdateProcessRequestStatusUseCase } from "./updateProcessRequestStatus/update-process-request-status.usecase";
 
 const getProcessUseCase = new GetProcessUseCase(processRepository);
 const getProcessesUseCase = new GetProcessesUseCase(processRepository);
@@ -49,6 +50,10 @@ const updateProcessRequestUseCase = new UpdateProcessRequestUseCase(
 const deleteProcessRequestUseCase = new DeleteProcessRequestUseCase(
   processRequestRepository
 );
+const updateProcessRequestStatusUseCase = new UpdateProcessRequestStatusUseCase(
+  processRequestRepository,
+  processRepository
+);
 
 export {
   getProcessUseCase,
@@ -61,4 +66,5 @@ export {
   createProcessRequestUseCase,
   updateProcessRequestUseCase,
   deleteProcessRequestUseCase,
+  updateProcessRequestStatusUseCase,
 };

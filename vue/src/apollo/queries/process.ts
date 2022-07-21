@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import gql from "graphql-tag";
-import { FormKitData, PageInfo, PaginationArgs } from "src/interfaces";
+import {
+  FormKitData,
+  PageInfo,
+  PaginationArgs,
+  ProcessRequestStatus,
+} from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
   query process($id: ID, $slug: String) {
@@ -168,7 +173,7 @@ export const PROCESS_REQUEST_QUERY = gql`
 export interface ProcessRequestQueryResult {
   processRequest: {
     id: string;
-    status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+    status: ProcessRequestStatus;
     data: FormKitData;
     process: {
       id: string;
@@ -250,7 +255,7 @@ export interface ProcessRequestsQueryResult {
       cursor: string;
       node: {
         id: string;
-        status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+        status: ProcessRequestStatus;
         processId: string;
         process: {
           id: string;
@@ -310,7 +315,7 @@ export const ASSIGNED_PROCESS_REQUESTS_QUERY = gql`
 
 export interface AssignedProcessRequestsNode {
   id: string;
-  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+  status: ProcessRequestStatus;
   process: {
     id: string;
     name: string;
@@ -379,7 +384,7 @@ export const FORWARDED_PROCESS_REQUESTS_QUERY = gql`
 
 export interface ForwardedProcessRequestsNode {
   id: string;
-  status: "OPEN" | "FORWARDED" | "PENDING_CHANGE" | "CLOSED";
+  status: ProcessRequestStatus;
   process: {
     id: string;
     name: string;

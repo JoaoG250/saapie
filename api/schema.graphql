@@ -80,6 +80,7 @@ type Mutation {
   updateGroup(data: UpdateGroupInput!, id: ID!): Group!
   updateProcess(data: UpdateProcessInput!, id: ID!): Process!
   updateProcessRequest(attachments: [Upload!], data: JSON!, id: ID!): ProcessRequest!
+  updateProcessRequestStatus(id: ID!, status: ProcessRequestStatus!): ProcessRequest!
   updateUser(data: UpdateUserInput!, id: ID!): User!
 }
 
