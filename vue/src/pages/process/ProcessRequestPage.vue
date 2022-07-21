@@ -7,7 +7,11 @@ import {
   PROCESS_REQUEST_QUERY,
 } from "src/apollo/queries";
 import { FormKitSchema } from "@formkit/vue";
-import { FormKitData, ProcessRequestWithProcessAndUser } from "src/interfaces";
+import {
+  FormKitData,
+  ProcessRequestStatus,
+  ProcessRequestWithProcessAndUser,
+} from "src/interfaces";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { FormKitSchemaNode } from "@formkit/core";
@@ -15,7 +19,10 @@ import { getFilesFromFormKitData } from "src/common/forms";
 import {
   UpdateProcessRequestMutationResult,
   UpdateProcessRequestMutationVariables,
+  UpdateProcessRequestStatusMutationResult,
+  UpdateProcessRequestStatusMutationVariables,
   UPDATE_PROCESS_REQUEST_MUTATION,
+  UPDATE_PROCESS_REQUEST_STATUS_MUTATION,
 } from "src/apollo/mutations";
 import { useQuasar } from "quasar";
 import { useAuthStore } from "src/stores/auth";
@@ -89,6 +96,17 @@ const allowEdit = computed(() => {
   if (processRequest.value.user.id === authStore.state.user.id) return true;
   return false;
 });
+const showFab = computed(() => {
+  if (!authStore.state.user) return false;
+  if (!processRequest.value) return false;
+  if (
+    processRequest.value.status !== "CLOSED" &&
+    authStore.state.user.groups.length
+  ) {
+    return true;
+  }
+  return false;
+});
 const schema = computed<FormKitSchemaNode[]>(() => {
   if (processRequest.value) {
     return processRequest.value.process.form.definition as FormKitSchemaNode[];
@@ -136,14 +154,80 @@ async function submitHandler(data: FormKitData) {
     throw err;
   }
 }
+
+function updateRequestStatus(
+  status: ProcessRequestStatus,
+  confirmMessage: string,
+  successMessage: string
+) {
+  if (!processRequest.value) return;
+  const { mutate } = useMutation<
+    UpdateProcessRequestStatusMutationResult,
+    UpdateProcessRequestStatusMutationVariables
+  >(UPDATE_PROCESS_REQUEST_STATUS_MUTATION, {
+    variables: { id: processRequest.value.id, status },
+  });
+  $q.dialog({
+    title: "Confirmação",
+    message: confirmMessage,
+    ok: { label: "Ok" },
+    cancel: { flat: true, label: "Cancelar" },
+    persistent: true,
+  }).onOk(async () => {
+    try {
+      if (!processRequest.value) return;
+      const response = await mutate();
+      if (!response?.data) {
+        throw new Error("Error updating process request");
+      }
+      processRequest.value = {
+        ...processRequest.value,
+        ...response.data.updateProcessRequestStatus,
+      };
+      $q.notify({
+        position: "top",
+        color: "positive",
+        message: successMessage,
+        icon: "check",
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        $q.notify({
+          position: "top",
+          color: "negative",
+          message: err.message,
+          icon: "report_problem",
+        });
+      }
+      throw err;
+    }
+  });
+}
+
+function closeRequest() {
+  updateRequestStatus(
+    "CLOSED",
+    "Deseja marcar o pedido de abertura de processo como iniciado?",
+    "Pedido de abertura de processo marcado como iniciado!"
+  );
+}
+
+function forwardRequest() {
+  updateRequestStatus(
+    "FORWARDED",
+    "Deseja encaminhar o pedido de abertura de processo?",
+    "Pedido de abertura de processo encaminhado!"
+  );
+}
 </script>
 
 <template>
   <q-page class="container">
     <template v-if="processRequest">
-      <div class="text-h4 text-weight-bold q-my-md">
+      <div class="text-h4 text-weight-bold text-center q-my-md">
         {{ processRequest.process.name }}
       </div>
+      <q-separator class="q-mb-md" inset />
       <div class="row">
         <q-space />
         <q-toggle
@@ -169,6 +253,29 @@ async function submitHandler(data: FormKitData) {
         <q-separator class="q-mb-md" inset />
         <ProcessRequestAttachmentList :files="formData.files" />
       </template>
+
+      <q-page-sticky v-if="showFab" position="bottom-right" :offset="[18, 18]">
+        <q-fab
+          label="Opções"
+          color="secondary"
+          icon="keyboard_arrow_down"
+          direction="up"
+        >
+          <q-fab-action
+            v-if="processRequest.process.forwardToGroup"
+            color="primary"
+            icon="forward"
+            label="Encaminhar"
+            @click="forwardRequest"
+          />
+          <q-fab-action
+            color="positive"
+            icon="check"
+            label="Finalizar"
+            @click="closeRequest"
+          />
+        </q-fab>
+      </q-page-sticky>
     </template>
   </q-page>
 </template>

@@ -22,9 +22,10 @@ onResult((result) => {
 
 <template>
   <q-page class="container">
-    <div class="text-h4 text-weight-bold q-my-md">
+    <div class="text-h4 text-weight-bold text-center q-my-md">
       Pedidos de abertura de processo
     </div>
+    <q-separator class="q-mb-md" inset />
     <q-list class="rounded-borders" bordered>
       <template v-for="(request, index) in processRequests" :key="index">
         <q-item :to="{ name: 'process-request', params: { id: request.id } }">

@@ -93,7 +93,8 @@ async function submitHandler(data: FormKitData) {
       </div>
       <div v-if="process" class="column">
         <div class="text-h4 text-weight-bold q-mt-md">{{ process.name }}</div>
-        <div class="text-subtitle1 q-mb-lg">{{ process.description }}</div>
+        <div class="text-subtitle1 q-mb-sm">{{ process.description }}</div>
+        <q-separator class="q-mb-md" inset />
         <FormKit type="form" @submit="submitHandler">
           <FormKitSchema :schema="schema" />
         </FormKit>

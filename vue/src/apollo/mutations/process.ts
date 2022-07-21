@@ -281,22 +281,14 @@ export const UPDATE_PROCESS_REQUEST_STATUS_MUTATION = gql`
     $status: ProcessRequestStatus!
   ) {
     updateProcessRequestStatus(id: $id, status: $status) {
-      id
       status
-      processId
-      userId
-      data
     }
   }
 `;
 
 export interface UpdateProcessRequestStatusMutationResult {
   updateProcessRequestStatus: {
-    id: string;
     status: ProcessRequestStatus;
-    processId: string;
-    userId: string;
-    data: FormKitData;
   };
 }
 
