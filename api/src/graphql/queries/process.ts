@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
-import { extendType, idArg, nullable, stringArg } from "nexus";
+import { arg, extendType, idArg, nullable, stringArg } from "nexus";
 import {
   getProcessesUseCase,
   getProcessUseCase,
@@ -31,9 +31,21 @@ export const processQueries = extendType({
     });
     t.connectionField("processes", {
       type: "Process",
+      additionalArgs: {
+        orderBy: nullable(arg({ type: "ProcessOrderByInput" })),
+      },
       nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
-        return getProcessesUseCase.execute({ ...pagination });
+        let orderBy: Prisma.ProcessOrderByWithRelationInput = {
+          createdAt: "desc",
+        };
+        if (args.orderBy) {
+          orderBy = {};
+          orderBy.createdAt = removeNullability(args.orderBy.createdAt);
+          orderBy.updatedAt = removeNullability(args.orderBy.updatedAt);
+          orderBy.name = removeNullability(args.orderBy.name);
+        }
+        return getProcessesUseCase.execute({ ...pagination, orderBy });
       },
       extendConnection(t) {
         t.int("totalCount", {
@@ -52,6 +64,9 @@ export const processQueries = extendType({
     });
     t.connectionField("processRequests", {
       type: "ProcessRequest",
+      additionalArgs: {
+        orderBy: nullable(arg({ type: "ProcessRequestOrderByInput" })),
+      },
       nodes(_root, args, ctx) {
         if (!ctx.user) {
           throw new AuthenticationError("Not Authorised!");
@@ -63,7 +78,20 @@ export const processQueries = extendType({
             userId: ctx.user.id,
           };
         }
-        return getProcessRequestsUseCase.execute({ ...pagination, where });
+        let orderBy: Prisma.ProcessRequestOrderByWithRelationInput = {
+          createdAt: "desc",
+        };
+        if (args.orderBy) {
+          orderBy = {};
+          orderBy.createdAt = removeNullability(args.orderBy.createdAt);
+          orderBy.updatedAt = removeNullability(args.orderBy.updatedAt);
+          orderBy.status = removeNullability(args.orderBy.status);
+        }
+        return getProcessRequestsUseCase.execute({
+          ...pagination,
+          where,
+          orderBy,
+        });
       },
       extendConnection(t) {
         t.int("totalCount", {
@@ -82,10 +110,17 @@ export const processQueries = extendType({
           return { name: group };
         });
         const where: Prisma.ProcessRequestWhereInput = {
-          status: { not: "FORWARDED" },
+          status: { in: ["OPEN", "PENDING_CHANGE"] },
           process: { targetGroup: { OR } },
         };
-        return getProcessRequestsUseCase.execute({ ...pagination, where });
+        const orderBy: Prisma.ProcessRequestOrderByWithRelationInput = {
+          createdAt: "desc",
+        };
+        return getProcessRequestsUseCase.execute({
+          ...pagination,
+          where,
+          orderBy,
+        });
       },
     });
     t.connectionField("forwardedProcessRequests", {
@@ -102,7 +137,14 @@ export const processQueries = extendType({
           status: "FORWARDED",
           process: { forwardToGroup: { OR } },
         };
-        return getProcessRequestsUseCase.execute({ ...pagination, where });
+        const orderBy: Prisma.ProcessRequestOrderByWithRelationInput = {
+          createdAt: "desc",
+        };
+        return getProcessRequestsUseCase.execute({
+          ...pagination,
+          where,
+          orderBy,
+        });
       },
     });
   },

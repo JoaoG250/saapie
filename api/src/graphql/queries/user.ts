@@ -3,7 +3,7 @@ import { AuthenticationError } from "apollo-server-express";
 import { arg, extendType, idArg, nullable, stringArg } from "nexus";
 import { UserNotFoundError } from "../../errors";
 import { getUsersUseCase, getUserUseCase } from "../../useCases/user";
-import { parsePaginationArgs } from "../../utils";
+import { parsePaginationArgs, removeNullability } from "../../utils";
 
 export const userQueries = extendType({
   type: "Query",
@@ -34,6 +34,7 @@ export const userQueries = extendType({
       type: "User",
       additionalArgs: {
         where: nullable(arg({ type: "UserWhereInput" })),
+        orderBy: nullable(arg({ type: "UserOrderByInput" })),
       },
       nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
@@ -44,7 +45,18 @@ export const userQueries = extendType({
             where.email = { contains: args.where.email, mode: "insensitive" };
           }
         }
-        return getUsersUseCase.execute({ where, ...pagination });
+        let orderBy: Prisma.UserOrderByWithRelationInput = {
+          createdAt: "desc",
+        };
+        if (args.orderBy) {
+          orderBy = {};
+          orderBy.createdAt = removeNullability(args.orderBy.createdAt);
+          orderBy.updatedAt = removeNullability(args.orderBy.updatedAt);
+          orderBy.email = removeNullability(args.orderBy.email);
+          orderBy.isActive = removeNullability(args.orderBy.isActive);
+          orderBy.isVerified = removeNullability(args.orderBy.isVerified);
+        }
+        return getUsersUseCase.execute({ where, orderBy, ...pagination });
       },
       extendConnection(t) {
         t.int("totalCount", {

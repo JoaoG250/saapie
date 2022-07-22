@@ -51,6 +51,12 @@ type GroupEdge {
   node: Group!
 }
 
+input GroupOrderByInput {
+  createdAt: SortOrderInput
+  name: SortOrderInput
+  updatedAt: SortOrderInput
+}
+
 input GroupWhereInput {
   name: String
 }
@@ -135,6 +141,12 @@ type ProcessForm {
   name: String!
 }
 
+input ProcessOrderByInput {
+  createdAt: SortOrderInput
+  name: SortOrderInput
+  updatedAt: SortOrderInput
+}
+
 type ProcessRequest {
   data: JSON!
   id: ID!
@@ -163,6 +175,12 @@ type ProcessRequestEdge {
 
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: ProcessRequest!
+}
+
+input ProcessRequestOrderByInput {
+  createdAt: SortOrderInput
+  status: SortOrderInput
+  updatedAt: SortOrderInput
 }
 
 enum ProcessRequestStatus {
@@ -212,6 +230,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    orderBy: GroupOrderByInput
     where: GroupWhereInput
   ): QueryGroups_Connection!
   isEmailAvailable(email: String!): Boolean!
@@ -230,6 +249,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    orderBy: ProcessRequestOrderByInput
   ): QueryProcessRequests_Connection!
   processes(
     """Returns the elements in the list that come after the specified cursor"""
@@ -243,6 +263,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    orderBy: ProcessOrderByInput
   ): QueryProcesses_Connection!
   user(id: ID!): User
   users(
@@ -257,6 +278,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    orderBy: UserOrderByInput
     where: UserWhereInput
   ): QueryUsers_Connection!
 }
@@ -313,6 +335,11 @@ type QueryUsers_Connection {
   totalCount: Int!
 }
 
+enum SortOrderInput {
+  asc
+  desc
+}
+
 input UpdateGroupInput {
   name: String!
 }
@@ -357,6 +384,14 @@ type UserEdge {
 
   """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: User!
+}
+
+input UserOrderByInput {
+  createdAt: SortOrderInput
+  email: SortOrderInput
+  isActive: SortOrderInput
+  isVerified: SortOrderInput
+  updatedAt: SortOrderInput
 }
 
 input UserWhereInput {

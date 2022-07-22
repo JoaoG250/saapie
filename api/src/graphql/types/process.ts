@@ -128,3 +128,21 @@ export const UpdateProcessInput = inputObjectType({
     t.field("form", { type: "UpdateProcessFormInput" });
   },
 });
+
+export const ProcessOrderByInput = inputObjectType({
+  name: "ProcessOrderByInput",
+  definition(t) {
+    t.nullable.field("createdAt", { type: "SortOrderInput" });
+    t.nullable.field("updatedAt", { type: "SortOrderInput" });
+    t.nullable.field("name", { type: "SortOrderInput" });
+  },
+});
+
+export const ProcessRequestOrderByInput = inputObjectType({
+  name: "ProcessRequestOrderByInput",
+  definition(t) {
+    t.nullable.field("createdAt", { type: "SortOrderInput" });
+    t.nullable.field("updatedAt", { type: "SortOrderInput" });
+    t.nullable.field("status", { type: "SortOrderInput" });
+  },
+});

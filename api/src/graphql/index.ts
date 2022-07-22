@@ -1,4 +1,5 @@
 // Types
+export * from "./types/inputs";
 export * from "./types/scalars";
 export * from "./types/auth";
 export * from "./types/user";

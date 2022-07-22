@@ -28,3 +28,12 @@ export const GroupWhereInput = inputObjectType({
     t.nullable.string("name");
   },
 });
+
+export const GroupOrderByInput = inputObjectType({
+  name: "GroupOrderByInput",
+  definition(t) {
+    t.nullable.field("createdAt", { type: "SortOrderInput" });
+    t.nullable.field("updatedAt", { type: "SortOrderInput" });
+    t.nullable.field("name", { type: "SortOrderInput" });
+  },
+});

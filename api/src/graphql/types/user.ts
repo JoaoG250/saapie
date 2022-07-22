@@ -51,3 +51,14 @@ export const UserWhereInput = inputObjectType({
     t.nullable.string("email");
   },
 });
+
+export const UserOrderByInput = inputObjectType({
+  name: "UserOrderByInput",
+  definition(t) {
+    t.nullable.field("createdAt", { type: "SortOrderInput" });
+    t.nullable.field("updatedAt", { type: "SortOrderInput" });
+    t.nullable.field("email", { type: "SortOrderInput" });
+    t.nullable.field("isActive", { type: "SortOrderInput" });
+    t.nullable.field("isVerified", { type: "SortOrderInput" });
+  },
+});
