@@ -23,6 +23,7 @@ onResult((result) => {
     (edge) => edge.node
   );
 });
+// TODO: implement list infinite scroll
 </script>
 
 <template>

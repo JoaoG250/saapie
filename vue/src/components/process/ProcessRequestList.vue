@@ -14,6 +14,7 @@ interface ProcessRequestListProps {
   }[];
 }
 defineProps<ProcessRequestListProps>();
+// TODO: implement list infinite scroll
 </script>
 
 <template>
@@ -30,7 +31,7 @@ defineProps<ProcessRequestListProps>();
           <q-item-label caption>{{ request.status }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-separator v-if="index < processRequests.length - 1" spaced inset />
+      <q-separator v-if="index < processRequests.length - 1" />
     </template>
     <q-item v-if="processRequests.length === 0">
       <q-item-section avatar>
