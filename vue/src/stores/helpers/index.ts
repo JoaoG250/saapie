@@ -5,10 +5,15 @@ import {
   PaginationState,
 } from "src/interfaces";
 
+interface Variables extends PaginationArgs {
+  where?: unknown;
+  orderBy?: unknown;
+}
+
 export function tablePaginate(
   state: PaginationState,
   paginate: TablePaginateArgs,
-  variables: Ref<PaginationArgs>
+  variables: Ref<Variables>
 ) {
   const goingForward = paginate.page > state.pagination.page;
   const goingBackward = paginate.page < state.pagination.page;
@@ -16,12 +21,16 @@ export function tablePaginate(
     variables.value = {
       first: paginate.rowsPerPage,
       after: state.pageInfo.endCursor,
+      where: variables.value.where,
+      orderBy: variables.value.orderBy,
     };
     state.pagination = { ...state.pagination, ...paginate };
   } else if (goingBackward && state.pageInfo.hasPreviousPage) {
     variables.value = {
       last: paginate.rowsPerPage,
       before: state.pageInfo.startCursor,
+      where: variables.value.where,
+      orderBy: variables.value.orderBy,
     };
     state.pagination = { ...state.pagination, ...paginate };
   } else if (

@@ -61,3 +61,9 @@ export interface ProcessRequestWithProcessAndUser
   process: Omit<Process, "targetGroupId" | "forwardToGroupId">;
   user: User;
 }
+
+export interface ProcessRequestWhereInput {
+  userId?: string;
+  processId?: string;
+  status?: ProcessRequestStatus;
+}

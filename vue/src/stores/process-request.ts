@@ -14,7 +14,6 @@ import { useAsyncQuery } from "src/composables";
 import {
   ProcessRequest,
   PageInfo,
-  PaginationArgs,
   TablePaginateArgs,
   TablePagination,
 } from "src/interfaces";
@@ -45,8 +44,9 @@ export const useProcessRequestStore = defineStore("process-request", () => {
     },
   });
   const loading = ref(false);
-  const fetchVariables = ref<PaginationArgs>({
+  const fetchVariables = ref<ProcessRequestsQueryVariables>({
     first: state.pagination.rowsPerPage,
+    where: {},
   });
 
   onMounted(() => {

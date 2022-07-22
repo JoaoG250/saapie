@@ -65,6 +65,7 @@ export const processQueries = extendType({
     t.connectionField("processRequests", {
       type: "ProcessRequest",
       additionalArgs: {
+        where: nullable(arg({ type: "ProcessRequestWhereInput" })),
         orderBy: nullable(arg({ type: "ProcessRequestOrderByInput" })),
       },
       nodes(_root, args, ctx) {
@@ -72,11 +73,14 @@ export const processQueries = extendType({
           throw new AuthenticationError("Not Authorised!");
         }
         const pagination = parsePaginationArgs(args);
-        let where: Prisma.ProcessRequestWhereInput | undefined = undefined;
-        if (!userIsAdmin(ctx.user)) {
-          where = {
-            userId: ctx.user.id,
-          };
+        let where: Prisma.ProcessRequestWhereInput = {
+          userId: ctx.user.id,
+        };
+        if (args.where && userIsAdmin(ctx.user)) {
+          where = {};
+          where.userId = removeNullability(args.where.userId);
+          where.processId = removeNullability(args.where.processId);
+          where.status = removeNullability(args.where.status);
         }
         let orderBy: Prisma.ProcessRequestOrderByWithRelationInput = {
           createdAt: "desc",

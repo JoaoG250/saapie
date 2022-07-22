@@ -146,3 +146,12 @@ export const ProcessRequestOrderByInput = inputObjectType({
     t.nullable.field("status", { type: "SortOrderInput" });
   },
 });
+
+export const ProcessRequestWhereInput = inputObjectType({
+  name: "ProcessRequestWhereInput",
+  definition(t) {
+    t.nullable.string("processId");
+    t.nullable.string("userId");
+    t.nullable.field("status", { type: "ProcessRequestStatus" });
+  },
+});
