@@ -14,7 +14,6 @@ interface ProcessRequestListProps {
   }[];
 }
 defineProps<ProcessRequestListProps>();
-// TODO: implement list infinite scroll
 </script>
 
 <template>

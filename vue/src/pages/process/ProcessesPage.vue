@@ -5,24 +5,70 @@ import {
   ProcessesQueryVariables,
   PROCESSES_QUERY,
 } from "src/apollo/queries";
-import { Process } from "src/interfaces";
+import { PageInfo, Process } from "src/interfaces";
 import { ref } from "vue";
 import ProcessList from "src/components/process/ProcessList.vue";
+import { QInfiniteScrollProps } from "quasar";
 
 const processes = ref<Process[]>([]);
-const { onResult } = useQuery<ProcessesQueryResult, ProcessesQueryVariables>(
-  PROCESSES_QUERY,
-  { first: 50 },
-  { fetchPolicy: "network-only" }
-);
+const pageInfo = ref<PageInfo>();
+const variables = ref<ProcessesQueryVariables>({
+  first: 30,
+});
+
+const { onResult, fetchMore } = useQuery<
+  ProcessesQueryResult,
+  ProcessesQueryVariables
+>(PROCESSES_QUERY, variables, { fetchPolicy: "network-only" });
 onResult((result) => {
   processes.value = result.data.processes.edges.map((edge) => edge.node);
+  pageInfo.value = result.data.processes.pageInfo;
 });
+
+const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
+  if (!pageInfo.value) {
+    done();
+    return;
+  }
+  if (!pageInfo.value.hasNextPage) {
+    done(true);
+    return;
+  }
+  await fetchMore({
+    variables: {
+      first: variables.value.first,
+      after: pageInfo.value.endCursor,
+    },
+    updateQuery: (prev, { fetchMoreResult }) => {
+      if (!fetchMoreResult) {
+        return prev;
+      }
+      return {
+        processes: {
+          ...fetchMoreResult.processes,
+          edges: prev.processes.edges.concat(fetchMoreResult.processes.edges),
+        },
+      };
+    },
+  });
+  if (!pageInfo.value.hasNextPage) {
+    done(true);
+    return;
+  }
+  done();
+};
 </script>
 
 <template>
   <q-page class="container">
-    <ProcessList :processes="processes" />
+    <q-infinite-scroll :offset="250" @load="onLoad">
+      <ProcessList :processes="processes" />
+      <template #loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
   </q-page>
 </template>
 
