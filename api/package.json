@@ -12,6 +12,9 @@
     "build": "tsc",
     "build:noemit": "tsc --noEmit"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@faker-js/faker": "^7.2.0",
     "@types/jest": "^28.1.1",
