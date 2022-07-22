@@ -210,6 +210,7 @@ const forwardToGroupInitial = computed(() => {
     </q-card>
   </q-dialog>
   <q-table
+    v-model:pagination="processStore.state.pagination"
     :loading="processStore.loading"
     :rows="processStore.state.items"
     :columns="columns"

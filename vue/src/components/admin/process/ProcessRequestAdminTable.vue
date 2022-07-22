@@ -85,6 +85,7 @@ const {
     </q-card>
   </q-dialog>
   <q-table
+    v-model:pagination="processRequestStore.state.pagination"
     :loading="processRequestStore.loading"
     :rows="processRequestStore.state.items"
     :columns="columns"

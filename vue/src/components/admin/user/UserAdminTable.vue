@@ -150,6 +150,7 @@ const {
     </q-card>
   </q-dialog>
   <q-table
+    v-model:pagination="userStore.state.pagination"
     :loading="userStore.loading"
     :rows="userStore.state.items"
     :columns="columns"
