@@ -8,22 +8,31 @@ const itemName = "Pedido de abertura de processo";
 const defaultItem: ProcessRequest = {
   id: "",
   status: "OPEN",
-  processId: "",
-  userId: "",
+  process: {
+    id: "",
+    name: "",
+    slug: "",
+  },
+  user: {
+    id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+  },
   data: {},
 };
 const columns: NonNullable<QTableProps["columns"]> = [
   {
-    name: "userId",
+    name: "user",
     label: "Usuário",
-    field: "userId",
+    field: (row: ProcessRequest) => row.user.email,
     align: "left",
     sortable: true,
   },
   {
-    name: "processId",
+    name: "process",
     label: "Processo",
-    field: "processId",
+    field: (row: ProcessRequest) => row.process.name,
     align: "center",
     sortable: true,
   },

@@ -254,8 +254,17 @@ export const DELETE_PROCESS_REQUEST_MUTATION = gql`
     deleteProcessRequest(id: $id) {
       id
       status
-      processId
-      userId
+      process {
+        id
+        name
+        slug
+      }
+      user {
+        id
+        firstName
+        lastName
+        email
+      }
       data
     }
   }
@@ -265,8 +274,17 @@ export interface DeleteProcessRequestMutationResult {
   deleteProcessRequest: {
     id: string;
     status: ProcessRequestStatus;
-    processId: string;
-    userId: string;
+    process: {
+      id: string;
+      name: string;
+      slug: string;
+    };
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
     data: FormKitData;
   };
 }

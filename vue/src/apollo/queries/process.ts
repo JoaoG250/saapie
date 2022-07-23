@@ -238,13 +238,17 @@ export const PROCESS_REQUESTS_QUERY = gql`
         node {
           id
           status
-          processId
           process {
             id
             name
             slug
           }
-          userId
+          user {
+            id
+            firstName
+            lastName
+            email
+          }
           data
         }
       }
@@ -256,13 +260,17 @@ export const PROCESS_REQUESTS_QUERY = gql`
 export interface ProcessRequestsQueryNode {
   id: string;
   status: ProcessRequestStatus;
-  processId: string;
   process: {
     id: string;
     name: string;
     slug: string;
   };
-  userId: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
   data: FormKitData;
 }
 

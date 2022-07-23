@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormKitData } from "./formkit";
 import { Group } from "./group";
-import { User } from "./user";
 
 export interface ProcessForm {
   id: string;
@@ -47,19 +46,18 @@ export type UpdateProcessInput = CreateProcessInput;
 export interface ProcessRequest {
   id: string;
   status: ProcessRequestStatus;
-  processId: string;
-  userId: string;
+  process: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
   data: FormKitData;
-}
-
-export interface ProcessRequestWithProcess extends ProcessRequest {
-  process: Pick<Process, "id" | "name" | "slug">;
-}
-
-export interface ProcessRequestWithProcessAndUser
-  extends Omit<ProcessRequest, "processId" | "userId"> {
-  process: Omit<Process, "targetGroupId" | "forwardToGroupId">;
-  user: User;
 }
 
 export interface ProcessRequestWhereInput {
