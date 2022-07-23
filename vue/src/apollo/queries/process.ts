@@ -12,6 +12,8 @@ export const PROCESS_QUERY = gql`
   query process($id: ID, $slug: String) {
     process(id: $id, slug: $slug) {
       id
+      createdAt
+      updatedAt
       name
       slug
       description
@@ -37,6 +39,8 @@ export const PROCESS_QUERY = gql`
 export interface ProcessQueryResult {
   process: {
     id: string;
+    createdAt: string;
+    updatedAt: string;
     name: string;
     slug: string;
     description: string;
@@ -140,6 +144,8 @@ export const PROCESS_REQUEST_QUERY = gql`
   query processRequest($id: ID!) {
     processRequest(id: $id) {
       id
+      createdAt
+      updatedAt
       status
       data
       process {
@@ -176,6 +182,8 @@ export const PROCESS_REQUEST_QUERY = gql`
 export interface ProcessRequestQueryResult {
   processRequest: {
     id: string;
+    createdAt: string;
+    updatedAt: string;
     status: ProcessRequestStatus;
     data: FormKitData;
     process: {
@@ -237,6 +245,8 @@ export const PROCESS_REQUESTS_QUERY = gql`
         cursor
         node {
           id
+          createdAt
+          updatedAt
           status
           process {
             id
@@ -259,6 +269,8 @@ export const PROCESS_REQUESTS_QUERY = gql`
 
 export interface ProcessRequestsQueryNode {
   id: string;
+  createdAt: string;
+  updatedAt: string;
   status: ProcessRequestStatus;
   process: {
     id: string;
@@ -312,6 +324,8 @@ export const ASSIGNED_PROCESS_REQUESTS_QUERY = gql`
         cursor
         node {
           id
+          createdAt
+          updatedAt
           status
           process {
             id
@@ -332,6 +346,8 @@ export const ASSIGNED_PROCESS_REQUESTS_QUERY = gql`
 
 export interface AssignedProcessRequestsQueryNode {
   id: string;
+  createdAt: string;
+  updatedAt: string;
   status: ProcessRequestStatus;
   process: {
     id: string;
@@ -381,6 +397,8 @@ export const FORWARDED_PROCESS_REQUESTS_QUERY = gql`
         cursor
         node {
           id
+          createdAt
+          updatedAt
           status
           process {
             id
@@ -401,6 +419,8 @@ export const FORWARDED_PROCESS_REQUESTS_QUERY = gql`
 
 export interface ForwardedProcessRequestsQueryNode {
   id: string;
+  createdAt: string;
+  updatedAt: string;
   status: ProcessRequestStatus;
   process: {
     id: string;

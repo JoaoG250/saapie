@@ -22,6 +22,7 @@ import {
 } from "src/apollo/mutations";
 import { useQuasar } from "quasar";
 import { useAuthStore } from "src/stores/auth";
+import { formatDate } from "src/common/format";
 import ProcessRequestAttachmentList from "src/components/process/ProcessRequestAttachmentList.vue";
 
 interface Data {
@@ -223,8 +224,15 @@ function forwardRequest() {
       <div class="text-h4 text-weight-bold text-center q-my-md">
         {{ processRequest.process.name }}
       </div>
-      <q-separator class="q-mb-md" inset />
-      <div class="row">
+      <q-separator class="q-mb-sm" inset />
+      <div class="row items-center q-mb-sm">
+        <span class="q-mr-md">
+          Data de envio: {{ formatDate(processRequest.createdAt) }}
+        </span>
+        <span>
+          Status:
+          <q-chip :label="processRequest.status" flat />
+        </span>
         <q-space />
         <q-toggle
           v-if="allowEdit"

@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { formatDate } from "src/common/format";
+
 interface ProcessRequestListProps {
   processRequests: {
     id: string;
+    createdAt: string;
+    updatedAt: string;
     status: string;
     process: {
       id: string;
@@ -25,6 +29,9 @@ defineProps<ProcessRequestListProps>();
         </q-item-section>
         <q-item-section>
           <q-item-label>{{ request.user.email }}</q-item-label>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{ formatDate(request.createdAt) }}</q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-item-label caption>{{ request.status }}</q-item-label>
