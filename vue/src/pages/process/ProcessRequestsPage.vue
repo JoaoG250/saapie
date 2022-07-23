@@ -9,7 +9,7 @@ import {
 } from "src/apollo/queries";
 import { PageInfo } from "src/interfaces";
 import { ref } from "vue";
-import { formatDate } from "src/common/format";
+import ProcessRequestList from "src/components/process/ProcessRequestList.vue";
 
 const processRequests = ref<ProcessRequestsQueryNode[]>([]);
 const pageInfo = ref<PageInfo>();
@@ -71,32 +71,10 @@ const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
     </div>
     <q-separator class="q-mb-md" inset />
     <q-infinite-scroll :offset="250" @load="onLoad">
-      <q-list class="rounded-borders" bordered>
-        <template v-for="(request, index) in processRequests" :key="index">
-          <q-item :to="{ name: 'process-request', params: { id: request.id } }">
-            <q-item-section>
-              <q-item-label>{{ request.process.name }}</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>
-                {{ formatDate(request.createdAt) }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-item-label caption>{{ request.status }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator v-if="index < processRequests.length - 1" />
-        </template>
-        <q-item v-if="processRequests.length === 0">
-          <q-item-section avatar>
-            <q-icon name="warning" />
-          </q-item-section>
-          <q-item-section>
-            Nenhum pedido de abertura de processo encontrado
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <ProcessRequestList
+        :process-requests="processRequests"
+        :omit-user-info="true"
+      />
       <template #loading>
         <div class="row justify-center q-my-md">
           <q-spinner-dots color="primary" size="40px" />

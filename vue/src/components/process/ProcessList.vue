@@ -21,9 +21,11 @@ defineProps<ProcessListProps>();
       >
         <q-card>
           <q-card-section>
-            <div class="text-h6">{{ process.name }}</div>
-            <div class="q-mt-sm">
-              {{ process.description }}
+            <div class="text-h6 process-name">
+              <span>{{ process.name }}</span>
+            </div>
+            <div class="q-mt-sm process-description">
+              <span>{{ process.description }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -32,4 +34,22 @@ defineProps<ProcessListProps>();
   </div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@import "src/css/mixins";
+.process {
+  &-name {
+    font-size: 1.2rem;
+    line-height: unset;
+    height: 55px;
+    span {
+      @include line-clamp(2);
+    }
+  }
+  &-description {
+    height: 100px;
+    span {
+      @include line-clamp(5);
+    }
+  }
+}
+</style>

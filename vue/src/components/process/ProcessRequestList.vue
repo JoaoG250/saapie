@@ -16,6 +16,7 @@ interface ProcessRequestListProps {
       email: string;
     };
   }[];
+  omitUserInfo?: boolean;
 }
 defineProps<ProcessRequestListProps>();
 </script>
@@ -24,10 +25,10 @@ defineProps<ProcessRequestListProps>();
   <q-list class="rounded-borders" bordered>
     <template v-for="(request, index) in processRequests" :key="index">
       <q-item :to="{ name: 'process-request', params: { id: request.id } }">
-        <q-item-section class="col-2">
+        <q-item-section>
           <q-item-label>{{ request.process.name }}</q-item-label>
         </q-item-section>
-        <q-item-section>
+        <q-item-section v-if="!omitUserInfo">
           <q-item-label>{{ request.user.email }}</q-item-label>
         </q-item-section>
         <q-item-section>
