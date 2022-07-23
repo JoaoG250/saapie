@@ -39,8 +39,10 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Group {
+  createdAt: DateTime!
   id: ID!
   name: String!
+  updatedAt: DateTime!
 }
 
 type GroupEdge {
@@ -116,6 +118,7 @@ type PageInfo {
 }
 
 type Process {
+  createdAt: DateTime!
   description: String!
   form: ProcessForm
   forwardToGroup: Group
@@ -125,6 +128,7 @@ type Process {
   slug: String!
   targetGroup: Group!
   targetGroupId: String!
+  updatedAt: DateTime!
 }
 
 type ProcessEdge {
@@ -136,9 +140,11 @@ type ProcessEdge {
 }
 
 type ProcessForm {
+  createdAt: DateTime!
   definition: JSON!
   id: ID!
   name: String!
+  updatedAt: DateTime!
 }
 
 input ProcessOrderByInput {
@@ -148,11 +154,13 @@ input ProcessOrderByInput {
 }
 
 type ProcessRequest {
+  createdAt: DateTime!
   data: JSON!
   id: ID!
   process: Process!
   processId: String!
   status: ProcessRequestStatus!
+  updatedAt: DateTime!
   user: User!
   userId: String!
 }
@@ -376,6 +384,7 @@ input UpdateUserInput {
 scalar Upload
 
 type User {
+  createdAt: DateTime!
   email: String!
   firstName: String!
   groups: [Group!]!
@@ -383,6 +392,7 @@ type User {
   isActive: Boolean!
   isVerified: Boolean!
   lastName: String!
+  updatedAt: DateTime!
 }
 
 type UserEdge {

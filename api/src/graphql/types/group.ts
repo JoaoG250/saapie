@@ -4,6 +4,8 @@ export const Group = objectType({
   name: "Group",
   definition(t) {
     t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
     t.string("name");
   },
 });

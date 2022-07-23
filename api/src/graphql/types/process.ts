@@ -4,6 +4,8 @@ export const ProcessForm = objectType({
   name: "ProcessForm",
   definition(t) {
     t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
     t.string("name");
     t.json("definition");
   },
@@ -13,6 +15,8 @@ export const Process = objectType({
   name: "Process",
   definition(t) {
     t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
     t.string("name");
     t.string("slug");
     t.string("description");
@@ -60,6 +64,8 @@ export const ProcessRequest = objectType({
   name: "ProcessRequest",
   definition(t) {
     t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
     t.field("status", { type: "ProcessRequestStatus" });
     t.string("processId");
     t.field("process", {

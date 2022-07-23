@@ -4,6 +4,8 @@ export const User = objectType({
   name: "User",
   definition(t) {
     t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
     t.string("firstName");
     t.string("lastName");
     t.string("email");
