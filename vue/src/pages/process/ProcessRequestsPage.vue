@@ -2,14 +2,15 @@
 import { useQuery } from "@vue/apollo-composable";
 import { QInfiniteScrollProps } from "quasar";
 import {
+  ProcessRequestsQueryNode,
   ProcessRequestsQueryResult,
   ProcessRequestsQueryVariables,
   PROCESS_REQUESTS_QUERY,
 } from "src/apollo/queries";
-import { PageInfo, ProcessRequestWithProcess } from "src/interfaces";
+import { PageInfo } from "src/interfaces";
 import { ref } from "vue";
 
-const processRequests = ref<ProcessRequestWithProcess[]>([]);
+const processRequests = ref<ProcessRequestsQueryNode[]>([]);
 const pageInfo = ref<PageInfo>();
 const variables = ref<ProcessRequestsQueryVariables>({
   first: 30,

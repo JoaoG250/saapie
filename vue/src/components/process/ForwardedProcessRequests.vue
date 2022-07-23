@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable";
 import {
-  ForwardedProcessRequestsNode,
+  ForwardedProcessRequestsQueryNode,
   ForwardedProcessRequestsQueryResult,
   ForwardedProcessRequestsQueryVariables,
   FORWARDED_PROCESS_REQUESTS_QUERY,
@@ -10,7 +10,7 @@ import { ref } from "vue";
 import ProcessRequestList from "src/components/process/ProcessRequestList.vue";
 import { PageInfo } from "src/interfaces";
 
-const processRequests = ref<ForwardedProcessRequestsNode[]>([]);
+const processRequests = ref<ForwardedProcessRequestsQueryNode[]>([]);
 const pageInfo = ref<PageInfo>();
 const variables = ref<ForwardedProcessRequestsQueryVariables>({
   first: 20,

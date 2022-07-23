@@ -101,32 +101,34 @@ export const PROCESSES_QUERY = gql`
   }
 `;
 
+export interface ProcessesQueryNode {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  targetGroupId: string;
+  forwardToGroupId: string;
+  form: {
+    id: string;
+    name: string;
+    definition: any;
+  };
+  targetGroup: {
+    id: string;
+    name: string;
+  };
+  forwardToGroup: {
+    id: string;
+    name: string;
+  };
+}
+
 export interface ProcessesQueryResult {
   processes: {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: {
-        id: string;
-        name: string;
-        slug: string;
-        description: string;
-        targetGroupId: string;
-        forwardToGroupId: string;
-        form: {
-          id: string;
-          name: string;
-          definition: any;
-        };
-        targetGroup: {
-          id: string;
-          name: string;
-        };
-        forwardToGroup: {
-          id: string;
-          name: string;
-        };
-      };
+      node: ProcessesQueryNode;
     }[];
     totalCount: number;
   };
@@ -251,23 +253,25 @@ export const PROCESS_REQUESTS_QUERY = gql`
   }
 `;
 
+export interface ProcessRequestsQueryNode {
+  id: string;
+  status: ProcessRequestStatus;
+  processId: string;
+  process: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  userId: string;
+  data: FormKitData;
+}
+
 export interface ProcessRequestsQueryResult {
   processRequests: {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: {
-        id: string;
-        status: ProcessRequestStatus;
-        processId: string;
-        process: {
-          id: string;
-          name: string;
-          slug: string;
-        };
-        userId: string;
-        data: FormKitData;
-      };
+      node: ProcessRequestsQueryNode;
     }[];
     totalCount: number;
   };
@@ -318,7 +322,7 @@ export const ASSIGNED_PROCESS_REQUESTS_QUERY = gql`
   }
 `;
 
-export interface AssignedProcessRequestsNode {
+export interface AssignedProcessRequestsQueryNode {
   id: string;
   status: ProcessRequestStatus;
   process: {
@@ -339,7 +343,7 @@ export interface AssignedProcessRequestsQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: AssignedProcessRequestsNode;
+      node: AssignedProcessRequestsQueryNode;
     }[];
   };
 }
@@ -387,7 +391,7 @@ export const FORWARDED_PROCESS_REQUESTS_QUERY = gql`
   }
 `;
 
-export interface ForwardedProcessRequestsNode {
+export interface ForwardedProcessRequestsQueryNode {
   id: string;
   status: ProcessRequestStatus;
   process: {
@@ -408,7 +412,7 @@ export interface ForwardedProcessRequestsQueryResult {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: ForwardedProcessRequestsNode;
+      node: ForwardedProcessRequestsQueryNode;
     }[];
   };
 }

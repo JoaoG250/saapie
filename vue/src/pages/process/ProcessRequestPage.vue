@@ -7,11 +7,7 @@ import {
   PROCESS_REQUEST_QUERY,
 } from "src/apollo/queries";
 import { FormKitSchema } from "@formkit/vue";
-import {
-  FormKitData,
-  ProcessRequestStatus,
-  ProcessRequestWithProcessAndUser,
-} from "src/interfaces";
+import { FormKitData, ProcessRequestStatus } from "src/interfaces";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { FormKitSchemaNode } from "@formkit/core";
@@ -38,7 +34,7 @@ interface Files {
 const route = useRoute();
 const authStore = useAuthStore();
 const $q = useQuasar();
-const processRequest = ref<ProcessRequestWithProcessAndUser>();
+const processRequest = ref<ProcessRequestQueryResult["processRequest"]>();
 const editing = ref(false);
 const processId = computed<string>(() => {
   const id = route.params.id;

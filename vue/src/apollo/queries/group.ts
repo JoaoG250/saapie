@@ -54,15 +54,17 @@ export const GROUPS_QUERY = gql`
   }
 `;
 
+export interface GroupsQueryNode {
+  id: string;
+  name: string;
+}
+
 export interface GroupsQueryResult {
   groups: {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: {
-        id: string;
-        name: string;
-      };
+      node: GroupsQueryNode;
     }[];
     totalCount: number;
   };

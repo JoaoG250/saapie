@@ -5,6 +5,7 @@ import {
   USER_GROUPS_QUERY,
   UserGroupsQueryResult,
   UserGroupsQueryVariables,
+  UserGroupsQueryNode,
 } from "src/apollo/queries";
 import { ref } from "vue";
 import { QTableProps, useQuasar } from "quasar";
@@ -21,7 +22,7 @@ interface EditUserProps {
 
 const props = defineProps<EditUserProps>();
 const $q = useQuasar();
-const groups = ref<Group[]>([]);
+const groups = ref<UserGroupsQueryNode[]>([]);
 const columns: NonNullable<QTableProps["columns"]> = [
   {
     name: "name",

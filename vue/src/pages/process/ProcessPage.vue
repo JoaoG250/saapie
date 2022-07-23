@@ -5,7 +5,7 @@ import {
   ProcessQueryVariables,
   PROCESS_QUERY,
 } from "src/apollo/queries";
-import { Process, FormKitData } from "src/interfaces";
+import { FormKitData } from "src/interfaces";
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { FormKit, FormKitSchema } from "@formkit/vue";
@@ -21,7 +21,7 @@ import { getFilesFromFormKitData } from "src/common/forms";
 const route = useRoute();
 const router = useRouter();
 const $q = useQuasar();
-const process = ref<Process>();
+const process = ref<ProcessQueryResult["process"]>();
 const schema = computed<FormKitSchemaNode[]>(() => {
   if (process.value) {
     return process.value.form.definition as FormKitSchemaNode[];

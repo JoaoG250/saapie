@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable";
 import {
+  ProcessesQueryNode,
   ProcessesQueryResult,
   ProcessesQueryVariables,
   PROCESSES_QUERY,
 } from "src/apollo/queries";
-import { PageInfo, Process } from "src/interfaces";
+import { PageInfo } from "src/interfaces";
 import { ref } from "vue";
 import ProcessList from "src/components/process/ProcessList.vue";
 import { QInfiniteScrollProps } from "quasar";
 
-const processes = ref<Process[]>([]);
+const processes = ref<ProcessesQueryNode[]>([]);
 const pageInfo = ref<PageInfo>();
 const variables = ref<ProcessesQueryVariables>({
   first: 30,

@@ -106,19 +106,21 @@ export const USERS_QUERY = gql`
   }
 `;
 
+export interface UsersQueryNode {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isActive: boolean;
+  isVerified: boolean;
+}
+
 export interface UsersQueryResult {
   users: {
     pageInfo: PageInfo;
     edges: {
       cursor: string;
-      node: {
-        id: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        isActive: boolean;
-        isVerified: boolean;
-      };
+      node: UsersQueryNode;
     }[];
     totalCount: number;
   };
@@ -139,12 +141,14 @@ export const USER_GROUPS_QUERY = gql`
   }
 `;
 
+export interface UserGroupsQueryNode {
+  id: string;
+  name: string;
+}
+
 export interface UserGroupsQueryResult {
   user: {
-    groups: {
-      id: string;
-      name: string;
-    }[];
+    groups: UserGroupsQueryNode[];
   };
 }
 
