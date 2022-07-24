@@ -67,7 +67,7 @@ const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
 <template>
   <q-page class="container">
     <div class="text-h4 text-weight-bold text-center q-my-md">
-      Pedidos de abertura de processo
+      PEDIDOS DE ABERTURA DE PROCESSO
     </div>
     <q-separator class="q-mb-md" inset />
     <q-infinite-scroll :offset="250" @load="onLoad">

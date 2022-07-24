@@ -9,9 +9,13 @@ const tab = ref("assigned");
 <template>
   <q-page class="container">
     <div class="text-h4 text-weight-bold text-center q-my-md">
-      Pedidos de abertura de processo
+      PEDIDOS DE ABERTURA DE PROCESSO
     </div>
-    <q-tabs v-model="tab" inline-label class="bg-primary text-white shadow-2">
+    <q-tabs
+      v-model="tab"
+      inline-label
+      class="bg-primary text-white shadow-2 rounded-borders"
+    >
       <q-tab name="assigned" icon="mail" label="Atribuido" />
       <q-tab name="forwarded" icon="forward" label="Emcaminhado" />
     </q-tabs>

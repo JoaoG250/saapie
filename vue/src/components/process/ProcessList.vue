@@ -9,7 +9,7 @@ defineProps<ProcessListProps>();
 </script>
 
 <template>
-  <div class="row q-col-gutter-md">
+  <div class="row justify-center q-col-gutter-md">
     <div
       v-for="(process, index) in processes"
       :key="index"

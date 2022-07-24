@@ -15,15 +15,14 @@ import { getFilesFromFormKitData } from "src/common/forms";
 import {
   UpdateProcessRequestMutationResult,
   UpdateProcessRequestMutationVariables,
-  UpdateProcessRequestStatusMutationResult,
-  UpdateProcessRequestStatusMutationVariables,
   UPDATE_PROCESS_REQUEST_MUTATION,
-  UPDATE_PROCESS_REQUEST_STATUS_MUTATION,
 } from "src/apollo/mutations";
 import { useQuasar } from "quasar";
 import { useAuthStore } from "src/stores/auth";
-import { formatDate } from "src/common/format";
+import { formatStatus } from "src/common/format";
 import ProcessRequestAttachmentList from "src/components/process/ProcessRequestAttachmentList.vue";
+import ProcessRequestActions from "src/components/process/ProcessRequestActions.vue";
+import ProcessRequestInfo from "src/components/process/ProcessRequestInfo.vue";
 
 interface Data {
   [key: string]: any;
@@ -93,9 +92,8 @@ const allowEdit = computed(() => {
   if (processRequest.value.user.id === authStore.state.user.id) return true;
   return false;
 });
-const showFab = computed(() => {
-  if (!authStore.state.user) return false;
-  if (!processRequest.value) return false;
+const showActions = computed(() => {
+  if (!authStore.state.user || !processRequest.value) return false;
   if (
     processRequest.value.status !== "CLOSED" &&
     authStore.state.user.groups.length
@@ -109,6 +107,22 @@ const schema = computed<FormKitSchemaNode[]>(() => {
     return processRequest.value.process.form.definition as FormKitSchemaNode[];
   }
   return [];
+});
+const statusChipProps = computed(() => {
+  const defaultValue = { color: undefined, icon: undefined };
+  if (!processRequest.value) return defaultValue;
+  switch (processRequest.value.status) {
+    case "OPEN":
+      return { color: "yellow-8", icon: "pending" };
+    case "CLOSED":
+      return { color: "positive", icon: "check" };
+    case "FORWARDED":
+      return { color: "light-blue-9", icon: "forward" };
+    case "PENDING_CHANGE":
+      return { color: "red-7", icon: "warning" };
+    default:
+      return defaultValue;
+  }
 });
 
 async function submitHandler(data: FormKitData) {
@@ -152,69 +166,12 @@ async function submitHandler(data: FormKitData) {
   }
 }
 
-function updateRequestStatus(
-  status: ProcessRequestStatus,
-  confirmMessage: string,
-  successMessage: string
-) {
+function onUpdateStatus(status: ProcessRequestStatus) {
   if (!processRequest.value) return;
-  const { mutate } = useMutation<
-    UpdateProcessRequestStatusMutationResult,
-    UpdateProcessRequestStatusMutationVariables
-  >(UPDATE_PROCESS_REQUEST_STATUS_MUTATION, {
-    variables: { id: processRequest.value.id, status },
-  });
-  $q.dialog({
-    title: "Confirmação",
-    message: confirmMessage,
-    ok: { label: "Ok" },
-    cancel: { flat: true, label: "Cancelar" },
-    persistent: true,
-  }).onOk(async () => {
-    try {
-      if (!processRequest.value) return;
-      const response = await mutate();
-      if (!response?.data) {
-        throw new Error("Error updating process request");
-      }
-      processRequest.value = {
-        ...processRequest.value,
-        ...response.data.updateProcessRequestStatus,
-      };
-      $q.notify({
-        position: "top",
-        color: "positive",
-        message: successMessage,
-        icon: "check",
-      });
-    } catch (err) {
-      if (err instanceof Error) {
-        $q.notify({
-          position: "top",
-          color: "negative",
-          message: err.message,
-          icon: "report_problem",
-        });
-      }
-      throw err;
-    }
-  });
-}
-
-function closeRequest() {
-  updateRequestStatus(
-    "CLOSED",
-    "Deseja marcar o pedido de abertura de processo como iniciado?",
-    "Pedido de abertura de processo marcado como iniciado!"
-  );
-}
-
-function forwardRequest() {
-  updateRequestStatus(
-    "FORWARDED",
-    "Deseja encaminhar o pedido de abertura de processo?",
-    "Pedido de abertura de processo encaminhado!"
-  );
+  processRequest.value = {
+    ...processRequest.value,
+    status,
+  };
 }
 </script>
 
@@ -222,17 +179,21 @@ function forwardRequest() {
   <q-page class="container">
     <template v-if="processRequest">
       <div class="text-h4 text-weight-bold text-center q-my-md">
-        {{ processRequest.process.name }}
+        {{ processRequest.process.name.toUpperCase() }}
       </div>
       <q-separator class="q-mb-sm" inset />
+      <ProcessRequestInfo :process-request="processRequest" />
       <div class="row items-center q-mb-sm">
-        <span class="q-mr-md">
-          Data de envio: {{ formatDate(processRequest.createdAt) }}
-        </span>
-        <span>
-          Status:
-          <q-chip :label="processRequest.status" flat />
-        </span>
+        <div>
+          <span class="text-weight-bold">Situação:</span>
+          <q-chip
+            text-color="white"
+            :label="formatStatus(processRequest.status)"
+            :color="statusChipProps.color"
+            :icon-right="statusChipProps.icon"
+            flat
+          />
+        </div>
         <q-space />
         <q-toggle
           v-if="allowEdit"
@@ -258,28 +219,11 @@ function forwardRequest() {
         <ProcessRequestAttachmentList :files="formData.files" />
       </template>
 
-      <q-page-sticky v-if="showFab" position="bottom-right" :offset="[18, 18]">
-        <q-fab
-          label="Opções"
-          color="secondary"
-          icon="keyboard_arrow_down"
-          direction="up"
-        >
-          <q-fab-action
-            v-if="processRequest.process.forwardToGroup"
-            color="primary"
-            icon="forward"
-            label="Encaminhar"
-            @click="forwardRequest"
-          />
-          <q-fab-action
-            color="positive"
-            icon="check"
-            label="Finalizar"
-            @click="closeRequest"
-          />
-        </q-fab>
-      </q-page-sticky>
+      <ProcessRequestActions
+        v-if="showActions"
+        :process-request="processRequest"
+        @update-status="onUpdateStatus"
+      />
     </template>
   </q-page>
 </template>

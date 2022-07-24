@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { formatDate } from "src/common/format";
+import { formatDate, formatStatus } from "src/common/format";
+import { ProcessRequestStatus } from "src/interfaces";
 
 interface ProcessRequestListProps {
   processRequests: {
     id: string;
     createdAt: string;
     updatedAt: string;
-    status: string;
+    status: ProcessRequestStatus;
     process: {
       id: string;
       name: string;
@@ -35,7 +36,9 @@ defineProps<ProcessRequestListProps>();
           <q-item-label>{{ formatDate(request.createdAt) }}</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-item-label caption>{{ request.status }}</q-item-label>
+          <q-item-label caption>
+            {{ formatStatus(request.status) }}
+          </q-item-label>
         </q-item-section>
       </q-item>
       <q-separator v-if="index < processRequests.length - 1" />
