@@ -6,10 +6,11 @@ import {
   ProcessesQueryVariables,
   PROCESSES_QUERY,
 } from "src/apollo/queries";
-import { PageInfo } from "src/interfaces";
+import { PageInfo, ProcessWhereInput } from "src/interfaces";
 import { ref } from "vue";
 import ProcessList from "src/components/process/ProcessList.vue";
 import { QInfiniteScrollProps } from "quasar";
+import ProcessFilter from "src/components/process/ProcessFilter.vue";
 
 const processes = ref<ProcessesQueryNode[]>([]);
 const pageInfo = ref<PageInfo>();
@@ -58,10 +59,20 @@ const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
   }
   done();
 };
+
+function onFilter(filter: ProcessWhereInput) {
+  variables.value = {
+    ...variables.value,
+    where: { ...filter },
+  };
+}
 </script>
 
 <template>
   <q-page class="container">
+    <div class="q-mb-md">
+      <ProcessFilter @filter="onFilter" />
+    </div>
     <q-infinite-scroll :offset="250" @load="onLoad">
       <ProcessList :processes="processes" />
       <template #loading>

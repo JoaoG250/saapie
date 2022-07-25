@@ -161,3 +161,10 @@ export const ProcessRequestWhereInput = inputObjectType({
     t.nullable.field("status", { type: "ProcessRequestStatus" });
   },
 });
+
+export const ProcessWhereInput = inputObjectType({
+  name: "ProcessWhereInput",
+  definition(t) {
+    t.nullable.string("name");
+  },
+});

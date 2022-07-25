@@ -6,6 +6,7 @@ import {
   PaginationArgs,
   ProcessRequestStatus,
   ProcessRequestWhereInput,
+  ProcessWhereInput,
 } from "src/interfaces";
 
 export const PROCESS_QUERY = gql`
@@ -68,8 +69,20 @@ export interface ProcessQueryVariables {
 }
 
 export const PROCESSES_QUERY = gql`
-  query processes($after: String, $before: String, $first: Int, $last: Int) {
-    processes(after: $after, before: $before, first: $first, last: $last) {
+  query processes(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $where: ProcessWhereInput
+  ) {
+    processes(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      where: $where
+    ) {
       pageInfo {
         startCursor
         endCursor
@@ -138,7 +151,9 @@ export interface ProcessesQueryResult {
   };
 }
 
-export type ProcessesQueryVariables = PaginationArgs;
+export interface ProcessesQueryVariables extends PaginationArgs {
+  where?: ProcessWhereInput;
+}
 
 export const PROCESS_REQUEST_QUERY = gql`
   query processRequest($id: ID!) {

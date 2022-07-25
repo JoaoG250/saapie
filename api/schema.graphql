@@ -204,6 +204,10 @@ input ProcessRequestWhereInput {
   userId: String
 }
 
+input ProcessWhereInput {
+  name: String
+}
+
 type Query {
   assignedProcessRequests(
     """Returns the elements in the list that come after the specified cursor"""
@@ -279,6 +283,7 @@ type Query {
     """Returns the last n elements from the list."""
     last: Int
     orderBy: ProcessOrderByInput
+    where: ProcessWhereInput
   ): QueryProcesses_Connection!
   user(id: ID!): User
   users(

@@ -65,3 +65,7 @@ export interface ProcessRequestWhereInput {
   processId?: string;
   status?: ProcessRequestStatus;
 }
+
+export interface ProcessWhereInput {
+  name?: string;
+}

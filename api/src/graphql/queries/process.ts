@@ -32,10 +32,18 @@ export const processQueries = extendType({
     t.connectionField("processes", {
       type: "Process",
       additionalArgs: {
+        where: nullable(arg({ type: "ProcessWhereInput" })),
         orderBy: nullable(arg({ type: "ProcessOrderByInput" })),
       },
       nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
+        let where: Prisma.ProcessWhereInput | undefined;
+        if (args.where) {
+          where = {};
+          if (args.where.name) {
+            where.name = { contains: args.where.name, mode: "insensitive" };
+          }
+        }
         let orderBy: Prisma.ProcessOrderByWithRelationInput = {
           createdAt: "desc",
         };
@@ -45,7 +53,7 @@ export const processQueries = extendType({
           orderBy.updatedAt = removeNullability(args.orderBy.updatedAt);
           orderBy.name = removeNullability(args.orderBy.name);
         }
-        return getProcessesUseCase.execute({ ...pagination, orderBy });
+        return getProcessesUseCase.execute({ ...pagination, where, orderBy });
       },
       extendConnection(t) {
         t.int("totalCount", {
