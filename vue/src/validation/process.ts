@@ -17,7 +17,7 @@ function validateDescription(value: string) {
     .string()
     .required("Descrição é obrigatória")
     .min(3, "Descrição deve ter no mínimo 3 caracteres")
-    .max(150, "Descrição deve ter no máximo 150 caracteres")
+    .max(2000, "Descrição deve ter no máximo 2000 caracteres")
     .trim();
   return validateRules(rules, value);
 }

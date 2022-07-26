@@ -126,7 +126,7 @@ export const processQueries = extendType({
           process: { targetGroup: { OR } },
         };
         const orderBy: Prisma.ProcessRequestOrderByWithRelationInput = {
-          createdAt: "desc",
+          createdAt: "asc",
         };
         return getProcessRequestsUseCase.execute({
           ...pagination,
@@ -150,7 +150,7 @@ export const processQueries = extendType({
           process: { forwardToGroup: { OR } },
         };
         const orderBy: Prisma.ProcessRequestOrderByWithRelationInput = {
-          createdAt: "desc",
+          createdAt: "asc",
         };
         return getProcessRequestsUseCase.execute({
           ...pagination,
