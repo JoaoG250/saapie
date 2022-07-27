@@ -59,7 +59,7 @@ export interface ProcessQueryResult {
     forwardToGroup: {
       id: string;
       name: string;
-    };
+    } | null;
   };
 }
 
@@ -137,7 +137,7 @@ export interface ProcessesQueryNode {
   forwardToGroup: {
     id: string;
     name: string;
-  };
+  } | null;
 }
 
 export interface ProcessesQueryResult {
@@ -213,7 +213,7 @@ export interface ProcessRequestQueryResult {
       forwardToGroup: {
         id: string;
         name: string;
-      };
+      } | null;
       form: {
         id: string;
         name: string;

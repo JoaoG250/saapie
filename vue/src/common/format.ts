@@ -1,7 +1,19 @@
 import { ProcessRequestStatus } from "src/interfaces";
 
-export function formatDate(date: string) {
-  return new Date(date).toLocaleDateString();
+export function formatDate(date: string | Date, time = false) {
+  if (typeof date === "string") {
+    date = new Date(date);
+  }
+  if (time) {
+    return date.toLocaleString(undefined, {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+  return date.toLocaleDateString();
 }
 
 export function formatStatus(status: ProcessRequestStatus) {

@@ -27,7 +27,7 @@ defineProps<ProcessRequestInfoProps>();
     <div class="row justify-center">
       <div>
         <q-icon class="q-mr-sm" name="event" size="2em" />
-        <span>{{ formatDate(processRequest.createdAt) }}</span>
+        <span>{{ formatDate(processRequest.createdAt, true) }}</span>
       </div>
     </div>
   </div>

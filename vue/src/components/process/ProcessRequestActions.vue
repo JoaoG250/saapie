@@ -8,6 +8,9 @@ import {
 } from "src/apollo/mutations";
 import { ProcessRequestQueryResult } from "src/apollo/queries";
 import { ProcessRequestStatus } from "src/interfaces";
+import { computed } from "vue";
+import { userIsFromGroup } from "src/common/permissions";
+import { useAuthStore } from "src/stores/auth";
 
 interface ProcessRequestActionsProps {
   processRequest: ProcessRequestQueryResult["processRequest"];
@@ -15,6 +18,53 @@ interface ProcessRequestActionsProps {
 
 const props = defineProps<ProcessRequestActionsProps>();
 const $q = useQuasar();
+const authStore = useAuthStore();
+
+const showForwardBtn = computed(() => {
+  if (!props.processRequest.process.forwardToGroup) {
+    return false;
+  }
+  if (props.processRequest.status === "FORWARDED") {
+    return false;
+  }
+  if (!authStore.state.user) {
+    return false;
+  }
+  if (
+    !userIsFromGroup(
+      authStore.state.user.groups,
+      props.processRequest.process.targetGroup
+    )
+  ) {
+    return false;
+  }
+  return true;
+});
+const showCloseBtn = computed(() => {
+  if (props.processRequest.status === "CLOSED") {
+    return false;
+  }
+  if (!authStore.state.user) {
+    return false;
+  }
+  if (
+    props.processRequest.process.forwardToGroup &&
+    props.processRequest.status !== "FORWARDED"
+  ) {
+    return false;
+  }
+  if (
+    props.processRequest.process.forwardToGroup &&
+    props.processRequest.status === "FORWARDED" &&
+    !userIsFromGroup(
+      authStore.state.user.groups,
+      props.processRequest.process.forwardToGroup
+    )
+  ) {
+    return false;
+  }
+  return true;
+});
 
 const emit = defineEmits<{
   (e: "update-status", status: ProcessRequestStatus): void;
@@ -83,26 +133,22 @@ function forwardRequest() {
 
 <template>
   <q-page-sticky position="bottom-right" :offset="[18, 18]">
-    <q-fab
-      label="Opções"
-      color="secondary"
-      icon="keyboard_arrow_down"
-      direction="up"
-    >
-      <q-fab-action
-        v-if="processRequest.process.forwardToGroup"
-        color="primary"
-        icon="forward"
-        label="Encaminhar"
-        @click="forwardRequest"
-      />
-      <q-fab-action
-        color="positive"
-        icon="check"
-        label="Finalizar"
-        @click="closeRequest"
-      />
-    </q-fab>
+    <q-btn
+      v-if="showForwardBtn"
+      color="primary"
+      icon="forward"
+      label="Encaminhar"
+      fab
+      @click="forwardRequest"
+    />
+    <q-btn
+      v-if="showCloseBtn"
+      color="positive"
+      icon="check"
+      label="Finalizar"
+      fab
+      @click="closeRequest"
+    />
   </q-page-sticky>
 </template>
 
