@@ -5,7 +5,7 @@ import {
 } from "apollo-server-express";
 import { and, or, rule, shield } from "graphql-shield";
 import { GraphQLContext } from "./types";
-import { userIsAdmin } from "./utils";
+import { userIsAdmin, userIsFromProcessGroups } from "./utils";
 
 const isAuthenticated = rule()((_root, _args, ctx: GraphQLContext) => {
   if (ctx.user) {
@@ -33,6 +33,45 @@ const isProcessRequestOwner = rule()(
   }
 );
 
+const hasProcessRequestPermission = rule()(
+  async (_root, args, ctx: GraphQLContext) => {
+    const processRequest = await ctx.prisma.processRequest.findUnique({
+      where: { id: args.id },
+      include: {
+        process: { include: { targetGroup: true, forwardToGroup: true } },
+      },
+    });
+    if (ctx.user && processRequest) {
+      if (ctx.user.id === processRequest.userId) {
+        return true;
+      }
+      if (userIsFromProcessGroups(ctx.user, processRequest.process)) {
+        return true;
+      }
+    }
+    return new ForbiddenError("Not Authorised!");
+  }
+);
+
+const isFromProcessRequestGroups = rule()(
+  async (_root, args, ctx: GraphQLContext) => {
+    const processRequest = await ctx.prisma.processRequest.findUnique({
+      where: { id: args.id },
+      include: {
+        process: { include: { targetGroup: true, forwardToGroup: true } },
+      },
+    });
+    if (
+      ctx.user &&
+      processRequest &&
+      userIsFromProcessGroups(ctx.user, processRequest.process)
+    ) {
+      return true;
+    }
+    return new ForbiddenError("Not Authorised!");
+  }
+);
+
 const isUserInGroup = rule()((_root, _args, ctx: GraphQLContext) => {
   if (ctx.user?.groups.length) {
     return true;
@@ -50,7 +89,10 @@ export const permissions = shield(
       groups: and(isAuthenticated, isAdmin),
       process: isAuthenticated,
       processes: isAuthenticated,
-      processRequest: and(isAuthenticated, or(isAdmin, isProcessRequestOwner)),
+      processRequest: and(
+        isAuthenticated,
+        or(isAdmin, hasProcessRequestPermission)
+      ),
       processRequests: isAuthenticated,
       assignedProcessRequests: and(isAuthenticated, isUserInGroup),
       forwardedProcessRequests: and(isAuthenticated, isUserInGroup),
@@ -73,7 +115,10 @@ export const permissions = shield(
         or(isAdmin, isProcessRequestOwner)
       ),
       deleteProcessRequest: and(isAuthenticated, isAdmin),
-      updateProcessRequestStatus: and(isAuthenticated, isUserInGroup),
+      updateProcessRequestStatus: and(
+        isAuthenticated,
+        isFromProcessRequestGroups
+      ),
     },
   },
   {

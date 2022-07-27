@@ -7,8 +7,11 @@ import {
   getProcessRequestUseCase,
   getProcessRequestsUseCase,
 } from "../../useCases/process";
-import { parsePaginationArgs, removeNullability } from "../../utils";
-import { userIsAdmin } from "../../utils";
+import {
+  parsePaginationArgs,
+  removeNullability,
+  userIsAdmin,
+} from "../../utils";
 
 export const processQueries = extendType({
   type: "Query",
