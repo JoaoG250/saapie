@@ -6,6 +6,8 @@ import {
 import { and, or, rule, shield } from "graphql-shield";
 import { GraphQLContext } from "./types";
 import { userIsAdmin, userIsFromProcessGroups } from "./utils";
+import { createRateLimitRule, RedisStore } from "graphql-rate-limit";
+import redis from "./redis";
 
 const isAuthenticated = rule()((_root, _args, ctx: GraphQLContext) => {
   if (ctx.user) {
@@ -79,45 +81,142 @@ const isUserInGroup = rule()((_root, _args, ctx: GraphQLContext) => {
   return new ForbiddenError("Not Authorised!");
 });
 
+const rateLimitRule = createRateLimitRule({
+  identifyContext: (ctx: GraphQLContext) => ctx.ip,
+  createError: (message: string) => new ForbiddenError(message),
+  store: new RedisStore(redis),
+});
+
 export const permissions = shield(
   {
     Query: {
-      me: isAuthenticated,
-      user: and(isAuthenticated, isAdmin),
-      users: and(isAuthenticated, isAdmin),
-      group: and(isAuthenticated, isAdmin),
-      groups: and(isAuthenticated, isAdmin),
-      process: isAuthenticated,
-      processes: isAuthenticated,
+      me: and(isAuthenticated, rateLimitRule({ window: "30m", max: 200 })),
+      user: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      users: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      isEmailAvailable: rateLimitRule({ window: "1h", max: 100 }),
+      group: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      groups: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      process: and(isAuthenticated, rateLimitRule({ window: "1h", max: 100 })),
+      processes: and(
+        isAuthenticated,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
       processRequest: and(
         isAuthenticated,
-        or(isAdmin, hasProcessRequestPermission)
+        or(isAdmin, hasProcessRequestPermission),
+        rateLimitRule({ window: "1h", max: 100 })
       ),
-      processRequests: isAuthenticated,
-      assignedProcessRequests: and(isAuthenticated, isUserInGroup),
-      forwardedProcessRequests: and(isAuthenticated, isUserInGroup),
+      processRequests: and(
+        isAuthenticated,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      assignedProcessRequests: and(
+        isAuthenticated,
+        isUserInGroup,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      forwardedProcessRequests: and(
+        isAuthenticated,
+        isUserInGroup,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
     },
     Mutation: {
-      createUser: and(isAuthenticated, isAdmin),
-      updateUser: and(isAuthenticated, isAdmin),
-      deleteUser: and(isAuthenticated, isAdmin),
-      createGroup: and(isAuthenticated, isAdmin),
-      updateGroup: and(isAuthenticated, isAdmin),
-      deleteGroup: and(isAuthenticated, isAdmin),
-      addUserToGroup: and(isAuthenticated, isAdmin),
-      removeUserFromGroup: and(isAuthenticated, isAdmin),
-      createProcess: and(isAuthenticated, isAdmin),
-      updateProcess: and(isAuthenticated, isAdmin),
-      deleteProcess: and(isAuthenticated, isAdmin),
-      createProcessRequest: isAuthenticated,
+      signup: rateLimitRule({ window: "5m", max: 3 }),
+      signin: rateLimitRule({ window: "1h", max: 10 }),
+      refreshTokens: rateLimitRule({ window: "1h", max: 30 }),
+      activateAccount: rateLimitRule({ window: "30m", max: 5 }),
+      sendPasswordResetEmail: rateLimitRule({ window: "5m", max: 3 }),
+      resetPassword: rateLimitRule({ window: "5m", max: 3 }),
+      createUser: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      updateUser: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      deleteUser: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      createGroup: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      updateGroup: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      deleteGroup: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      addUserToGroup: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      removeUserFromGroup: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      createProcess: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      updateProcess: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      deleteProcess: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      createProcessRequest: and(
+        isAuthenticated,
+        rateLimitRule({ window: "30m", max: 10 })
+      ),
       updateProcessRequest: and(
         isAuthenticated,
-        or(isAdmin, isProcessRequestOwner)
+        or(isAdmin, isProcessRequestOwner),
+        rateLimitRule({ window: "30m", max: 20 })
       ),
-      deleteProcessRequest: and(isAuthenticated, isAdmin),
+      deleteProcessRequest: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
       updateProcessRequestStatus: and(
         isAuthenticated,
-        isFromProcessRequestGroups
+        isFromProcessRequestGroups,
+        rateLimitRule({ window: "30m", max: 200 })
       ),
     },
   },

@@ -6,6 +6,7 @@ export function buildContext({ req }: ExpressJwtContext): GraphQLContext {
   return {
     redis,
     prisma,
+    ip: req.ip,
     user: req.auth,
   };
 }

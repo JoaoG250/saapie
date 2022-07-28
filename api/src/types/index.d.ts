@@ -17,6 +17,7 @@ interface ExpressJwtContext extends ExpressContext {
 }
 
 interface GraphQLContext {
+  ip: string;
   user?: UserFromRequest;
   prisma: PrismaClient;
   redis: Redis;

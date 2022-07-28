@@ -18,6 +18,7 @@ export default {
     domain: getEnvironmentVariable("DOMAIN"),
     protocol: getEnvironmentVariable("PROTOCOL"),
     port: 4000,
+    loggingFormat: "dev",
     rootDir,
     publicUrl,
     publicDir,

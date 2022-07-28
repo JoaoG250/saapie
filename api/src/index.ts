@@ -1,6 +1,8 @@
 import config from "config";
 import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
+import depthLimit from "graphql-depth-limit";
 import express, { NextFunction, Request, Response } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { graphqlUploadExpress } from "graphql-upload";
@@ -11,12 +13,18 @@ import { buildContext } from "./context";
 const domain: string = config.get("server.domain");
 const protocol: string = config.get("server.protocol");
 const port: number = config.get("server.port");
+const loggingFormat: string = config.get("server.loggingFormat");
 const accessTokenSecret: string = config.get("jwt.accessToken.secret");
 
 async function startServer(): Promise<void> {
   const app = express();
 
-  app.use(morgan("dev"));
+  // https://expressjs.com/en/guide/behind-proxies.html
+  app.set("trust proxy", true);
+
+  app.use(morgan(loggingFormat));
+
+  app.use(helmet());
 
   app.use(
     cors({
@@ -46,6 +54,7 @@ async function startServer(): Promise<void> {
   const apolloServer = new ApolloServer({
     schema,
     context: buildContext,
+    validationRules: [depthLimit(5)],
   });
 
   await apolloServer.start();
