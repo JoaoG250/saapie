@@ -10,7 +10,8 @@
     "nexus:typegen": "ts-node --transpile-only src/schema.ts --nexus-exit",
     "dev": "ts-node-dev --transpile-only --no-notify src/index.ts",
     "build": "tsc",
-    "build:noemit": "tsc --noEmit"
+    "build:noemit": "tsc --noEmit",
+    "start": "node dist/src/index.js"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

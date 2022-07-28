@@ -19,6 +19,33 @@ yarn_install() {
     fi
 }
 
+yarn_typegen() {
+    cd ${work_dir}
+
+    echo "\n${white}${h_spacer} Generating types ${h_spacer}${reset}\n"
+    yarn prisma generate
+    yarn nexus:typegen
+    if [ $? -ne 0 ]; then
+        echo "\n${red}${e_spacer} Error generating types ${e_spacer}${reset}\n"
+        exit 1
+    fi
+
+    echo "\n${green}${h_spacer} Types generated ${h_spacer}${reset}\n"
+}
+
+yarn_build() {
+    cd ${work_dir}
+
+    echo "\n${white}${h_spacer} Compiling source code ${h_spacer}${reset}\n"
+    yarn build
+    if [ $? -ne 0 ]; then
+        echo "\n${red}${e_spacer} Error compiling source code ${e_spacer}${reset}\n"
+        exit 1
+    fi
+
+    echo "\n${green}${h_spacer} Code compiled ${h_spacer}${reset}\n"
+}
+
 db_setup() {
     cd ${work_dir}
 
@@ -55,6 +82,13 @@ setup)
 
 development)
     exec yarn dev
+    ;;
+
+production)
+    yarn_typegen
+    yarn_build
+    export NODE_ENV=production
+    exec yarn start
     ;;
 
 *)

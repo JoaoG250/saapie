@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  db:
+    restart: unless-stopped
+    image: postgres:14.3
+    container_name: saapie_db_prod_1
+    env_file:
+      - ./dotenv/db.prod.env
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  redis:
+    restart: unless-stopped
+    image: redis:alpine
+    container_name: saapie_redis_prod_1
+    sysctls:
+      - net.core.somaxconn=511
+    volumes:
+      - ./data/redis:/data
+
+  api:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: api
+    image: saapie:api
+    container_name: saapie_api_prod_1
+    env_file:
+      - ./dotenv/api.prod.env
+    command: production
+    volumes:
+      - ./api/public:/home/node/saapie/api/public
+    depends_on:
+      - db
+
+  nginx:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        API_URL: ${API_URL}
+      target: nginx
+    volumes:
+      - ./config/nginx.prod.conf:/etc/nginx/conf.d/default.conf
+      - ./logs/nginx:/var/log/nginx
+      - ./api/public:/usr/share/nginx/html/public
+    ports:
+      - "80:80"
+    depends_on:
+      - api
