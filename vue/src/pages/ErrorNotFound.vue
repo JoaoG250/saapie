@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+
+onMounted(() => {
+  document.title = "404 Página não encontrada - SAAPIE";
+});
+</script>
 
 <template>
   <div

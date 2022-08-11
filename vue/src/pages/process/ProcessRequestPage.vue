@@ -54,6 +54,7 @@ const { onResult } = useQuery<
 );
 onResult((result) => {
   processRequest.value = result.data.processRequest;
+  document.title = `Pedido para ${processRequest.value.process.name} - SAAPIE`;
 });
 
 const formData = computed(() => {

@@ -20,6 +20,7 @@ import routes from "./routes";
 
 declare module "vue-router" {
   interface RouteMeta {
+    title?: string;
     authRequired?: boolean;
     groupRequired?: string;
   }
@@ -57,6 +58,14 @@ export default route(function (/* { store, ssrContext } */) {
       if (!userIsInGroup) {
         return { name: "forbidden" };
       }
+    }
+  });
+
+  Router.afterEach((to) => {
+    if (to.meta.title) {
+      document.title = `${to.meta.title} - SAAPIE`;
+    } else {
+      document.title = "SAAPIE";
     }
   });
 

@@ -26,6 +26,9 @@ const routes: RouteRecordRaw[] = [
         path: "/processes",
         name: "processes",
         component: () => import("pages/process/ProcessesPage.vue"),
+        meta: {
+          title: "Processos",
+        },
       },
       {
         path: "/processes/:slug",
@@ -36,6 +39,9 @@ const routes: RouteRecordRaw[] = [
         path: "/processes/requests",
         name: "process-requests",
         component: () => import("pages/process/ProcessRequestsPage.vue"),
+        meta: {
+          title: "Meus Pedidos",
+        },
       },
       {
         path: "/processes/requests/:id",
@@ -46,6 +52,9 @@ const routes: RouteRecordRaw[] = [
         path: "/processes/requests/manage",
         name: "process-request-manage",
         component: () => import("pages/process/ManageProcessRequestsPage.vue"),
+        meta: {
+          title: "Gerenciar Pedidos",
+        },
       },
     ],
     meta: {
@@ -61,21 +70,33 @@ const routes: RouteRecordRaw[] = [
         path: "signin",
         name: "signin",
         component: () => import("pages/auth/SigninPage.vue"),
+        meta: {
+          title: "Autenticação",
+        },
       },
       {
         path: "signup",
         name: "signup",
         component: () => import("pages/auth/SignupPage.vue"),
+        meta: {
+          title: "Cadastro",
+        },
       },
       {
         path: "activate-account/:token",
         name: "activate-account",
         component: () => import("pages/auth/ActivateAccountPage.vue"),
+        meta: {
+          title: "Ativação de Conta",
+        },
       },
       {
         path: "reset-password/:token",
         name: "reset-password",
         component: () => import("pages/auth/ResetPasswordPage.vue"),
+        meta: {
+          title: "Redefinição de Senha",
+        },
       },
     ],
   },
@@ -88,26 +109,41 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "admin",
         component: () => import("pages/admin/AdminPage.vue"),
+        meta: {
+          title: "Administração",
+        },
       },
       {
         path: "user",
         name: "admin:user",
         component: () => import("pages/admin/UserAdminPage.vue"),
+        meta: {
+          title: "Administrar Usuários",
+        },
       },
       {
         path: "group",
         name: "admin:group",
         component: () => import("pages/admin/GroupAdminPage.vue"),
+        meta: {
+          title: "Administrar Grupos",
+        },
       },
       {
         path: "process",
         name: "admin:process",
         component: () => import("pages/admin/ProcessAdminPage.vue"),
+        meta: {
+          title: "Administrar Processos",
+        },
       },
       {
         path: "process-request",
         name: "admin:process-request",
         component: () => import("pages/admin/ProcessRequestAdminPage.vue"),
+        meta: {
+          title: "Administrar Pedidos de abertura de processo",
+        },
       },
     ],
     meta: {

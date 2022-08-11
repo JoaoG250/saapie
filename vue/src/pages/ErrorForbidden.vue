@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+
+onMounted(() => {
+  document.title = "403 Acesso Negado - SAAPIE";
+});
+</script>
 
 <template>
   <div

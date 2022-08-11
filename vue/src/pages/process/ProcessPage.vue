@@ -50,6 +50,7 @@ const { onResult, loading } = useQuery<
 >(PROCESS_QUERY, { slug: processSlug.value }, { fetchPolicy: "network-only" });
 onResult((result) => {
   process.value = result.data.process;
+  document.title = `${process.value.name} - SAAPIE`;
 });
 
 async function submitHandler(data: FormKitData) {
