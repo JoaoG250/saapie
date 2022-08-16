@@ -95,7 +95,7 @@ async function signup() {
             label="Email"
             type="email"
             name="email"
-            :rules="userRules.email"
+            :rules="userRules.emailSignup"
           />
           <q-input
             v-model="form.password"

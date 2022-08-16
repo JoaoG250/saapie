@@ -21,7 +21,13 @@ export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
     const userSignupDataConstraints = yup.object().shape({
       firstName: yup.string().required().min(3).max(30).trim(),
       lastName: yup.string().required().min(3).max(50).trim(),
-      email: yup.string().required().email().lowercase().trim(),
+      email: yup
+        .string()
+        .required()
+        .email()
+        .lowercase()
+        .trim()
+        .matches(/@arapiraca.ufal.br$/),
       password: yup.string().required().min(6).max(50),
     });
     return userSignupDataConstraints.validate(data);

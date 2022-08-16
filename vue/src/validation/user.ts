@@ -31,6 +31,20 @@ function validateEmail(value: string) {
   return validateRules(rules, value);
 }
 
+function validateEmailSignup(value: string) {
+  const rules = yup
+    .string()
+    .required("Email é obrigatório")
+    .email("Email inválido")
+    .lowercase()
+    .trim()
+    .matches(
+      /@arapiraca.ufal.br$/,
+      "Email deve ser do domínio @arapiraca.ufal.br"
+    );
+  return validateRules(rules, value);
+}
+
 function validatePassword(value: string) {
   const rules = yup
     .string()
@@ -44,5 +58,6 @@ export const userRules = {
   firstName: [(value: string) => validateFirstName(value)],
   lastName: [(value: string) => validateLastName(value)],
   email: [(value: string) => validateEmail(value)],
+  emailSignup: [(value: string) => validateEmailSignup(value)],
   password: [(value: string) => validatePassword(value)],
 };
