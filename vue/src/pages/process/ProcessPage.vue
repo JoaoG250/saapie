@@ -100,9 +100,16 @@ async function submitHandler(data: FormKitData) {
         <div class="text-h5 text-center">Carregando...</div>
       </div>
       <div v-if="process" class="column">
-        <div class="text-h4 text-weight-bold q-mt-md">{{ process.name }}</div>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="text-subtitle1 q-mb-sm" v-html="description" />
+        <div class="text-h4 text-weight-bold text-center q-my-md process-name">
+          {{ process.name }}
+        </div>
+        <q-separator class="q-mb-md" inset />
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="text-subtitle1 q-mb-sm process-description"
+          v-html="description"
+        />
+        <!-- eslint-enable vue/no-v-html -->
         <q-separator class="q-mb-md" inset />
         <FormKit type="form" @submit="submitHandler">
           <FormKitSchema :schema="schema" />
@@ -113,7 +120,16 @@ async function submitHandler(data: FormKitData) {
 </template>
 
 <style lang="scss" scoped>
+@import "src/css/mixins";
 .container :deep(.formkit-form) {
   --fk-max-width-input: 100%;
+}
+@include screen(xs) {
+  .process-name {
+    font-size: 1.6rem;
+  }
+  .process-description :deep(p) {
+    font-size: 0.9rem;
+  }
 }
 </style>

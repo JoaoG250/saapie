@@ -103,7 +103,7 @@ async function activateAccount() {
             <q-icon :name="banner.icon" color="white" />
           </template>
           <div class="text-h6 q-mb-md">{{ banner.title }}</div>
-          <p>
+          <p class="text-justify">
             {{ banner.message }}
           </p>
           <template #action>

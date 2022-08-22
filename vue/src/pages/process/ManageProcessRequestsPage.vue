@@ -8,7 +8,7 @@ const tab = ref("assigned");
 
 <template>
   <q-page class="container">
-    <div class="text-h4 text-weight-bold text-center q-my-md">
+    <div class="text-h4 text-weight-bold text-center q-my-md page-title">
       PEDIDOS DE ABERTURA DE PROCESSO
     </div>
     <q-tabs
@@ -30,4 +30,11 @@ const tab = ref("assigned");
   </q-page>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@import "src/css/mixins";
+@include screen(xs) {
+  .page-title {
+    font-size: 1.6rem;
+  }
+}
+</style>

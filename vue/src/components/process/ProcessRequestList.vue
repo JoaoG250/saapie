@@ -29,7 +29,7 @@ defineProps<ProcessRequestListProps>();
         <q-item-section>
           <q-item-label>{{ request.process.name }}</q-item-label>
         </q-item-section>
-        <q-item-section v-if="!omitUserInfo">
+        <q-item-section v-if="!omitUserInfo" class="show-desktop-only">
           <q-item-label>{{ request.user.email }}</q-item-label>
         </q-item-section>
         <q-item-section>

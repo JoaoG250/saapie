@@ -179,7 +179,7 @@ function onUpdateStatus(status: ProcessRequestStatus) {
 <template>
   <q-page class="container">
     <template v-if="processRequest">
-      <div class="text-h4 text-weight-bold text-center q-my-md">
+      <div class="text-h4 text-weight-bold text-center q-my-md process-name">
         {{ processRequest.process.name.toUpperCase() }}
       </div>
       <q-separator class="q-mb-sm" inset />
@@ -230,7 +230,13 @@ function onUpdateStatus(status: ProcessRequestStatus) {
 </template>
 
 <style lang="scss" scoped>
+@import "src/css/mixins";
 .container :deep(.formkit-form) {
   --fk-max-width-input: 100%;
+}
+@include screen(xs) {
+  .process-name {
+    font-size: 1.6rem;
+  }
 }
 </style>

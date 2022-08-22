@@ -31,3 +31,9 @@
     max-width: 1785px;
   }
 }
+
+.show-desktop-only {
+  @media (max-width: $breakpoint-sm) {
+    display: none;
+  }
+}

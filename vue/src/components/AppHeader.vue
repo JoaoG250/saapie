@@ -28,7 +28,7 @@ async function handleSignout() {
         <router-link :to="{ name: 'index' }">SAAPIE</router-link>
       </q-toolbar-title>
 
-      <q-tabs>
+      <q-tabs class="show-desktop-only">
         <template v-for="(item, index) in menuList" :key="index">
           <q-route-tab :label="item.label" :to="item.to" exact />
         </template>

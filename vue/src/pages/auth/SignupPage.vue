@@ -138,7 +138,7 @@ async function signup() {
             <q-icon name="check" color="white" />
           </template>
           <div class="text-h6 q-mb-md">Cadastro realizado com sucesso!</div>
-          <p>
+          <p class="text-justify">
             Antes de você poder autenticar você precisa ativar sua conta.<br />
             Enviamos um email de ativação.<br />
             Por favor, verifique sua caixa de entrada e clique no link no email
