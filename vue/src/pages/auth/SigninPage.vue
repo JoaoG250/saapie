@@ -19,11 +19,10 @@ async function signin() {
     await authStore.actions.signin(form);
   } catch (err) {
     if (err instanceof Error) {
-      // TODO: error message localization
       $q.notify({
         position: "top",
         color: "negative",
-        message: err.message,
+        message: "Não foi possível realizar a autenticação. Tente novamente.",
         icon: "report_problem",
       });
     }

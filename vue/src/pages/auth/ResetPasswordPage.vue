@@ -73,7 +73,7 @@ async function resetPassword() {
       $q.notify({
         position: "top",
         color: "negative",
-        message: err.message,
+        message: "Não foi possível redefinir a senha. Tente novamente.",
         icon: "report_problem",
       });
     }

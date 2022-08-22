@@ -164,7 +164,8 @@ async function submitHandler(data: FormKitData) {
       $q.notify({
         position: "top",
         color: "negative",
-        message: err.message,
+        message:
+          "Não foi possível atualizar o pedido de abertura de processo. Tente novamente.",
         icon: "report_problem",
       });
     }

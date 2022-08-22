@@ -57,7 +57,7 @@ async function signup() {
       $q.notify({
         position: "top",
         color: "negative",
-        message: err.message,
+        message: "Não foi possível realizar o cadastro. Tente novamente.",
         icon: "report_problem",
       });
     }

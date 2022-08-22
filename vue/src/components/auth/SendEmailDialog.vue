@@ -57,7 +57,7 @@ async function sendEmail() {
       $q.notify({
         position: "top",
         color: "negative",
-        message: err.message,
+        message: "Não foi possível enviar o email. Tente novamente.",
         icon: "report_problem",
       });
     }

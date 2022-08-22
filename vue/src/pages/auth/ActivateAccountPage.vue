@@ -76,7 +76,7 @@ async function activateAccount() {
       $q.notify({
         position: "top",
         color: "negative",
-        message: err.message,
+        message: "Não foi possível ativar a conta. Tente novamente.",
         icon: "report_problem",
       });
     }
