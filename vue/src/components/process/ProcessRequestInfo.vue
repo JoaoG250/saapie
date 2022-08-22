@@ -3,7 +3,7 @@ import { ProcessRequestQueryResult } from "src/apollo/queries";
 import { formatDate } from "src/common/format";
 
 interface ProcessRequestInfoProps {
-  processRequest: ProcessRequestQueryResult["processRequest"];
+  processRequest: NonNullable<ProcessRequestQueryResult["processRequest"]>;
 }
 
 defineProps<ProcessRequestInfoProps>();

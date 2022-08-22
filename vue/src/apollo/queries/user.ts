@@ -51,7 +51,7 @@ export const USER_QUERY = gql`
 `;
 
 export interface UserQueryResult {
-  user: {
+  user?: {
     id: string;
     firstName: string;
     lastName: string;

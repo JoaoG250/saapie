@@ -13,7 +13,7 @@ import { userIsFromGroup } from "src/common/permissions";
 import { useAuthStore } from "src/stores/auth";
 
 interface ProcessRequestActionsProps {
-  processRequest: ProcessRequestQueryResult["processRequest"];
+  processRequest: NonNullable<ProcessRequestQueryResult["processRequest"]>;
 }
 
 const props = defineProps<ProcessRequestActionsProps>();

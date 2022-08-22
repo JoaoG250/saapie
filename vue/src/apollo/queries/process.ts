@@ -38,7 +38,7 @@ export const PROCESS_QUERY = gql`
 `;
 
 export interface ProcessQueryResult {
-  process: {
+  process?: {
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -195,7 +195,7 @@ export const PROCESS_REQUEST_QUERY = gql`
 `;
 
 export interface ProcessRequestQueryResult {
-  processRequest: {
+  processRequest?: {
     id: string;
     createdAt: string;
     updatedAt: string;

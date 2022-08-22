@@ -11,7 +11,7 @@ export const GROUP_QUERY = gql`
 `;
 
 export interface GroupQueryResult {
-  group: {
+  group?: {
     id: string;
     name: string;
   };

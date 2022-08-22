@@ -9,7 +9,7 @@ import {
 import { FormKitSchema } from "@formkit/vue";
 import { FormKitData, ProcessRequestStatus } from "src/interfaces";
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { FormKitSchemaNode } from "@formkit/core";
 import { getFilesFromFormKitData } from "src/common/forms";
 import {
@@ -32,6 +32,7 @@ interface Files {
 }
 
 const route = useRoute();
+const router = useRouter();
 const authStore = useAuthStore();
 const $q = useQuasar();
 const processRequest = ref<ProcessRequestQueryResult["processRequest"]>();
@@ -53,8 +54,12 @@ const { onResult } = useQuery<
   { fetchPolicy: "network-only" }
 );
 onResult((result) => {
-  processRequest.value = result.data.processRequest;
-  document.title = `Pedido para ${processRequest.value.process.name} - SAAPIE`;
+  if (result.data.processRequest) {
+    processRequest.value = result.data.processRequest;
+    document.title = `Pedido para ${processRequest.value.process.name} - SAAPIE`;
+  } else {
+    router.push({ name: "not-found" });
+  }
 });
 
 const formData = computed(() => {

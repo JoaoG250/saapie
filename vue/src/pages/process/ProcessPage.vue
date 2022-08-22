@@ -49,8 +49,12 @@ const { onResult, loading } = useQuery<
   ProcessQueryVariables
 >(PROCESS_QUERY, { slug: processSlug.value }, { fetchPolicy: "network-only" });
 onResult((result) => {
-  process.value = result.data.process;
-  document.title = `${process.value.name} - SAAPIE`;
+  if (result.data.process) {
+    process.value = result.data.process;
+    document.title = `${process.value.name} - SAAPIE`;
+  } else {
+    router.push({ name: "not-found" });
+  }
 });
 
 async function submitHandler(data: FormKitData) {
