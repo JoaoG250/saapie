@@ -461,3 +461,76 @@ export interface ForwardedProcessRequestsQueryResult {
 }
 
 export type ForwardedProcessRequestsQueryVariables = PaginationArgs;
+
+export const CLOSED_PROCESS_REQUESTS_QUERY = gql`
+  query closedProcessRequests(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    closedProcessRequests(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          createdAt
+          updatedAt
+          status
+          process {
+            id
+            name
+            description
+          }
+          user {
+            id
+            firstName
+            lastName
+            email
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface ClosedProcessRequestsQueryNode {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  status: ProcessRequestStatus;
+  process: {
+    id: string;
+    name: string;
+    description: string;
+  };
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+export interface ClosedProcessRequestsQueryResult {
+  closedProcessRequests: {
+    pageInfo: PageInfo;
+    edges: {
+      cursor: string;
+      node: ClosedProcessRequestsQueryNode;
+    }[];
+  };
+}
+
+export type ClosedProcessRequestsQueryVariables = PaginationArgs;

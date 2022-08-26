@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import AssignedProcessRequests from "src/components/process/AssignedProcessRequests.vue";
 import ForwardedProcessRequests from "src/components/process/ForwardedProcessRequests.vue";
+import ClosedProcessRequests from "src/components/process/ClosedProcessRequests.vue";
 
 const tab = ref("assigned");
 </script>
@@ -18,6 +19,7 @@ const tab = ref("assigned");
     >
       <q-tab name="assigned" icon="mail" label="Atribuido" />
       <q-tab name="forwarded" icon="forward" label="Emcaminhado" />
+      <q-tab name="closed" icon="check" label="Finalizado" />
     </q-tabs>
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="assigned">
@@ -25,6 +27,9 @@ const tab = ref("assigned");
       </q-tab-panel>
       <q-tab-panel name="forwarded">
         <ForwardedProcessRequests />
+      </q-tab-panel>
+      <q-tab-panel name="closed">
+        <ClosedProcessRequests />
       </q-tab-panel>
     </q-tab-panels>
   </q-page>
