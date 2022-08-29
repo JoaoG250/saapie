@@ -73,7 +73,7 @@ async function signup() {
 </script>
 
 <template>
-  <q-page class="row items-center justify-center">
+  <q-page class="row items-center justify-center q-pa-sm">
     <q-card style="width: 450px">
       <q-form v-if="!success" @submit="signup">
         <q-card-section>

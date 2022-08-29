@@ -85,7 +85,7 @@ async function resetPassword() {
 </script>
 
 <template>
-  <q-page class="row items-center justify-center">
+  <q-page class="row items-center justify-center q-pa-sm">
     <q-card style="width: 450px">
       <q-form @submit="resetPassword">
         <q-card-section>
