@@ -48,6 +48,13 @@ export class CreateProcessRequestUseCase
     return user;
   }
 
+  checkProcessStatus(process: Process): true {
+    if (process.active) {
+      return true;
+    }
+    throw new IntegrityError("Process is not active");
+  }
+
   async userHasRequestOpen(user: User, process: Process): Promise<boolean> {
     const requests = await this.processRequestRepository.findMany({
       where: {
@@ -105,6 +112,7 @@ export class CreateProcessRequestUseCase
 
   async execute(args: CreateProcessRequestDto): Promise<ProcessRequest> {
     const process = await this.getProcess(args.processId, args.processSlug);
+    this.checkProcessStatus(process);
     const user = await this.getUserById(args.userId);
     if (await this.userHasRequestOpen(user, process)) {
       throw new IntegrityError(

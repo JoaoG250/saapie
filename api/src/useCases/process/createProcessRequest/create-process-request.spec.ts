@@ -1,4 +1,8 @@
-import { ProcessNotFoundError, UserNotFoundError } from "../../../errors";
+import {
+  IntegrityError,
+  ProcessNotFoundError,
+  UserNotFoundError,
+} from "../../../errors";
 import { FsStorageProvider } from "../../../providers/storage";
 import {
   ProcessRepository,
@@ -58,6 +62,19 @@ describe("CreateProcessRequestUseCase", () => {
     await expect(
       createProcessRequestUseCase.getProcess(data.processId)
     ).resolves.toBeTruthy();
+  });
+  it("should check if the process is active", async () => {
+    const { createProcessRequestUseCase } = buildSUT();
+    const process = createFakeProcess({ active: true }, 1);
+
+    expect(
+      createProcessRequestUseCase.checkProcessStatus(process)
+    ).toBeTruthy();
+
+    process.active = false;
+    expect(() => {
+      createProcessRequestUseCase.checkProcessStatus(process);
+    }).toThrow(IntegrityError);
   });
   it("should check if the user exists", async () => {
     const { createProcessRequestUseCase } = buildSUT();

@@ -139,6 +139,7 @@ interface CreateFakeProcessArgs {
   updatedAt?: Date;
   name?: string;
   slug?: string;
+  active?: boolean;
   targetGroupId?: string;
   forwardToGroupId?: string | null;
 }
