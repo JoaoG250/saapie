@@ -116,7 +116,24 @@ async function submitHandler(data: FormKitData) {
         />
         <!-- eslint-enable vue/no-v-html -->
         <q-separator class="q-mb-md" inset />
-        <FormKit type="form" @submit="submitHandler">
+        <q-banner
+          v-if="!process.active"
+          class="text-white bg-warning q-mb-md"
+          rounded
+        >
+          <template #avatar>
+            <q-icon name="warning" />
+          </template>
+          <div class="text-weight-bold text-body1">
+            O formulário para este processo está fechado e não aceitará mais
+            respostas.
+          </div>
+        </q-banner>
+        <FormKit
+          type="form"
+          :disabled="!process.active"
+          @submit="submitHandler"
+        >
           <FormKitSchema :schema="schema" />
         </FormKit>
       </div>

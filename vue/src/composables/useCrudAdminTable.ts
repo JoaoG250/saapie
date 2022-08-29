@@ -29,7 +29,8 @@ interface UseCrudAdminTableArgs<T> {
   store: AdminStore<T>;
   extraCreateData?: ExtraData;
   extraUpdateData?: ExtraData;
-  omitOnSave?: string[];
+  omitOnCreate?: string[];
+  omitOnUpdate?: string[];
 }
 
 export function useCrudAdminTable<T extends { id: string }>({
@@ -38,7 +39,8 @@ export function useCrudAdminTable<T extends { id: string }>({
   store,
   extraCreateData,
   extraUpdateData,
-  omitOnSave = [],
+  omitOnCreate = [],
+  omitOnUpdate = [],
 }: UseCrudAdminTableArgs<T>) {
   const $q = useQuasar();
   const dialogOpen = ref(false);
@@ -120,9 +122,9 @@ export function useCrudAdminTable<T extends { id: string }>({
   async function save() {
     try {
       const { id, ...itemData } = editedItem.value;
-      const cleanedData = _.omit(itemData, omitOnSave);
       if (editedIndex.value > -1) {
         if (!store.actions.updateItem) return;
+        const cleanedData = _.omit(itemData, omitOnUpdate);
         const extraData = extraUpdateData?.value || {};
         const item = await store.actions.updateItem({
           id,
@@ -137,6 +139,7 @@ export function useCrudAdminTable<T extends { id: string }>({
         store.state.items[editedIndex.value] = item;
       } else {
         if (!store.actions.createItem) return;
+        const cleanedData = _.omit(itemData, omitOnCreate);
         const extraData = extraCreateData?.value || {};
         const item = await store.actions.createItem({
           data: { ...cleanedData, ...extraData },

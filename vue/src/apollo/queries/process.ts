@@ -18,6 +18,7 @@ export const PROCESS_QUERY = gql`
       name
       slug
       description
+      active
       targetGroupId
       forwardToGroupId
       form {
@@ -45,6 +46,7 @@ export interface ProcessQueryResult {
     name: string;
     slug: string;
     description: string;
+    active: boolean;
     targetGroupId: string;
     forwardToGroupId: string;
     form: {
@@ -96,6 +98,7 @@ export const PROCESSES_QUERY = gql`
           name
           slug
           description
+          active
           targetGroupId
           forwardToGroupId
           form {
@@ -123,6 +126,7 @@ export interface ProcessesQueryNode {
   name: string;
   slug: string;
   description: string;
+  active: boolean;
   targetGroupId: string;
   forwardToGroupId: string;
   form: {
@@ -168,6 +172,7 @@ export const PROCESS_REQUEST_QUERY = gql`
         name
         slug
         description
+        active
         targetGroup {
           id
           name
@@ -206,6 +211,7 @@ export interface ProcessRequestQueryResult {
       name: string;
       slug: string;
       description: string;
+      active: boolean;
       targetGroup: {
         id: string;
         name: string;

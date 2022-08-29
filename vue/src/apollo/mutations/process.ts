@@ -13,6 +13,7 @@ export const CREATE_PROCESS_MUTATION = gql`
       name
       slug
       description
+      active
       targetGroupId
       forwardToGroupId
       form {
@@ -38,6 +39,7 @@ export interface CreateProcessMutationResult {
     name: string;
     slug: string;
     description: string;
+    active: boolean;
     targetGroupId: string;
     forwardToGroupId: string | null | undefined;
     form: {
@@ -70,6 +72,7 @@ export const UPDATE_PROCESS_MUTATION = gql`
       name
       slug
       description
+      active
       targetGroupId
       forwardToGroupId
       form {
@@ -95,6 +98,7 @@ export interface UpdateProcessMutationResult {
     name: string;
     slug: string;
     description: string;
+    active: boolean;
     targetGroupId: string;
     forwardToGroupId: string | null | undefined;
     form: {
@@ -128,6 +132,7 @@ export const DELETE_PROCESS_MUTATION = gql`
       name
       slug
       description
+      active
       targetGroupId
       forwardToGroupId
       form {
@@ -153,6 +158,7 @@ export interface DeleteProcessMutationResult {
     name: string;
     slug: string;
     description: string;
+    active: boolean;
     targetGroupId: string;
     forwardToGroupId: string | null | undefined;
     form: {

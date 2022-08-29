@@ -16,6 +16,7 @@ const defaultItem: Process = {
   name: "",
   slug: "",
   description: "",
+  active: true,
   targetGroupId: "",
   forwardToGroupId: undefined,
   form: {
@@ -60,6 +61,7 @@ const extraData = ref({
 const {
   dialogOpen,
   editedItem,
+  editedIndex,
   itemNameLowerCase,
   formTitle,
   onRequest,
@@ -74,7 +76,8 @@ const {
   store: processStore,
   extraCreateData: extraData,
   extraUpdateData: extraData,
-  omitOnSave: ["slug", "targetGroup", "forwardToGroup"],
+  omitOnCreate: ["slug", "active", "targetGroup", "forwardToGroup"],
+  omitOnUpdate: ["slug", "targetGroup", "forwardToGroup"],
 });
 
 const forwardFor = ref(!!editedItem.value.forwardToGroupId);
@@ -182,6 +185,12 @@ const forwardToGroupInitial = computed(() => {
             label="Definição do formulário"
             type="textarea"
             :rules="processRules.form.definition"
+          />
+          <q-toggle
+            v-if="editedIndex > -1"
+            v-model="editedItem.active"
+            class="q-mt-md"
+            label="Processo ativo?"
           />
           <q-toggle
             v-model="forwardFor"

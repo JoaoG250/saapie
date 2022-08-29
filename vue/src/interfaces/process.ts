@@ -19,6 +19,7 @@ export interface Process {
   name: string;
   slug: string;
   description: string;
+  active: boolean;
   targetGroupId: string;
   forwardToGroupId: string | null | undefined;
   form: ProcessForm;
@@ -41,7 +42,9 @@ export interface CreateProcessInput {
   form: CreateProcessFormInput;
 }
 
-export type UpdateProcessInput = CreateProcessInput;
+export interface UpdateProcessInput extends CreateProcessInput {
+  active: boolean;
+}
 
 export interface ProcessRequest {
   id: string;
