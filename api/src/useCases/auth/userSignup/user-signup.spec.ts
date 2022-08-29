@@ -34,7 +34,7 @@ describe("UserSignupUseCase", () => {
     const data: UserSignupDto = {
       firstName: "John",
       lastName: "Doe",
-      email: "test@gmail.com",
+      email: "test@arapiraca.ufal.br",
       password: "123456",
     };
     let testData = { ...data };

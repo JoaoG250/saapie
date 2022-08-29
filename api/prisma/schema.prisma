@@ -51,6 +51,7 @@ model Process {
     name             String           @unique
     slug             String           @unique
     description      String
+    active           Boolean          @default(true)
     form             ProcessForm?
     requests         ProcessRequest[]
     targetGroup      Group            @relation("GroupProcesses", fields: [targetGroupId], references: [id], onDelete: SetNull)

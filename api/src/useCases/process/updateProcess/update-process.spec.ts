@@ -30,6 +30,7 @@ describe("UpdateProcessUseCase", () => {
     const data: UpdateProcessDto["data"] = {
       name: "Test Process",
       description: "Test Form Description",
+      active: true,
       form: {
         name: "Test Form",
         definition: [],
@@ -122,6 +123,7 @@ describe("UpdateProcessUseCase", () => {
     const data: UpdateProcessDto["data"] = {
       name: "Test Process",
       description: "Test Form Description",
+      active: true,
       form: {
         name: "Test Form",
         definition: [],
@@ -151,6 +153,7 @@ describe("UpdateProcessUseCase", () => {
       data: {
         name: "Test Process",
         description: "Test Form Description",
+        active: true,
         form: {
           name: "Test Form",
           definition: [],

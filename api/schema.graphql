@@ -118,6 +118,7 @@ type PageInfo {
 }
 
 type Process {
+  active: Boolean!
   createdAt: DateTime!
   description: String!
   form: ProcessForm
@@ -383,6 +384,7 @@ input UpdateProcessFormInput {
 }
 
 input UpdateProcessInput {
+  active: Boolean!
   description: String!
   form: UpdateProcessFormInput!
   forwardToGroupId: ID

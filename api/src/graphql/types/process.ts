@@ -20,6 +20,7 @@ export const Process = objectType({
     t.string("name");
     t.string("slug");
     t.string("description");
+    t.boolean("active");
     t.string("targetGroupId");
     t.field("targetGroup", {
       type: "Group",
@@ -129,6 +130,7 @@ export const UpdateProcessInput = inputObjectType({
   definition(t) {
     t.string("name");
     t.string("description");
+    t.boolean("active");
     t.id("targetGroupId");
     t.nullable.id("forwardToGroupId");
     t.field("form", { type: "UpdateProcessFormInput" });

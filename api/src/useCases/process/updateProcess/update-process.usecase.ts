@@ -28,6 +28,7 @@ export class UpdateProcessUseCase
     const updateProcessDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
       description: yup.string().required().min(3).max(2000).trim(),
+      active: yup.boolean().required(),
       form: yup.object().shape({
         name: yup.string().required().min(3).max(50).trim(),
         definition: yup.array().of(yup.object()).required(),
@@ -139,6 +140,7 @@ export class UpdateProcessUseCase
       {
         name: validatedData.name,
         description: validatedData.description,
+        active: validatedData.active,
         form: { update: validatedData.form },
         slug,
         ...groupParams,

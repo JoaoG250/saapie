@@ -3,6 +3,7 @@ export interface UpdateProcessDto {
   data: {
     name: string;
     description: string;
+    active: boolean;
     form: {
       name: string;
       definition: object[];

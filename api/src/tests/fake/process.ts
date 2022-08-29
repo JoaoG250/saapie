@@ -10,6 +10,7 @@ const fakeProcesses: Process[] = [
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
     description:
       "Dolorem ad molestias sed qui repellendus. Assumenda consequatur temporibus nisi quod rerum accusantium sunt officia.",
+    active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
   },
@@ -21,6 +22,7 @@ const fakeProcesses: Process[] = [
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
     description:
       "Possimus architecto commodi nesciunt ullam optio. Quis blanditiis occaecati est. Vitae dolorem sit nisi.",
+    active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
   },
@@ -32,6 +34,7 @@ const fakeProcesses: Process[] = [
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
     description:
       "Esse repellendus ut. Quidem accusamus itaque et animi debitis ut animi. Autem nihil in quo.",
+    active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
   },
@@ -43,6 +46,7 @@ const fakeProcesses: Process[] = [
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
     description:
       "ccusantium sapiente magni inventore distinctio dolore dicta consequatur. Soluta est officia.",
+    active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
   },
@@ -52,6 +56,7 @@ const fakeProcesses: Process[] = [
     updatedAt: new Date("2022-06-26T23:50:47.917Z"),
     name: "Repellat quisquam recusandae alias consequuntur corporis.",
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
+    active: true,
     description:
       "Numquam quia ut earum nostrum aut fugit est quia earum. Est maiores aut autem. Est deleniti non dolorem officiis exercitationem cum qui veniam.",
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
@@ -63,6 +68,7 @@ const fakeProcesses: Process[] = [
     updatedAt: new Date("2022-06-26T23:50:47.922Z"),
     name: "Repellat quisquam recusandae alias consequuntur corporis.",
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
+    active: true,
     description:
       "Quia nihil commodi accusamus voluptatem aut. Odit architecto omnis doloribus alias corporis sint nisi autem ut.",
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
