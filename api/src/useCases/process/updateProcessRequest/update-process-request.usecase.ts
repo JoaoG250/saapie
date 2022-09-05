@@ -14,6 +14,7 @@ import { IStorageProvider } from "../../../interfaces/storage";
 import { IntegrityError, ProcessRequestNotFoundError } from "../../../errors";
 
 const publicUrl: string = config.get("server.publicUrl");
+const baseUrl: string = config.get("server.baseUrl");
 
 export class UpdateProcessRequestUseCase
   implements IUseCase<UpdateProcessRequestDto, ProcessRequest>
@@ -77,7 +78,10 @@ export class UpdateProcessRequestUseCase
           processRequest: { connect: { id: processRequest.id } },
         });
         const field = path.basename(filename, ext);
-        files[field] = [...(files[field] || []), { name: fileUrl }];
+        files[field] = [
+          ...(files[field] || []),
+          { name: path.join(baseUrl, fileUrl) },
+        ];
       })
     );
     return files;

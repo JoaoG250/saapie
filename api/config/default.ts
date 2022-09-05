@@ -14,8 +14,7 @@ function getEnvironmentVariable(name: string, fallback?: string): string {
 const accessTokenSecret = getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET");
 const refreshTokenSecret = getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET");
 const rootDir = path.resolve(__dirname, "../");
-const baseUrl = getEnvironmentVariable("BASE_URL", "/");
-const publicUrl = baseUrl + "public/";
+const publicUrl = "public/";
 const publicDir = path.join(rootDir, publicUrl);
 
 export default {
@@ -25,6 +24,7 @@ export default {
     port: 4000,
     loggingFormat: "dev",
     rootDir,
+    baseUrl: getEnvironmentVariable("BASE_URL", "/"),
     publicUrl,
     publicDir,
   },
