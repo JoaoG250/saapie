@@ -67,7 +67,9 @@ FROM vue-base as vue-build
 
 # Build args
 ARG API_URL
+ARG BASE_URL
 ENV API_URL=${API_URL}
+ENV BASE_URL=${BASE_URL}
 
 # Yarn build
 RUN yarn build

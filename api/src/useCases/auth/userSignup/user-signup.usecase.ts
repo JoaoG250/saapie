@@ -81,7 +81,13 @@ export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
       password: passwordHash,
     });
 
-    await this.sendSignupEmail(user);
+    try {
+      await this.sendSignupEmail(user);
+    } catch (err) {
+      await this.userRepository.delete({ id: user.id });
+      throw err;
+    }
+
     return true;
   }
 }
