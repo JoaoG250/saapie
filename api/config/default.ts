@@ -1,7 +1,11 @@
 import path from "path";
-function getEnvironmentVariable(name: string): string {
+
+function getEnvironmentVariable(name: string, fallback?: string): string {
   const value = process.env[name];
   if (!value) {
+    if (fallback) {
+      return fallback;
+    }
     throw new Error(`Missing environment variable ${name}`);
   }
   return value;
@@ -10,7 +14,8 @@ function getEnvironmentVariable(name: string): string {
 const accessTokenSecret = getEnvironmentVariable("JWT_ACCESS_TOKEN_SECRET");
 const refreshTokenSecret = getEnvironmentVariable("JWT_REFRESH_TOKEN_SECRET");
 const rootDir = path.resolve(__dirname, "../");
-const publicUrl = "/public/";
+const baseUrl = getEnvironmentVariable("BASE_URL", "/");
+const publicUrl = baseUrl + "public/";
 const publicDir = path.join(rootDir, publicUrl);
 
 export default {
