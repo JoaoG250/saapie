@@ -18,9 +18,9 @@ import {
 import { CreateProcessRequestDto } from "./create-process-request.dto";
 import { FileUpload } from "graphql-upload";
 import { IStorageProvider } from "../../../interfaces/storage";
+import { createUrl } from "../../../utils";
 
 const publicUrl: string = config.get("server.publicUrl");
-const baseUrl: string = config.get("server.baseUrl");
 
 export class CreateProcessRequestUseCase
   implements IUseCase<CreateProcessRequestDto, ProcessRequest>
@@ -105,10 +105,7 @@ export class CreateProcessRequestUseCase
           processRequest: { connect: { id: processRequest.id } },
         });
         const field = path.basename(filename, ext);
-        files[field] = [
-          ...(files[field] || []),
-          { name: path.join(baseUrl, fileUrl) },
-        ];
+        files[field] = [...(files[field] || []), { name: createUrl(fileUrl) }];
       })
     );
     return files;

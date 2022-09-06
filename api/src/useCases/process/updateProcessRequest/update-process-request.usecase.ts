@@ -12,9 +12,9 @@ import {
 import { UpdateProcessRequestDto } from "./update-process-request.dto";
 import { IStorageProvider } from "../../../interfaces/storage";
 import { IntegrityError, ProcessRequestNotFoundError } from "../../../errors";
+import { createUrl } from "../../../utils";
 
 const publicUrl: string = config.get("server.publicUrl");
-const baseUrl: string = config.get("server.baseUrl");
 
 export class UpdateProcessRequestUseCase
   implements IUseCase<UpdateProcessRequestDto, ProcessRequest>
@@ -78,10 +78,7 @@ export class UpdateProcessRequestUseCase
           processRequest: { connect: { id: processRequest.id } },
         });
         const field = path.basename(filename, ext);
-        files[field] = [
-          ...(files[field] || []),
-          { name: path.join(baseUrl, fileUrl) },
-        ];
+        files[field] = [...(files[field] || []), { name: createUrl(fileUrl) }];
       })
     );
     return files;

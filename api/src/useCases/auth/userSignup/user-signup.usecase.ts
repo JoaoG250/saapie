@@ -8,6 +8,7 @@ import {
   IUseCase,
   IUserRepository,
 } from "../../../interfaces";
+import { createUrl } from "../../../utils";
 import { UserSignupDto } from "./user-signup.dto";
 
 export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
@@ -65,7 +66,7 @@ export class UserSignupUseCase implements IUseCase<UserSignupDto, true> {
       subject: "Confirmação de cadastro",
       template: "accountActivation",
       data: {
-        url: `auth/activate-account/${token}/`,
+        url: createUrl(`auth/activate-account/${token}/`, true),
       },
     });
   }

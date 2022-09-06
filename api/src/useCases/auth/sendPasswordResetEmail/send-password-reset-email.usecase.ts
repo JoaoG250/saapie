@@ -7,6 +7,7 @@ import {
   IUseCase,
   IUserRepository,
 } from "../../../interfaces";
+import { createUrl } from "../../../utils";
 import { SendPasswordResetEmailDto } from "./send-password-reset-email.dto";
 
 export class SendPasswordResetEmailUseCase
@@ -48,7 +49,7 @@ export class SendPasswordResetEmailUseCase
       subject: "Recuperação de senha",
       template: "passwordReset",
       data: {
-        url: `auth/reset-password/${token}/`,
+        url: createUrl(`auth/reset-password/${token}/`, true),
       },
     });
     return true;

@@ -1,5 +1,9 @@
+import { join } from "path";
+import config from "config";
 import { UserInputError } from "apollo-server-express";
 import { PaginationArgs } from "nexus/dist/plugins/connectionPlugin";
+
+const baseUrl: string = config.get("server.baseUrl");
 
 export function removeNullability<T>(
   type: T | null | undefined
@@ -66,4 +70,12 @@ export function validatePaginationArgs(args: PaginationArgs): void {
       );
     }
   }
+}
+
+export function createUrl(path: string, relativeUrl?: boolean): string {
+  const url = join(baseUrl, path);
+  if (relativeUrl) {
+    return url.replace(/^\//g, "");
+  }
+  return url;
 }
