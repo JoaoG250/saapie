@@ -35,11 +35,6 @@ export default {
   sendgrid: {
     apiKey: getEnvironmentVariable("SENDGRID_API_KEY"),
   },
-  oauth: {
-    clientId: getEnvironmentVariable("OAUTH_CLIENT_ID"),
-    clientSecret: getEnvironmentVariable("OAUTH_CLIENT_SECRET"),
-    refreshToken: getEnvironmentVariable("OAUTH_REFRESH_TOKEN"),
-  },
   jwt: {
     accessToken: {
       secret: accessTokenSecret,
