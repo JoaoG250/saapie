@@ -1,6 +1,6 @@
 import RedisMock from "ioredis-mock";
 import { ValidationError } from "yup";
-import { GmailMailProvider } from "../../../providers/mail";
+import { NodeMailerProvider } from "../../../providers/mail";
 import { JwtRepository } from "../../../repositories/jwt";
 import { UserRepository } from "../../../repositories/user";
 import { JwtService } from "../../../services/jwtService/jwt.service";
@@ -19,7 +19,7 @@ function buildSUT(): {
   const userRepository = new UserRepository(prismaMock);
   const jwtRepository = new JwtRepository(new RedisMock());
   const jwtService = new JwtService(jwtRepository);
-  const mailProvider = new GmailMailProvider(mailTransporterMock);
+  const mailProvider = new NodeMailerProvider(mailTransporterMock);
   const mailService = new MailService(mailProvider);
   const sendPasswordResetEmailUseCase = new SendPasswordResetEmailUseCase(
     userRepository,

@@ -2,7 +2,7 @@ import RedisMock from "ioredis-mock";
 import { User } from "@prisma/client";
 import { ValidationError } from "yup";
 import { IntegrityError } from "../../../errors";
-import { GmailMailProvider } from "../../../providers/mail";
+import { NodeMailerProvider } from "../../../providers/mail";
 import { UserRepository } from "../../../repositories/user";
 import { MailService } from "../../../services/mailService/mail.service";
 import { createFakeUser } from "../../../tests/fake/user";
@@ -16,7 +16,7 @@ import { mailTransporterMock } from "../../../tests/mock/nodemailer";
 function buildSUT(): {
   userSignupUseCase: UserSignupUseCase;
 } {
-  const mailProvider = new GmailMailProvider(mailTransporterMock);
+  const mailProvider = new NodeMailerProvider(mailTransporterMock);
   const userRepository = new UserRepository(prismaMock);
   const mailService = new MailService(mailProvider);
   const jwtRepository = new JwtRepository(new RedisMock());

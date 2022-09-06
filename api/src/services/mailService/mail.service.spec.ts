@@ -1,11 +1,11 @@
-import { GmailMailProvider } from "../../providers/mail";
+import { NodeMailerProvider } from "../../providers/mail";
 import { MailService } from "./mail.service";
 import { mailTransporterMock } from "../../tests/mock/nodemailer";
 
 function buildSUT(): {
   mailService: MailService;
 } {
-  const mailProvider = new GmailMailProvider(mailTransporterMock);
+  const mailProvider = new NodeMailerProvider(mailTransporterMock);
   const mailService = new MailService(mailProvider);
   return { mailService };
 }

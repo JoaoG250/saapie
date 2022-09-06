@@ -7,7 +7,7 @@ const mailConfig: { userName: string; userAddress: string } =
   config.get("mail");
 const sendgridConfig: { apiKey: string } = config.get("sendgrid");
 
-export class GmailMailProvider implements IMailProvider {
+export class NodeMailerProvider implements IMailProvider {
   constructor(private readonly transporter: Mail) {}
 
   async sendMail(message: MailMessage): Promise<void> {
