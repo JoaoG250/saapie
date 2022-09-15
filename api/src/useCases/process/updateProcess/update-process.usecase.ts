@@ -1,6 +1,6 @@
-import * as yup from "yup";
 import slugify from "slugify";
 import { Group, Prisma, Process } from "@prisma/client";
+import { yup } from "../../../modules";
 import {
   IGroupRepository,
   IProcessRepository,
@@ -27,7 +27,13 @@ export class UpdateProcessUseCase
   ): Promise<UpdateProcessDto["data"]> {
     const updateProcessDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
-      description: yup.string().required().min(3).max(2000).trim(),
+      description: yup
+        .string()
+        .sanitizeHtml()
+        .required()
+        .min(3)
+        .max(2000)
+        .trim(),
       active: yup.boolean().required(),
       form: yup.object().shape({
         name: yup.string().required().min(3).max(50).trim(),

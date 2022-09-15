@@ -1,6 +1,6 @@
-import * as yup from "yup";
 import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
+import { yup } from "../../../modules";
 import { IUseCase, IUserRepository } from "../../../interfaces";
 import { CreateUserDto } from "./create-user.dto";
 import { IntegrityError } from "../../../errors";

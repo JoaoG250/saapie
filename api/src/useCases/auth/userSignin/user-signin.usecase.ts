@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import * as yup from "yup";
 import { User } from "@prisma/client";
+import { yup } from "../../../modules";
 import {
   AuthTokens,
   IJwtService,

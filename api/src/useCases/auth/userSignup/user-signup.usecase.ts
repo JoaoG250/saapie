@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
-import * as yup from "yup";
+import { yup } from "../../../modules";
 import { IntegrityError } from "../../../errors";
 import {
   IJwtService,

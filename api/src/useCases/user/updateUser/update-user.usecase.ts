@@ -1,5 +1,5 @@
-import * as yup from "yup";
 import { User } from "@prisma/client";
+import { yup } from "../../../modules";
 import { IUseCase, IUserRepository } from "../../../interfaces";
 import { UpdateUserDto } from "./update-user.dto";
 import { IntegrityError, UserNotFoundError } from "../../../errors";

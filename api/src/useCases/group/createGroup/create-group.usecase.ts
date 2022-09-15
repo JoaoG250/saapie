@@ -1,5 +1,5 @@
 import { Group } from "@prisma/client";
-import * as yup from "yup";
+import { yup } from "../../../modules";
 import { IntegrityError } from "../../../errors";
 import { IGroupRepository, IUseCase } from "../../../interfaces";
 import { CreateGroupDto } from "./create-group.dto";

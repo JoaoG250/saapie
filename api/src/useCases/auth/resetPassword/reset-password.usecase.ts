@@ -1,5 +1,5 @@
-import * as yup from "yup";
 import bcrypt from "bcrypt";
+import { yup } from "../../../modules";
 import { InvalidTokenError } from "../../../errors";
 import { IJwtService, IUseCase, IUserRepository } from "../../../interfaces";
 import { ResetPasswordDto } from "./reset-password.dto";

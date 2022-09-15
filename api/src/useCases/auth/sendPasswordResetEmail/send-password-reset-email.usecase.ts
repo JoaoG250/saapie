@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import * as yup from "yup";
+import { yup } from "../../../modules";
 import { UserNotFoundError } from "../../../errors";
 import {
   IJwtService,
