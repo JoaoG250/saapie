@@ -6,6 +6,12 @@ interface ProcessListProps {
   processes: Process[];
 }
 defineProps<ProcessListProps>();
+
+function htmlToText(html: string): string {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+}
 </script>
 
 <template>
@@ -25,7 +31,7 @@ defineProps<ProcessListProps>();
               <span>{{ process.name }}</span>
             </div>
             <div class="q-mt-sm process-description">
-              <span>{{ process.description }}</span>
+              <span>{{ htmlToText(process.description) }}</span>
             </div>
           </q-card-section>
         </q-card>

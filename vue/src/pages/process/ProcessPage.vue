@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { marked } from "marked";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import {
   ProcessQueryResult,
@@ -36,12 +35,6 @@ const processSlug = computed<string>(() => {
   } else {
     throw new Error("Invalid id");
   }
-});
-const description = computed(() => {
-  if (process.value) {
-    return marked.parse(process.value.description);
-  }
-  return "";
 });
 
 const { onResult, loading } = useQuery<
@@ -112,7 +105,7 @@ async function submitHandler(data: FormKitData) {
         <!-- eslint-disable vue/no-v-html -->
         <div
           class="text-subtitle1 q-mb-sm process-description"
-          v-html="description"
+          v-html="process.description"
         />
         <!-- eslint-enable vue/no-v-html -->
         <q-separator class="q-mb-md" inset />

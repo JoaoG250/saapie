@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QTableProps } from "quasar";
+import { QTableProps, useQuasar } from "quasar";
 import { Process, SelectOption } from "src/interfaces";
 import { computed, ref, watch } from "vue";
 import { useCrudAdminTable } from "src/composables";
@@ -10,6 +10,7 @@ import GroupSelect, {
 } from "components/admin/group/GroupSelect.vue";
 import { cannotMatch } from "src/validation";
 
+const $q = useQuasar();
 const itemName = "Processo";
 const defaultItem: Process = {
   id: "",
@@ -49,6 +50,40 @@ const columns: NonNullable<QTableProps["columns"]> = [
       return;
     },
   },
+];
+const toolbar = [
+  ["undo", "redo"],
+  [
+    {
+      label: $q.lang.editor.fontSize,
+      icon: $q.iconSet.editor.fontSize,
+      fixedLabel: true,
+      fixedIcon: true,
+      list: "no-icons",
+      options: [
+        "size-1",
+        "size-2",
+        "size-3",
+        "size-4",
+        "size-5",
+        "size-6",
+        "size-7",
+      ],
+    },
+  ],
+  [
+    {
+      label: $q.lang.editor.align,
+      icon: $q.iconSet.editor.align,
+      fixedLabel: true,
+      list: "only-icons",
+      options: ["left", "center", "right", "justify"],
+    },
+  ],
+  ["bold", "italic", "strike", "underline", "quote"],
+  ["token", "hr", "link"],
+  ["unordered", "ordered", "outdent", "indent"],
+  ["removeFormat", "fullscreen"],
 ];
 
 const processStore = useProcessStore();
@@ -97,7 +132,7 @@ const forwardToGroupRules = [
 watch(editedItem, (item) => {
   extraData.value.form = {
     name: item.form.name,
-    definition: JSON.stringify(item.form.definition),
+    definition: JSON.stringify(item.form.definition, undefined, 2),
   };
 });
 
@@ -163,11 +198,11 @@ const forwardToGroupInitial = computed(() => {
             label="Nome"
             :rules="processRules.name"
           />
-          <q-input
+          <q-editor
             v-model="editedItem.description"
-            label="Descrição"
-            type="textarea"
-            :rules="processRules.description"
+            placeholder="Descrição"
+            min-height="15rem"
+            :toolbar="toolbar"
           />
           <GroupSelect
             label="Grupo alvo"
@@ -184,6 +219,7 @@ const forwardToGroupInitial = computed(() => {
             v-model="extraData.form.definition"
             label="Definição do formulário"
             type="textarea"
+            rows="15"
             :rules="processRules.form.definition"
           />
           <q-toggle
