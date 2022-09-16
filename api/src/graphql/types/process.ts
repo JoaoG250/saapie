@@ -11,6 +11,21 @@ export const ProcessForm = objectType({
   },
 });
 
+export const ProcessWithoutRelations = objectType({
+  name: "ProcessWithoutRelations",
+  definition(t) {
+    t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
+    t.string("name");
+    t.string("slug");
+    t.string("description");
+    t.boolean("active");
+    t.string("targetGroupId");
+    t.nullable.string("forwardToGroupId");
+  },
+});
+
 export const Process = objectType({
   name: "Process",
   definition(t) {
@@ -59,6 +74,19 @@ export const Process = objectType({
 export const ProcessRequestStatus = enumType({
   name: "ProcessRequestStatus",
   members: ["OPEN", "FORWARDED", "PENDING_CHANGE", "CLOSED"],
+});
+
+export const ProcessRequestWithoutRelations = objectType({
+  name: "ProcessRequestWithoutRelations",
+  definition(t) {
+    t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
+    t.field("status", { type: "ProcessRequestStatus" });
+    t.string("processId");
+    t.string("userId");
+    t.json("data");
+  },
 });
 
 export const ProcessRequest = objectType({

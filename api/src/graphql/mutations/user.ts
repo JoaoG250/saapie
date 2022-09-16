@@ -54,7 +54,7 @@ export const userMutations = extendType({
       },
     });
     t.field("deleteUser", {
-      type: "User",
+      type: "UserWithoutRelations",
       args: {
         id: idArg(),
       },

@@ -76,9 +76,9 @@ type Mutation {
   createProcessRequest(attachments: [Upload!], data: JSON!, processId: ID, processSlug: String): ProcessRequest!
   createUser(data: CreateUserInput!): User!
   deleteGroup(id: ID!): Group!
-  deleteProcess(id: ID!): Process!
-  deleteProcessRequest(id: ID!): ProcessRequest!
-  deleteUser(id: ID!): User!
+  deleteProcess(id: ID!): ProcessWithoutRelations!
+  deleteProcessRequest(id: ID!): ProcessRequestWithoutRelations!
+  deleteUser(id: ID!): UserWithoutRelations!
   refreshTokens(refreshToken: String!): AuthTokens!
   removeUserFromGroup(groupId: ID!, userId: ID!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
@@ -205,8 +205,30 @@ input ProcessRequestWhereInput {
   userId: String
 }
 
+type ProcessRequestWithoutRelations {
+  createdAt: DateTime!
+  data: JSON!
+  id: ID!
+  processId: String!
+  status: ProcessRequestStatus!
+  updatedAt: DateTime!
+  userId: String!
+}
+
 input ProcessWhereInput {
   name: String
+}
+
+type ProcessWithoutRelations {
+  active: Boolean!
+  createdAt: DateTime!
+  description: String!
+  forwardToGroupId: String
+  id: ID!
+  name: String!
+  slug: String!
+  targetGroupId: String!
+  updatedAt: DateTime!
 }
 
 type Query {
@@ -433,4 +455,15 @@ input UserOrderByInput {
 
 input UserWhereInput {
   email: String
+}
+
+type UserWithoutRelations {
+  createdAt: DateTime!
+  email: String!
+  firstName: String!
+  id: ID!
+  isActive: Boolean!
+  isVerified: Boolean!
+  lastName: String!
+  updatedAt: DateTime!
 }

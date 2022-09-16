@@ -135,19 +135,6 @@ export const DELETE_PROCESS_MUTATION = gql`
       active
       targetGroupId
       forwardToGroupId
-      form {
-        id
-        name
-        definition
-      }
-      targetGroup {
-        id
-        name
-      }
-      forwardToGroup {
-        id
-        name
-      }
     }
   }
 `;
@@ -161,22 +148,6 @@ export interface DeleteProcessMutationResult {
     active: boolean;
     targetGroupId: string;
     forwardToGroupId: string | null | undefined;
-    form: {
-      id: string;
-      name: string;
-      definition: object[];
-    };
-    targetGroup: {
-      id: string;
-      name: string;
-    };
-    forwardToGroup:
-      | {
-          id: string;
-          name: string;
-        }
-      | null
-      | undefined;
   };
 }
 
@@ -260,17 +231,6 @@ export const DELETE_PROCESS_REQUEST_MUTATION = gql`
     deleteProcessRequest(id: $id) {
       id
       status
-      process {
-        id
-        name
-        slug
-      }
-      user {
-        id
-        firstName
-        lastName
-        email
-      }
       data
     }
   }
@@ -280,17 +240,6 @@ export interface DeleteProcessRequestMutationResult {
   deleteProcessRequest: {
     id: string;
     status: ProcessRequestStatus;
-    process: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-    user: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
     data: FormKitData;
   };
 }

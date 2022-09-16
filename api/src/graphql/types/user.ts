@@ -1,5 +1,19 @@
 import { inputObjectType, objectType } from "nexus";
 
+export const UserWithoutRelations = objectType({
+  name: "UserWithoutRelations",
+  definition(t) {
+    t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
+    t.string("firstName");
+    t.string("lastName");
+    t.string("email");
+    t.boolean("isActive");
+    t.boolean("isVerified");
+  },
+});
+
 export const User = objectType({
   name: "User",
   definition(t) {

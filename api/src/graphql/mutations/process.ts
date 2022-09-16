@@ -80,7 +80,7 @@ export const ProcessMutations = extendType({
       },
     });
     t.field("deleteProcess", {
-      type: "Process",
+      type: "ProcessWithoutRelations",
       args: {
         id: idArg(),
       },
@@ -161,7 +161,7 @@ export const ProcessMutations = extendType({
       },
     });
     t.field("deleteProcessRequest", {
-      type: "ProcessRequest",
+      type: "ProcessRequestWithoutRelations",
       args: {
         id: idArg(),
       },
