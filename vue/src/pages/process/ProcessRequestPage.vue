@@ -98,16 +98,6 @@ const allowEdit = computed(() => {
   if (processRequest.value.user.id === authStore.state.user.id) return true;
   return false;
 });
-const showActions = computed(() => {
-  if (!authStore.state.user || !processRequest.value) return false;
-  if (
-    processRequest.value.status !== "CLOSED" &&
-    authStore.state.user.groups.length
-  ) {
-    return true;
-  }
-  return false;
-});
 const schema = computed<FormKitSchemaNode[]>(() => {
   if (processRequest.value) {
     return processRequest.value.process.form.definition as FormKitSchemaNode[];
@@ -227,7 +217,6 @@ function onUpdateStatus(status: ProcessRequestStatus) {
       </template>
 
       <ProcessRequestActions
-        v-if="showActions"
         :process-request="processRequest"
         @update-status="onUpdateStatus"
       />

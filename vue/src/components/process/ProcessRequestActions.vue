@@ -21,16 +21,15 @@ const $q = useQuasar();
 const authStore = useAuthStore();
 
 const showForwardBtn = computed(() => {
-  if (!props.processRequest.process.forwardToGroup) {
-    return false;
-  }
-  if (props.processRequest.status === "FORWARDED") {
-    return false;
-  }
-  if (!authStore.state.user) {
+  if (!props.processRequest.process.forwardToGroup || !authStore.state.user) {
     return false;
   }
   if (
+    props.processRequest.status === "CLOSED" ||
+    props.processRequest.status === "FORWARDED"
+  ) {
+    return false;
+  } else if (
     !userIsFromGroup(
       authStore.state.user.groups,
       props.processRequest.process.targetGroup
@@ -41,24 +40,24 @@ const showForwardBtn = computed(() => {
   return true;
 });
 const showCloseBtn = computed(() => {
-  if (props.processRequest.status === "CLOSED") {
+  if (props.processRequest.status === "CLOSED" || !authStore.state.user) {
     return false;
   }
-  if (!authStore.state.user) {
-    return false;
-  }
-  if (
-    props.processRequest.process.forwardToGroup &&
-    props.processRequest.status !== "FORWARDED"
-  ) {
-    return false;
-  }
-  if (
-    props.processRequest.process.forwardToGroup &&
-    props.processRequest.status === "FORWARDED" &&
+  if (props.processRequest.process.forwardToGroup) {
+    if (props.processRequest.status !== "FORWARDED") {
+      return false;
+    } else if (
+      !userIsFromGroup(
+        authStore.state.user.groups,
+        props.processRequest.process.forwardToGroup
+      )
+    ) {
+      return false;
+    }
+  } else if (
     !userIsFromGroup(
       authStore.state.user.groups,
-      props.processRequest.process.forwardToGroup
+      props.processRequest.process.targetGroup
     )
   ) {
     return false;

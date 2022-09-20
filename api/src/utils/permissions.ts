@@ -5,6 +5,10 @@ export function userIsAdmin(user: UserFromRequest): boolean {
   return user.groups.includes("ADMINISTRATORS");
 }
 
+export function userIsSuperAdmin(user: UserFromRequest): boolean {
+  return user.groups.includes("SUPER_ADMINISTRATORS");
+}
+
 export function userIsFromProcessGroups(
   user: UserFromRequest,
   process: Process & {

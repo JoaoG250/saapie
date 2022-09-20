@@ -5,7 +5,11 @@ import {
 } from "apollo-server-express";
 import { and, or, rule, shield } from "graphql-shield";
 import { GraphQLContext } from "./types";
-import { userIsAdmin, userIsFromProcessGroups } from "./utils";
+import {
+  userIsAdmin,
+  userIsFromProcessGroups,
+  userIsSuperAdmin,
+} from "./utils";
 import { createRateLimitRule, RedisStore } from "graphql-rate-limit";
 import redis from "./redis";
 
@@ -18,6 +22,13 @@ const isAuthenticated = rule()((_root, _args, ctx: GraphQLContext) => {
 
 const isAdmin = rule()((_root, _args, ctx: GraphQLContext) => {
   if (ctx.user && userIsAdmin(ctx.user)) {
+    return true;
+  }
+  return new ForbiddenError("Not Authorised!");
+});
+
+const isSuperAdmin = rule()((_root, _args, ctx: GraphQLContext) => {
+  if (ctx.user && userIsSuperAdmin(ctx.user)) {
     return true;
   }
   return new ForbiddenError("Not Authorised!");
@@ -146,17 +157,17 @@ export const permissions = shield(
       resetPassword: rateLimitRule({ window: "5m", max: 3 }),
       createUser: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       updateUser: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       deleteUser: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       createGroup: and(
@@ -176,12 +187,12 @@ export const permissions = shield(
       ),
       addUserToGroup: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       removeUserFromGroup: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       createProcess: and(

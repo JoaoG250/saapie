@@ -21,7 +21,13 @@ async function createAdministrator(): Promise<void> {
   const email = await askQuestion("Email: ");
   const password = await askQuestion("Password: ");
 
-  const group = await prisma.group.upsert({
+  const superAdminGroup = await prisma.group.upsert({
+    where: { name: "SUPER_ADMINISTRATORS" },
+    create: { name: "SUPER_ADMINISTRATORS" },
+    update: {},
+  });
+
+  const adminGroup = await prisma.group.upsert({
     where: { name: "ADMINISTRATORS" },
     create: { name: "ADMINISTRATORS" },
     update: {},
@@ -36,7 +42,7 @@ async function createAdministrator(): Promise<void> {
       password: passwordHash,
       isActive: true,
       isVerified: true,
-      groups: { connect: { id: group.id } },
+      groups: { connect: [{ id: superAdminGroup.id }, { id: adminGroup.id }] },
     },
   });
   rl.close();

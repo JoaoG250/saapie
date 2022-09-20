@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { QTableProps } from "quasar";
 import { User } from "src/interfaces";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { userRules } from "src/validation/user";
 import { useUserStore } from "src/stores/user";
 import EditUserGroups from "./EditUserGroups.vue";
+import { useAuthStore } from "src/stores/auth";
+import { userIsSuperAdmin } from "src/common/permissions";
 
 const itemName = "Usuário";
 const defaultItem: User = {
@@ -16,52 +18,8 @@ const defaultItem: User = {
   isActive: false,
   isVerified: false,
 };
-const columns: NonNullable<QTableProps["columns"]> = [
-  {
-    name: "firstName",
-    label: "Nome",
-    field: "firstName",
-    align: "left",
-    sortable: true,
-  },
-  {
-    name: "lastName",
-    label: "Sobrenome",
-    field: "lastName",
-    align: "center",
-    sortable: true,
-  },
-  {
-    name: "email",
-    label: "Email",
-    field: "email",
-    align: "center",
-    sortable: true,
-  },
-  {
-    name: "isActive",
-    label: "Ativo",
-    field: "isActive",
-    align: "center",
-    sortable: true,
-  },
-  {
-    name: "isVerified",
-    label: "Verificado",
-    field: "isVerified",
-    align: "center",
-    sortable: true,
-  },
-  {
-    name: "actions",
-    label: "Ações",
-    align: "right",
-    field: () => {
-      return;
-    },
-  },
-];
 
+const authStore = useAuthStore();
 const userStore = useUserStore();
 const editGroups = ref(false);
 const extraCreateData = ref({
@@ -84,6 +42,62 @@ const {
   defaultItem: defaultItem,
   store: userStore,
   extraCreateData,
+});
+const isSuperAdmin = computed<boolean>(() => {
+  if (authStore.state.user) {
+    return userIsSuperAdmin(authStore.state.user.groups);
+  }
+  return false;
+});
+const columns = computed<NonNullable<QTableProps["columns"]>>(() => {
+  let cols: NonNullable<QTableProps["columns"]> = [
+    {
+      name: "firstName",
+      label: "Nome",
+      field: "firstName",
+      align: "left",
+      sortable: true,
+    },
+    {
+      name: "lastName",
+      label: "Sobrenome",
+      field: "lastName",
+      align: "center",
+      sortable: true,
+    },
+    {
+      name: "email",
+      label: "Email",
+      field: "email",
+      align: "center",
+      sortable: true,
+    },
+    {
+      name: "isActive",
+      label: "Ativo",
+      field: "isActive",
+      align: "center",
+      sortable: true,
+    },
+    {
+      name: "isVerified",
+      label: "Verificado",
+      field: "isVerified",
+      align: "center",
+      sortable: true,
+    },
+  ];
+  if (isSuperAdmin.value) {
+    cols.push({
+      name: "actions",
+      label: "Ações",
+      align: "right",
+      field: () => {
+        return;
+      },
+    });
+  }
+  return cols;
 });
 </script>
 
@@ -163,13 +177,14 @@ const {
       <div class="q-table__title">{{ itemName }}</div>
       <q-space />
       <q-btn
+        v-if="isSuperAdmin"
         :label="`Novo ${itemNameLowerCase}`"
         icon="add"
         color="primary"
         @click="openDialog"
       />
     </template>
-    <template #body-cell-actions="slotItem">
+    <template v-if="isSuperAdmin" #body-cell-actions="slotItem">
       <q-td :props="slotItem">
         <q-btn round icon="edit" size="xs" @click="editItem(slotItem.row)" />
         <q-btn
