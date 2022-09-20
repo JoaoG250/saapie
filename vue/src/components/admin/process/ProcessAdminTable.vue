@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { QTableProps, useQuasar } from "quasar";
+import {
+  QTableProps,
+  useQuasar,
+  GlobalComponentConstructor,
+  QEditorProps,
+  QEditorSlots as QuasarEditorSlots,
+  QEditor as QuasarEditor,
+} from "quasar";
 import { Process, SelectOption } from "src/interfaces";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, VNode } from "vue";
 import { useCrudAdminTable } from "src/composables";
 import { processRules } from "src/validation/process";
 import { useProcessStore } from "src/stores/process";
@@ -10,6 +17,12 @@ import GroupSelect, {
 } from "components/admin/group/GroupSelect.vue";
 import { cannotMatch } from "src/validation";
 
+interface QEditorSlots extends QuasarEditorSlots {
+  count: () => VNode;
+}
+type QEditorType = GlobalComponentConstructor<QEditorProps, QEditorSlots>;
+
+const QEditor = QuasarEditor as unknown as QEditorType;
 const $q = useQuasar();
 const itemName = "Processo";
 const defaultItem: Process = {
@@ -84,6 +97,7 @@ const toolbar = [
   ["token", "hr", "link"],
   ["unordered", "ordered", "outdent", "indent"],
   ["removeFormat", "fullscreen"],
+  ["count"],
 ];
 
 const processStore = useProcessStore();
@@ -181,6 +195,17 @@ const forwardToGroupInitial = computed(() => {
   }
   return undefined;
 });
+const descriptionError = computed(() => {
+  let error = "";
+  for (const fn of processRules.description) {
+    const validation = fn(editedItem.value.description);
+    if (typeof validation === "string") {
+      error = validation;
+      break;
+    }
+  }
+  return error;
+});
 </script>
 
 <template>
@@ -198,12 +223,27 @@ const forwardToGroupInitial = computed(() => {
             label="Nome"
             :rules="processRules.name"
           />
+          <q-banner
+            v-if="descriptionError"
+            class="text-white bg-red q-mt-sm"
+            rounded
+          >
+            <template #avatar>
+              <q-icon name="error" color="white" />
+            </template>
+            {{ descriptionError }}
+          </q-banner>
           <q-editor
             v-model="editedItem.description"
             placeholder="Descrição"
             min-height="15rem"
+            class="q-mt-sm"
             :toolbar="toolbar"
-          />
+          >
+            <template #count>
+              <q-chip square>{{ editedItem.description.length }}/4000</q-chip>
+            </template>
+          </q-editor>
           <GroupSelect
             label="Grupo alvo"
             :on-change="setTargetGroup"

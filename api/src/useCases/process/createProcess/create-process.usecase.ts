@@ -22,13 +22,7 @@ export class CreateProcessUseCase
   ): Promise<CreateProcessDto> {
     const createProcessDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
-      description: yup
-        .string()
-        .sanitizeHtml()
-        .required()
-        .min(3)
-        .max(2000)
-        .trim(),
+      description: yup.string().ensure().sanitizeHtml().max(4000).trim(),
       form: yup.object().shape({
         name: yup.string().required().min(3).max(50).trim(),
         definition: yup.array().of(yup.object()).required(),

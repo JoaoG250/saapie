@@ -15,9 +15,8 @@ function validateName(value: string) {
 function validateDescription(value: string) {
   const rules = yup
     .string()
-    .required("Descrição é obrigatória")
-    .min(3, "Descrição deve ter no mínimo 3 caracteres")
-    .max(2000, "Descrição deve ter no máximo 2000 caracteres")
+    .ensure()
+    .max(4000, "Descrição deve ter no máximo 4000 caracteres")
     .trim();
   return validateRules(rules, value);
 }

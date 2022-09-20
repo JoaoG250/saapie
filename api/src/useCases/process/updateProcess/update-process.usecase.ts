@@ -27,13 +27,7 @@ export class UpdateProcessUseCase
   ): Promise<UpdateProcessDto["data"]> {
     const updateProcessDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
-      description: yup
-        .string()
-        .sanitizeHtml()
-        .required()
-        .min(3)
-        .max(2000)
-        .trim(),
+      description: yup.string().ensure().sanitizeHtml().max(4000).trim(),
       active: yup.boolean().required(),
       form: yup.object().shape({
         name: yup.string().required().min(3).max(50).trim(),
