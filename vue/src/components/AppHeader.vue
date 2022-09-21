@@ -30,43 +30,41 @@ async function handleSignout() {
 
       <q-tabs class="show-desktop-only">
         <template v-for="(item, index) in menuList" :key="index">
-          <q-route-tab :label="item.label" :to="item.to" exact />
+          <q-route-tab :label="item.label" :to="item.to" exact no-caps />
         </template>
       </q-tabs>
 
-      <q-btn
+      <q-btn-dropdown
         v-if="authStore.state.user"
-        class="q-ml-md"
-        color="primary"
-        icon="menu"
         :label="authStore.state.user.firstName"
+        flat
+        no-caps
+        stretch
       >
-        <q-menu>
-          <q-list style="min-width: 100px">
-            <q-item
-              v-if="userIsAdmin(authStore.state.user.groups)"
-              v-close-popup
-              clickable
-              :to="{ name: 'admin' }"
-            >
-              <q-item-section>
-                <div class="row justify-between items-center">
-                  Admin
-                  <q-icon name="local_police" size="1.2rem" />
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-item v-close-popup clickable @click="handleSignout">
-              <q-item-section>
-                <div class="row justify-between items-center">
-                  Sair
-                  <q-icon name="logout" size="1.2rem" />
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
-      </q-btn>
+        <q-list>
+          <q-item
+            v-if="userIsAdmin(authStore.state.user.groups)"
+            v-close-popup
+            clickable
+            :to="{ name: 'admin' }"
+          >
+            <q-item-section>
+              <div class="row justify-between items-center">
+                Admin
+                <q-icon name="local_police" size="1.2rem" />
+              </div>
+            </q-item-section>
+          </q-item>
+          <q-item v-close-popup clickable @click="handleSignout">
+            <q-item-section>
+              <div class="row justify-between items-center">
+                Sair
+                <q-icon name="logout" size="1.2rem" />
+              </div>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
       <q-btn
         v-else
         :to="{ name: 'signin' }"

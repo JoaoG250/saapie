@@ -9,17 +9,17 @@ const tab = ref("assigned");
 
 <template>
   <q-page class="container">
-    <div class="text-h4 text-weight-bold text-center q-my-md page-title">
-      PEDIDOS DE ABERTURA DE PROCESSO
+    <div class="text-h4 text-center q-my-md page-heading">
+      Pedidos De Abertura De Processo
     </div>
     <q-tabs
       v-model="tab"
       inline-label
       class="bg-primary text-white shadow-2 rounded-borders"
     >
-      <q-tab name="assigned" icon="mail" label="Atribuido" />
-      <q-tab name="forwarded" icon="forward" label="Emcaminhado" />
-      <q-tab name="closed" icon="check" label="Finalizado" />
+      <q-tab name="assigned" icon="mail" label="Atribuido" no-caps />
+      <q-tab name="forwarded" icon="forward" label="Emcaminhado" no-caps />
+      <q-tab name="closed" icon="check" label="Finalizado" no-caps />
     </q-tabs>
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="assigned">
@@ -38,7 +38,7 @@ const tab = ref("assigned");
 <style lang="scss" scoped>
 @import "src/css/mixins";
 @include screen(xs) {
-  .page-title {
+  .page-heading {
     font-size: 1.6rem;
   }
 }

@@ -46,7 +46,7 @@ function htmlToText(html: string): string {
   &-name {
     font-size: 1.2rem;
     line-height: unset;
-    height: 55px;
+    color: $primary;
     span {
       @include line-clamp(2);
     }

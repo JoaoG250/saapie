@@ -66,8 +66,8 @@ const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
 
 <template>
   <q-page class="container">
-    <div class="text-h4 text-weight-bold text-center q-my-md page-title">
-      PEDIDOS DE ABERTURA DE PROCESSO
+    <div class="text-h4 text-center q-my-md page-heading">
+      Pedidos De Abertura De Processo
     </div>
     <q-separator class="q-mb-md" inset />
     <q-infinite-scroll :offset="250" @load="onLoad">
@@ -87,7 +87,7 @@ const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
 <style lang="scss" scoped>
 @import "src/css/mixins";
 @include screen(xs) {
-  .page-title {
+  .page-heading {
     font-size: 1.6rem;
   }
 }

@@ -175,7 +175,7 @@ function onUpdateStatus(status: ProcessRequestStatus) {
 <template>
   <q-page class="container">
     <template v-if="processRequest">
-      <div class="text-h4 text-weight-bold text-center q-my-md process-name">
+      <div class="text-h4 text-center q-my-md page-heading process-name">
         {{ processRequest.process.name.toUpperCase() }}
       </div>
       <q-separator class="q-mb-sm" inset />
@@ -211,7 +211,7 @@ function onUpdateStatus(status: ProcessRequestStatus) {
       </FormKit>
 
       <template v-if="hasAttachments">
-        <div class="text-h4 text-center text-weight-bold q-my-lg">Anexos</div>
+        <div class="text-h4 text-center page-heading q-my-lg">Anexos</div>
         <q-separator class="q-mb-md" inset />
         <ProcessRequestAttachmentList :files="formData.files" />
       </template>
@@ -228,6 +228,9 @@ function onUpdateStatus(status: ProcessRequestStatus) {
 @import "src/css/mixins";
 .container :deep(.formkit-form) {
   --fk-max-width-input: 100%;
+  --fk-bg-submit: #1976d2;
+  --fk-color-submit: white;
+  --fk-bg-submit-hover: #3988d6;
 }
 @include screen(xs) {
   .process-name {

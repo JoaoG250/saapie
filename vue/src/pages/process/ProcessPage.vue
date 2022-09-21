@@ -98,7 +98,7 @@ async function submitHandler(data: FormKitData) {
         <div class="text-h5 text-center">Carregando...</div>
       </div>
       <div v-if="process" class="column">
-        <div class="text-h4 text-weight-bold text-center q-my-md process-name">
+        <div class="text-h4 text-center q-my-md page-heading process-name">
           {{ process.name }}
         </div>
         <q-separator class="q-mb-md" inset />
@@ -138,6 +138,9 @@ async function submitHandler(data: FormKitData) {
 @import "src/css/mixins";
 .container :deep(.formkit-form) {
   --fk-max-width-input: 100%;
+  --fk-bg-submit: #1976d2;
+  --fk-color-submit: white;
+  --fk-bg-submit-hover: #3988d6;
 }
 @include screen(xs) {
   .process-name {
