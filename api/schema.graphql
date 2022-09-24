@@ -70,6 +70,7 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 
 type Mutation {
   activateAccount(token: String!): Boolean!
+  addProcessRequestExtraAttachment(attachment: Upload!, id: ID!): ProcessRequest!
   addUserToGroup(groupId: ID!, userId: ID!): Boolean!
   createGroup(data: CreateGroupInput!): Group!
   createProcess(data: CreateProcessInput!): Process!

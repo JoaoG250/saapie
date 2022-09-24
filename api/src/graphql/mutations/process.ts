@@ -9,6 +9,7 @@ import {
   UserNotFoundError,
 } from "../../errors";
 import {
+  addProcessRequestExtraAttachmentUseCase,
   createProcessRequestUseCase,
   createProcessUseCase,
   deleteProcessRequestUseCase,
@@ -190,6 +191,26 @@ export const ProcessMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof ProcessNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("addProcessRequestExtraAttachment", {
+      type: "ProcessRequest",
+      args: {
+        id: idArg(),
+        attachment: arg({ type: "Upload" }),
+      },
+      async resolve(_root, args) {
+        try {
+          return await addProcessRequestExtraAttachmentUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessRequestNotFoundError) {
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {

@@ -6,6 +6,7 @@ import {
   processRequestRepository,
   userRepository,
 } from "../../repositories";
+import { AddProcessRequestExtraAttachmentUseCase } from "./addProcessRequestExtraAttachment/add-process-request-extra-attachment.usecase";
 import { CreateProcessUseCase } from "./createProcess/create-process.usecase";
 import { CreateProcessRequestUseCase } from "./createProcessRequest/create-process-request.usecase";
 import { DeleteProcessUseCase } from "./deleteProcess/delete-process.usecase";
@@ -54,6 +55,12 @@ const updateProcessRequestStatusUseCase = new UpdateProcessRequestStatusUseCase(
   processRequestRepository,
   processRepository
 );
+const addProcessRequestExtraAttachmentUseCase =
+  new AddProcessRequestExtraAttachmentUseCase(
+    processRequestRepository,
+    processRequestAttachmentRepository,
+    storageProvider
+  );
 
 export {
   getProcessUseCase,
@@ -67,4 +74,5 @@ export {
   updateProcessRequestUseCase,
   deleteProcessRequestUseCase,
   updateProcessRequestStatusUseCase,
+  addProcessRequestExtraAttachmentUseCase,
 };
