@@ -72,3 +72,9 @@ export interface ProcessRequestWhereInput {
 export interface ProcessWhereInput {
   name?: string;
 }
+
+export interface OnUpdateProcessRequestData {
+  updatedAt?: string;
+  status?: ProcessRequestStatus;
+  data?: FormKitData;
+}

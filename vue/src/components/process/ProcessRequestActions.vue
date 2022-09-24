@@ -7,10 +7,14 @@ import {
   UPDATE_PROCESS_REQUEST_STATUS_MUTATION,
 } from "src/apollo/mutations";
 import { ProcessRequestQueryResult } from "src/apollo/queries";
-import { ProcessRequestStatus } from "src/interfaces";
+import {
+  OnUpdateProcessRequestData,
+  ProcessRequestStatus,
+} from "src/interfaces";
 import { computed } from "vue";
 import { userIsFromGroup } from "src/common/permissions";
 import { useAuthStore } from "src/stores/auth";
+import AddProcessRequestExtraAttachmentDialog from "./AddProcessRequestExtraAttachmentDialog.vue";
 
 interface ProcessRequestActionsProps {
   processRequest: NonNullable<ProcessRequestQueryResult["processRequest"]>;
@@ -66,7 +70,7 @@ const showCloseBtn = computed(() => {
 });
 
 const emit = defineEmits<{
-  (e: "update-status", status: ProcessRequestStatus): void;
+  (e: "update-process-request", data: OnUpdateProcessRequestData): void;
 }>();
 
 function updateRequestStatus(
@@ -92,7 +96,9 @@ function updateRequestStatus(
       if (!response?.data) {
         throw new Error("Error updating process request");
       }
-      emit("update-status", response.data.updateProcessRequestStatus.status);
+      emit("update-process-request", {
+        status: response.data.updateProcessRequestStatus.status,
+      });
       $q.notify({
         position: "top",
         color: "positive",
@@ -129,26 +135,50 @@ function forwardRequest() {
     "Pedido de abertura de processo encaminhado!"
   );
 }
+
+function onUpdateProcessRequest(data: OnUpdateProcessRequestData) {
+  emit("update-process-request", data);
+}
 </script>
 
 <template>
-  <q-page-sticky position="bottom-right" :offset="[18, 18]">
-    <q-btn
-      v-if="showForwardBtn"
-      color="primary"
-      icon="forward"
-      label="Encaminhar"
-      fab
-      @click="forwardRequest"
-    />
-    <q-btn
-      v-if="showCloseBtn"
-      color="positive"
-      icon="check"
-      label="Finalizar"
-      fab
-      @click="closeRequest"
-    />
+  <q-page-sticky position="bottom-right" :offset="[30, 18]">
+    <q-fab
+      v-if="showForwardBtn || showCloseBtn"
+      label="Ações"
+      label-position="right"
+      color="secondary"
+      icon="keyboard_arrow_up"
+      direction="up"
+    >
+      <q-fab-action
+        v-if="showForwardBtn"
+        color="primary"
+        icon="forward"
+        label="Encaminhar"
+        @click="forwardRequest"
+      />
+      <q-fab-action
+        v-if="showCloseBtn"
+        color="positive"
+        icon="check"
+        label="Finalizar"
+        @click="closeRequest"
+      />
+      <AddProcessRequestExtraAttachmentDialog
+        :process-request="processRequest"
+        @update-process-request="onUpdateProcessRequest"
+      >
+        <template #activator="{ open }">
+          <q-fab-action
+            color="amber"
+            icon="attach_file"
+            label="Adicionar anexo"
+            @click="open"
+          />
+        </template>
+      </AddProcessRequestExtraAttachmentDialog>
+    </q-fab>
   </q-page-sticky>
 </template>
 

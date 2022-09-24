@@ -7,7 +7,7 @@ import {
   PROCESS_REQUEST_QUERY,
 } from "src/apollo/queries";
 import { FormKitSchema } from "@formkit/vue";
-import { FormKitData, ProcessRequestStatus } from "src/interfaces";
+import { FormKitData, OnUpdateProcessRequestData } from "src/interfaces";
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { FormKitSchemaNode } from "@formkit/core";
@@ -163,12 +163,9 @@ async function submitHandler(data: FormKitData) {
   }
 }
 
-function onUpdateStatus(status: ProcessRequestStatus) {
+function onUpdateProcessRequest(data: OnUpdateProcessRequestData) {
   if (!processRequest.value) return;
-  processRequest.value = {
-    ...processRequest.value,
-    status,
-  };
+  processRequest.value = { ...processRequest.value, ...data };
 }
 </script>
 
@@ -218,7 +215,7 @@ function onUpdateStatus(status: ProcessRequestStatus) {
 
       <ProcessRequestActions
         :process-request="processRequest"
-        @update-status="onUpdateStatus"
+        @update-process-request="onUpdateProcessRequest"
       />
     </template>
   </q-page>

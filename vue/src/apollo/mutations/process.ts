@@ -269,3 +269,24 @@ export interface UpdateProcessRequestStatusMutationVariables {
   id: string;
   status: ProcessRequestStatus;
 }
+
+export const ADD_PROCESS_REQUEST_EXTRA_ATTACHMENT_MUTATION = gql`
+  mutation addProcessRequestExtraAttachment($id: ID!, $attachment: Upload!) {
+    addProcessRequestExtraAttachment(id: $id, attachment: $attachment) {
+      updatedAt
+      data
+    }
+  }
+`;
+
+export interface AddProcessRequestExtraAttachmentMutationResult {
+  addProcessRequestExtraAttachment: {
+    updatedAt: string;
+    data: FormKitData;
+  };
+}
+
+export interface AddProcessRequestExtraAttachmentMutationVariables {
+  id: string;
+  attachment: File;
+}
