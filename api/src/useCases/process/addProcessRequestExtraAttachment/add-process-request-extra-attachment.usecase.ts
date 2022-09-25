@@ -12,7 +12,7 @@ import {
 } from "../../../interfaces";
 import { IStorageProvider } from "../../../interfaces/storage";
 import { AddProcessRequestExtraAttachmentDto } from "./add-process-request-extra-attachment.dto";
-import { createUrl } from "../../../utils";
+import { createUrl, getFileUrl } from "../../../utils";
 
 const publicUrl: string = config.get("server.publicUrl");
 
@@ -84,7 +84,7 @@ export class AddProcessRequestExtraAttachmentUseCase
       for (const file of extra) {
         if (typeof file === "object") {
           await this.processRequestAttachmentRepository.delete({
-            url: file.name,
+            url: getFileUrl(file.name),
           });
         }
       }

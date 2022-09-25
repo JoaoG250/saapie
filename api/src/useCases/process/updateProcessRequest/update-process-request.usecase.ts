@@ -12,7 +12,7 @@ import {
 import { UpdateProcessRequestDto } from "./update-process-request.dto";
 import { IStorageProvider } from "../../../interfaces/storage";
 import { IntegrityError, ProcessRequestNotFoundError } from "../../../errors";
-import { createUrl } from "../../../utils";
+import { createUrl, getFileUrl } from "../../../utils";
 
 const publicUrl: string = config.get("server.publicUrl");
 
@@ -95,7 +95,7 @@ export class UpdateProcessRequestUseCase
       for (const file of value) {
         if (!(typeof file === "object")) continue;
         await this.processRequestAttachmentRepository.delete({
-          url: file.name,
+          url: getFileUrl(file.name),
         });
       }
     }

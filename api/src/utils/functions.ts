@@ -79,3 +79,7 @@ export function createUrl(path: string, relativeUrl?: boolean): string {
   }
   return url;
 }
+
+export function getFileUrl(path: string): string {
+  return path.replace(baseUrl, "").replace(/^\//g, "");
+}

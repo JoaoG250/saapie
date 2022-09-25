@@ -68,8 +68,9 @@ const hasProcessRequestPermission = rule()(
 
 const isFromProcessRequestGroups = rule()(
   async (_root, args, ctx: GraphQLContext) => {
+    const id = args.id || args.processId;
     const processRequest = await ctx.prisma.processRequest.findUnique({
-      where: { id: args.id },
+      where: { id },
       include: {
         process: { include: { targetGroup: true, forwardToGroup: true } },
       },
@@ -228,6 +229,11 @@ export const permissions = shield(
         isAuthenticated,
         isFromProcessRequestGroups,
         rateLimitRule({ window: "30m", max: 200 })
+      ),
+      addProcessRequestExtraAttachment: and(
+        isAuthenticated,
+        isFromProcessRequestGroups,
+        rateLimitRule({ window: "30m", max: 100 })
       ),
     },
   },
