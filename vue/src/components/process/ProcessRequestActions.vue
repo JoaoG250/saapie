@@ -15,6 +15,7 @@ import { computed } from "vue";
 import { userIsFromGroup } from "src/common/permissions";
 import { useAuthStore } from "src/stores/auth";
 import AddProcessRequestExtraAttachmentDialog from "./AddProcessRequestExtraAttachmentDialog.vue";
+import RemoveProcessRequestExtraAttachmentBtn from "./RemoveProcessRequestExtraAttachmentBtn.vue";
 
 interface ProcessRequestActionsProps {
   processRequest: NonNullable<ProcessRequestQueryResult["processRequest"]>;
@@ -67,6 +68,9 @@ const showCloseBtn = computed(() => {
     return false;
   }
   return true;
+});
+const hasExtraAttachment = computed(() => {
+  return !!props.processRequest.data.extra;
 });
 
 const emit = defineEmits<{
@@ -173,11 +177,16 @@ function onUpdateProcessRequest(data: OnUpdateProcessRequestData) {
           <q-fab-action
             color="amber"
             icon="attach_file"
-            label="Adicionar anexo"
+            :label="hasExtraAttachment ? 'Substituir anexo' : 'Adicionar anexo'"
             @click="open"
           />
         </template>
       </AddProcessRequestExtraAttachmentDialog>
+      <RemoveProcessRequestExtraAttachmentBtn
+        v-if="hasExtraAttachment"
+        :process-request="processRequest"
+        @update-process-request="onUpdateProcessRequest"
+      />
     </q-fab>
   </q-page-sticky>
 </template>

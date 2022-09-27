@@ -6,11 +6,12 @@ import {
   AddProcessRequestExtraAttachmentMutationVariables,
   ADD_PROCESS_REQUEST_EXTRA_ATTACHMENT_MUTATION,
 } from "src/apollo/mutations";
-import { OnUpdateProcessRequestData, ProcessRequest } from "src/interfaces";
+import { ProcessRequestQueryResult } from "src/apollo/queries";
+import { OnUpdateProcessRequestData } from "src/interfaces";
 import { ref, reactive, computed } from "vue";
 
 interface AddProcessRequestExtraAttachmentDialogProps {
-  processRequest: ProcessRequest;
+  processRequest: NonNullable<ProcessRequestQueryResult["processRequest"]>;
 }
 
 const props = defineProps<AddProcessRequestExtraAttachmentDialogProps>();

@@ -290,3 +290,23 @@ export interface AddProcessRequestExtraAttachmentMutationVariables {
   id: string;
   attachment: File;
 }
+
+export const REMOVE_PROCESS_REQUEST_EXTRA_ATTACHMENT_MUTATION = gql`
+  mutation removeProcessRequestExtraAttachment($id: ID!) {
+    removeProcessRequestExtraAttachment(id: $id) {
+      updatedAt
+      data
+    }
+  }
+`;
+
+export interface RemoveProcessRequestExtraAttachmentMutationResult {
+  removeProcessRequestExtraAttachment: {
+    updatedAt: string;
+    data: FormKitData;
+  };
+}
+
+export interface RemoveProcessRequestExtraAttachmentMutationVariables {
+  id: string;
+}
