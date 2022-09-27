@@ -15,6 +15,7 @@ import { GetProcessUseCase } from "./getProcess/get-process.usecase";
 import { GetProcessesUseCase } from "./getProcesses/get-processes.usecase";
 import { GetProcessRequestUseCase } from "./getProcessRequest/get-process-request.usecase";
 import { GetProcessRequestsUseCase } from "./getProcessRequests/get-process-requests.usecase";
+import { RemoveProcessRequestExtraAttachmentUseCase } from "./removeProcessRequestExtraAttachment/remove-process-request-extra-attachment.usecase";
 import { UpdateProcessUseCase } from "./updateProcess/update-process.usecase";
 import { UpdateProcessRequestUseCase } from "./updateProcessRequest/update-process-request.usecase";
 import { UpdateProcessRequestStatusUseCase } from "./updateProcessRequestStatus/update-process-request-status.usecase";
@@ -61,6 +62,11 @@ const addProcessRequestExtraAttachmentUseCase =
     processRequestAttachmentRepository,
     storageProvider
   );
+const removeProcessRequestExtraAttachmentUseCase =
+  new RemoveProcessRequestExtraAttachmentUseCase(
+    processRequestRepository,
+    processRequestAttachmentRepository
+  );
 
 export {
   getProcessUseCase,
@@ -75,4 +81,5 @@ export {
   deleteProcessRequestUseCase,
   updateProcessRequestStatusUseCase,
   addProcessRequestExtraAttachmentUseCase,
+  removeProcessRequestExtraAttachmentUseCase,
 };

@@ -81,6 +81,7 @@ type Mutation {
   deleteProcessRequest(id: ID!): ProcessRequestWithoutRelations!
   deleteUser(id: ID!): UserWithoutRelations!
   refreshTokens(refreshToken: String!): AuthTokens!
+  removeProcessRequestExtraAttachment(id: ID!): ProcessRequest!
   removeUserFromGroup(groupId: ID!, userId: ID!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!
   sendPasswordResetEmail(email: String!): Boolean!
