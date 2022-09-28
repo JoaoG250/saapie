@@ -1,6 +1,6 @@
 import { ProcessRequestStatus } from "src/interfaces";
 
-export function formatDate(date: string | Date, time = false) {
+export function formatDate(date: string | Date, time = false, urlSafe = false) {
   if (typeof date === "string") {
     date = new Date(date);
   }
@@ -13,7 +13,11 @@ export function formatDate(date: string | Date, time = false) {
       minute: "2-digit",
     });
   }
-  return date.toLocaleDateString();
+  let formatedDate = date.toLocaleDateString();
+  if (urlSafe) {
+    formatedDate = formatedDate.replaceAll("/", "-");
+  }
+  return formatedDate;
 }
 
 export function formatStatus(status: ProcessRequestStatus) {

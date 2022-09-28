@@ -18,10 +18,19 @@ function downloadFile(url: string) {
   a.click();
   document.body.removeChild(a);
 }
+
+function getIcon(fileUrl: string) {
+  if (fileUrl.match(/.pdf$/i)) {
+    return "picture_as_pdf";
+  } else if (fileUrl.match(/.(jpg|jpeg|png)$/i)) {
+    return "collections";
+  }
+  return "description";
+}
 </script>
 
 <template>
-  <div class="row q-col-gutter-md">
+  <div class="row q-col-gutter-md justify-center">
     <div
       v-for="(urls, field) in files"
       :key="field"
@@ -30,13 +39,13 @@ function downloadFile(url: string) {
       <q-card>
         <q-card-section class="bg-primary text-white">
           <div class="text-h6 text-center">
-            {{ field.toString().toUpperCase() }}
+            {{ field.toString() }}
           </div>
         </q-card-section>
         <q-list>
           <q-item v-for="(url, index) in urls" :key="index">
             <q-item-section avatar>
-              <q-icon name="description" />
+              <q-icon :name="getIcon(url)" />
             </q-item-section>
             <q-item-section>
               <q-item-label>Anexo {{ index + 1 }}</q-item-label>

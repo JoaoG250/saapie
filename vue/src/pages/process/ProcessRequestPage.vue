@@ -23,6 +23,7 @@ import { formatStatus } from "src/common/format";
 import ProcessRequestAttachmentList from "src/components/process/ProcessRequestAttachmentList.vue";
 import ProcessRequestActions from "src/components/process/ProcessRequestActions.vue";
 import ProcessRequestInfo from "src/components/process/ProcessRequestInfo.vue";
+import MergeProcessRequestAttachments from "src/components/process/MergeProcessRequestAttachments.vue";
 
 interface Data {
   [key: string]: any;
@@ -173,7 +174,7 @@ function onUpdateProcessRequest(data: OnUpdateProcessRequestData) {
   <q-page class="container">
     <template v-if="processRequest">
       <div class="text-h4 text-center q-my-md page-heading process-name">
-        {{ processRequest.process.name.toUpperCase() }}
+        {{ processRequest.process.name }}
       </div>
       <q-separator class="q-mb-sm" inset />
       <ProcessRequestInfo :process-request="processRequest" />
@@ -210,7 +211,8 @@ function onUpdateProcessRequest(data: OnUpdateProcessRequestData) {
       <template v-if="hasAttachments">
         <div class="text-h4 text-center page-heading q-my-lg">Anexos</div>
         <q-separator class="q-mb-md" inset />
-        <ProcessRequestAttachmentList :files="formData.files" />
+        <ProcessRequestAttachmentList class="q-mb-md" :files="formData.files" />
+        <MergeProcessRequestAttachments :files="formData.files" />
       </template>
 
       <ProcessRequestActions
