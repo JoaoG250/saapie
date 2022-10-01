@@ -58,4 +58,12 @@ export default {
     host: "redis",
     family: 4,
   },
+  models: {
+    processRequestAttachment: {
+      imgMaxDimensions: {
+        width: 1920,
+        height: 1080,
+      },
+    },
+  },
 };

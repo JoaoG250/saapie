@@ -63,13 +63,19 @@ export class UpdateProcessRequestUseCase
         if (!filename) throw new Error("No file uploaded");
         const stream = createReadStream();
         const date = new Date();
-        const ext = path.extname(filename);
+        const ext = mimetype.startsWith("image/")
+          ? ".jpg"
+          : path.extname(filename);
         const newFileName = path.join(
           date.getFullYear().toString(),
           (date.getMonth() + 1).toString(),
           cuid() + ext
         );
-        await this.storageProvider.saveFileFromStream(stream, newFileName);
+        await this.storageProvider.saveFileFromStream(
+          stream,
+          newFileName,
+          mimetype
+        );
         const fileUrl = path.join(publicUrl, newFileName);
         await this.processRequestAttachmentRepository.create({
           name: newFileName,
@@ -77,7 +83,7 @@ export class UpdateProcessRequestUseCase
           url: fileUrl,
           processRequest: { connect: { id: processRequest.id } },
         });
-        const field = path.basename(filename, ext);
+        const field = path.basename(filename, path.extname(filename));
         files[field] = [...(files[field] || []), { name: createUrl(fileUrl) }];
       })
     );
