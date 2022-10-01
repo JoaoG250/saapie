@@ -148,6 +148,11 @@ export const permissions = shield(
         isUserInGroup,
         rateLimitRule({ window: "1h", max: 100 })
       ),
+      closedProcessRequests: and(
+        isAuthenticated,
+        isUserInGroup,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
     },
     Mutation: {
       signup: rateLimitRule({ window: "5m", max: 3 }),
@@ -231,6 +236,11 @@ export const permissions = shield(
         rateLimitRule({ window: "30m", max: 200 })
       ),
       addProcessRequestExtraAttachment: and(
+        isAuthenticated,
+        isFromProcessRequestGroups,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      removeProcessRequestExtraAttachment: and(
         isAuthenticated,
         isFromProcessRequestGroups,
         rateLimitRule({ window: "30m", max: 100 })

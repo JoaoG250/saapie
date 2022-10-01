@@ -212,7 +212,10 @@ function onUpdateProcessRequest(data: OnUpdateProcessRequestData) {
         <div class="text-h4 text-center page-heading q-my-lg">Anexos</div>
         <q-separator class="q-mb-md" inset />
         <ProcessRequestAttachmentList class="q-mb-md" :files="formData.files" />
-        <MergeProcessRequestAttachments :files="formData.files" />
+        <MergeProcessRequestAttachments
+          v-if="Object.keys(formData.files).length > 1"
+          :files="formData.files"
+        />
       </template>
 
       <ProcessRequestActions
