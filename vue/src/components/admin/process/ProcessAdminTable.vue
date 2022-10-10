@@ -259,6 +259,7 @@ const descriptionError = computed(() => {
             v-model="extraData.form.definition"
             label="Definição do formulário"
             type="textarea"
+            spellcheck="false"
             rows="15"
             :rules="processRules.form.definition"
           />
