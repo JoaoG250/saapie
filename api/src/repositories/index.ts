@@ -3,6 +3,7 @@ import redis from "../redis";
 import { GroupRepository } from "./group";
 import { JwtRepository } from "./jwt";
 import {
+  ProcessCategoryRepository,
   ProcessRepository,
   ProcessRequestAttachmentRepository,
   ProcessRequestRepository,
@@ -20,3 +21,4 @@ export const processRequestRepository = new ProcessRequestRepository(
 );
 export const processRequestAttachmentRepository =
   new ProcessRequestAttachmentRepository(prisma, storageProvider);
+export const processCategoryRepository = new ProcessCategoryRepository(prisma);

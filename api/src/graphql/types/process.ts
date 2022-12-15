@@ -126,6 +126,25 @@ export const ProcessRequest = objectType({
   },
 });
 
+export const ProcessCategory = objectType({
+  name: "ProcessCategory",
+  definition(t) {
+    t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
+    t.string("name");
+    t.string("slug");
+    t.list.field("processes", {
+      type: "Process",
+      resolve(root, args, ctx) {
+        return ctx.prisma.processCategory
+          .findUnique({ where: { id: root.id } })
+          .processes();
+      },
+    });
+  },
+});
+
 export const CreateProcessFormInput = inputObjectType({
   name: "CreateProcessFormInput",
   definition(t) {
@@ -196,5 +215,12 @@ export const ProcessWhereInput = inputObjectType({
   name: "ProcessWhereInput",
   definition(t) {
     t.nullable.string("name");
+  },
+});
+
+export const CreateProcessCategoryInput = inputObjectType({
+  name: "CreateProcessCategoryInput",
+  definition(t) {
+    t.string("name");
   },
 });

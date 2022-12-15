@@ -10,6 +10,7 @@ import {
 } from "../../errors";
 import {
   addProcessRequestExtraAttachmentUseCase,
+  createProcessCategoryUseCase,
   createProcessRequestUseCase,
   createProcessUseCase,
   deleteProcessRequestUseCase,
@@ -231,6 +232,25 @@ export const ProcessMutations = extendType({
           return await removeProcessRequestExtraAttachmentUseCase.execute(args);
         } catch (err) {
           if (err instanceof ProcessRequestNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("createProcessCategory", {
+      type: "ProcessCategory",
+      args: {
+        data: arg({ type: "CreateProcessCategoryInput" }),
+      },
+      async resolve(_root, args) {
+        try {
+          return await createProcessCategoryUseCase.execute(args.data);
+        } catch (err) {
+          if (err instanceof ValidationError) {
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {

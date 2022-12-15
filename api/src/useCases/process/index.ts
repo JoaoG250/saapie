@@ -1,6 +1,7 @@
 import { storageProvider } from "../../providers";
 import {
   groupRepository,
+  processCategoryRepository,
   processRepository,
   processRequestAttachmentRepository,
   processRequestRepository,
@@ -8,6 +9,7 @@ import {
 } from "../../repositories";
 import { AddProcessRequestExtraAttachmentUseCase } from "./addProcessRequestExtraAttachment/add-process-request-extra-attachment.usecase";
 import { CreateProcessUseCase } from "./createProcess/create-process.usecase";
+import { CreateProcessCategoryUseCase } from "./createProcessCategory/create-process-category.usecase";
 import { CreateProcessRequestUseCase } from "./createProcessRequest/create-process-request.usecase";
 import { DeleteProcessUseCase } from "./deleteProcess/delete-process.usecase";
 import { DeleteProcessRequestUseCase } from "./deleteProcessRequest/delete-process-request";
@@ -67,6 +69,9 @@ const removeProcessRequestExtraAttachmentUseCase =
     processRequestRepository,
     processRequestAttachmentRepository
   );
+const createProcessCategoryUseCase = new CreateProcessCategoryUseCase(
+  processCategoryRepository
+);
 
 export {
   getProcessUseCase,
@@ -82,4 +87,5 @@ export {
   updateProcessRequestStatusUseCase,
   addProcessRequestExtraAttachmentUseCase,
   removeProcessRequestExtraAttachmentUseCase,
+  createProcessCategoryUseCase,
 };
