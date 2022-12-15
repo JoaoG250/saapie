@@ -83,6 +83,7 @@ type Mutation {
   createUser(data: CreateUserInput!): User!
   deleteGroup(id: ID!): Group!
   deleteProcess(id: ID!): ProcessWithoutRelations!
+  deleteProcessCategory(id: ID!): ProcessCategoryWithoutRelations!
   deleteProcessRequest(id: ID!): ProcessRequestWithoutRelations!
   deleteUser(id: ID!): UserWithoutRelations!
   refreshTokens(refreshToken: String!): AuthTokens!
@@ -144,6 +145,14 @@ type ProcessCategory {
   id: ID!
   name: String!
   processes: [Process!]!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+type ProcessCategoryWithoutRelations {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
   slug: String!
   updatedAt: DateTime!
 }

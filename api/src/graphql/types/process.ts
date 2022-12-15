@@ -145,6 +145,17 @@ export const ProcessCategory = objectType({
   },
 });
 
+export const ProcessCategoryWithoutRelations = objectType({
+  name: "ProcessCategoryWithoutRelations",
+  definition(t) {
+    t.id("id");
+    t.dateTime("createdAt");
+    t.dateTime("updatedAt");
+    t.string("name");
+    t.string("slug");
+  },
+});
+
 export const CreateProcessFormInput = inputObjectType({
   name: "CreateProcessFormInput",
   definition(t) {

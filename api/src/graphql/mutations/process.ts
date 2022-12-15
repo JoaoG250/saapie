@@ -4,6 +4,7 @@ import { ValidationError } from "yup";
 import {
   GroupNotFoundError,
   IntegrityError,
+  ProcessCategoryNotFoundError,
   ProcessNotFoundError,
   ProcessRequestNotFoundError,
   UserNotFoundError,
@@ -13,6 +14,7 @@ import {
   createProcessCategoryUseCase,
   createProcessRequestUseCase,
   createProcessUseCase,
+  deleteProcessCategoryUseCase,
   deleteProcessRequestUseCase,
   deleteProcessUseCase,
   removeProcessRequestExtraAttachmentUseCase,
@@ -254,6 +256,22 @@ export const ProcessMutations = extendType({
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("deleteProcessCategory", {
+      type: "ProcessCategoryWithoutRelations",
+      args: {
+        id: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await deleteProcessCategoryUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessCategoryNotFoundError) {
             throw new UserInputError(err.message);
           }
           throw err;
