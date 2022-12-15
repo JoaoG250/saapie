@@ -2,10 +2,12 @@ import {
   Prisma,
   PrismaClient,
   Process,
+  ProcessCategory,
   ProcessRequest,
   ProcessRequestAttachment,
 } from "@prisma/client";
 import {
+  IProcessCategoryRepository,
   IProcessRepository,
   IProcessRequestAttachmentRepository,
   IProcessRequestRepository,
@@ -151,5 +153,41 @@ export class ProcessRequestAttachmentRepository
       await this.prisma.processRequestAttachment.delete({ where });
     await this.storateProvider.deleteFile(processRequestAttachment.name);
     return processRequestAttachment;
+  }
+}
+
+export class ProcessCategoryRepository implements IProcessCategoryRepository {
+  constructor(private readonly prisma: PrismaClient) {}
+  findOne(
+    where: Prisma.ProcessCategoryWhereUniqueInput
+  ): Promise<ProcessCategory | null> {
+    return this.prisma.processCategory.findUnique({ where });
+  }
+
+  findMany(args: {
+    skip?: number | undefined;
+    take?: number | undefined;
+    cursor?: Prisma.ProcessCategoryWhereUniqueInput | undefined;
+    where?: Prisma.ProcessCategoryWhereInput | undefined;
+    orderBy?: Prisma.ProcessCategoryOrderByWithRelationInput | undefined;
+  }): Promise<ProcessCategory[]> {
+    return this.prisma.processCategory.findMany(args);
+  }
+
+  create(data: Prisma.ProcessCategoryCreateInput): Promise<ProcessCategory> {
+    return this.prisma.processCategory.create({ data });
+  }
+
+  update(
+    where: Prisma.ProcessCategoryWhereUniqueInput,
+    data: Prisma.ProcessCategoryUpdateInput
+  ): Promise<ProcessCategory> {
+    return this.prisma.processCategory.update({ where, data });
+  }
+
+  delete(
+    where: Prisma.ProcessCategoryWhereUniqueInput
+  ): Promise<ProcessCategory> {
+    return this.prisma.processCategory.delete({ where });
   }
 }

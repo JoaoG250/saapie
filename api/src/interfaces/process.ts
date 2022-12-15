@@ -2,6 +2,7 @@ import {
   Group,
   Prisma,
   Process,
+  ProcessCategory,
   ProcessRequest,
   ProcessRequestAttachment,
 } from "@prisma/client";
@@ -73,4 +74,26 @@ export interface IProcessRequestAttachmentRepository
   delete(
     where: Prisma.ProcessRequestAttachmentWhereUniqueInput
   ): Promise<ProcessRequestAttachment>;
+}
+
+export interface IProcessCategoryRepository
+  extends IRepository<ProcessCategory> {
+  findOne(
+    where: Prisma.ProcessCategoryWhereUniqueInput
+  ): Promise<ProcessCategory | null>;
+  findMany(args: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProcessCategoryWhereUniqueInput;
+    where?: Prisma.ProcessCategoryWhereInput;
+    orderBy?: Prisma.ProcessCategoryOrderByWithRelationInput;
+  }): Promise<ProcessCategory[]>;
+  create(data: Prisma.ProcessCategoryCreateInput): Promise<ProcessCategory>;
+  update(
+    where: Prisma.ProcessCategoryWhereUniqueInput,
+    data: Prisma.ProcessCategoryUpdateInput
+  ): Promise<ProcessCategory>;
+  delete(
+    where: Prisma.ProcessCategoryWhereUniqueInput
+  ): Promise<ProcessCategory>;
 }
