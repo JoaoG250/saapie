@@ -53,3 +53,10 @@ export class ProcessRequestNotFoundError extends Error {
     this.name = "ProcessRequestNotFoundError";
   }
 }
+
+export class ProcessCategoryNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ProcessCategoryNotFoundError";
+  }
+}
