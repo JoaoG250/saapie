@@ -45,19 +45,30 @@ model Group {
 }
 
 model Process {
-    id               String           @id @default(cuid())
-    createdAt        DateTime         @default(now())
-    updatedAt        DateTime         @updatedAt
-    name             String           @unique
-    slug             String           @unique
-    description      String
-    active           Boolean          @default(true)
-    form             ProcessForm?
-    requests         ProcessRequest[]
-    targetGroup      Group            @relation("GroupProcesses", fields: [targetGroupId], references: [id], onDelete: SetNull)
-    targetGroupId    String
-    forwardToGroup   Group?           @relation("GroupForwardedProcesses", fields: [forwardToGroupId], references: [id], onDelete: SetNull)
-    forwardToGroupId String?
+    id                String           @id @default(cuid())
+    createdAt         DateTime         @default(now())
+    updatedAt         DateTime         @updatedAt
+    name              String           @unique
+    slug              String           @unique
+    description       String
+    active            Boolean          @default(true)
+    form              ProcessForm?
+    requests          ProcessRequest[]
+    targetGroup       Group            @relation("GroupProcesses", fields: [targetGroupId], references: [id], onDelete: Restrict)
+    targetGroupId     String
+    forwardToGroup    Group?           @relation("GroupForwardedProcesses", fields: [forwardToGroupId], references: [id], onDelete: SetNull)
+    forwardToGroupId  String?
+    processCategory   ProcessCategory? @relation(fields: [processCategoryId], references: [id], onDelete: SetNull)
+    processCategoryId String?
+}
+
+model ProcessCategory {
+    id        String    @id @default(cuid())
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    name      String    @unique
+    slug      String    @unique
+    processes Process[]
 }
 
 model ProcessForm {
@@ -75,7 +86,7 @@ model ProcessRequest {
     createdAt      DateTime                      @default(now())
     updatedAt      DateTime                      @updatedAt
     status         ProcessRequestStatus          @default(OPEN)
-    process        Process                       @relation(fields: [processId], references: [id], onDelete: SetNull)
+    process        Process                       @relation(fields: [processId], references: [id], onDelete: Restrict)
     processId      String
     user           User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId         String
