@@ -1,4 +1,9 @@
-import { Process, ProcessRequest, ProcessRequestStatus } from "@prisma/client";
+import {
+  Process,
+  ProcessCategory,
+  ProcessRequest,
+  ProcessRequestStatus,
+} from "@prisma/client";
 import { FormKitData } from "../../interfaces";
 
 const fakeProcesses: Process[] = [
@@ -13,6 +18,7 @@ const fakeProcesses: Process[] = [
     active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
+    processCategoryId: null,
   },
   {
     id: "f2316265-a6e8-4d65-a837-e308ae67862f",
@@ -25,6 +31,7 @@ const fakeProcesses: Process[] = [
     active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
+    processCategoryId: null,
   },
   {
     id: "f2316265-a6e8-4d65-a837-e308ae67862f",
@@ -37,6 +44,7 @@ const fakeProcesses: Process[] = [
     active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
+    processCategoryId: null,
   },
   {
     id: "f2316265-a6e8-4d65-a837-e308ae67862f",
@@ -49,6 +57,7 @@ const fakeProcesses: Process[] = [
     active: true,
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
+    processCategoryId: null,
   },
   {
     id: "f2316265-a6e8-4d65-a837-e308ae67862f",
@@ -61,6 +70,7 @@ const fakeProcesses: Process[] = [
       "Numquam quia ut earum nostrum aut fugit est quia earum. Est maiores aut autem. Est deleniti non dolorem officiis exercitationem cum qui veniam.",
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
+    processCategoryId: null,
   },
   {
     id: "f2316265-a6e8-4d65-a837-e308ae67862f",
@@ -73,6 +83,7 @@ const fakeProcesses: Process[] = [
       "Quia nihil commodi accusamus voluptatem aut. Odit architecto omnis doloribus alias corporis sint nisi autem ut.",
     targetGroupId: "cbfc51b8-eded-41d0-820e-a196af683b45",
     forwardToGroupId: "2acd600c-9fab-4447-8311-77e14e412801",
+    processCategoryId: null,
   },
 ];
 
@@ -133,6 +144,51 @@ const fakeProccessRequests: ProcessRequest[] = [
   },
 ];
 
+const fakeProcessCategories: ProcessCategory[] = [
+  {
+    id: "69a674e0-f467-4cc8-b96e-d151a05dfc2d",
+    createdAt: new Date("2022-02-01T00:24:53.271Z"),
+    updatedAt: new Date("2022-12-14T14:53:32.304Z"),
+    name: "Deserunt porro nulla id vero perspiciatis nulla.",
+    slug: "deserunt-porro-nulla-id-vero-perspiciatis-nulla",
+  },
+  {
+    id: "f2316265-a6e8-4d65-a837-e308ae67862f",
+    createdAt: new Date("2022-10-04T07:00:35.773Z"),
+    updatedAt: new Date("2022-12-14T19:41:51.899Z"),
+    name: "Repellat quisquam recusandae alias consequuntur corporis.",
+    slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
+  },
+  {
+    id: "765523b9-1474-4a9d-8a27-892bc4d876d2",
+    createdAt: new Date("2022-11-16T12:41:04.460Z"),
+    updatedAt: new Date("2022-12-14T15:06:28.681Z"),
+    name: "Amet accusantium non unde rerum iusto.",
+    slug: "amet-accusantium-non-unde-rerum-iusto",
+  },
+  {
+    id: "e6e02033-017b-4027-ba34-5a79e0c8f466",
+    createdAt: new Date("2022-05-27T20:05:48.336Z"),
+    updatedAt: new Date("2022-12-15T07:34:27.668Z"),
+    name: "Quasi impedit voluptas nostrum quia excepturi similique.",
+    slug: "quasi-impedit-voluptas-nostrum-quia-excepturi-similique",
+  },
+  {
+    id: "2f30b4e6-ac03-49d5-b926-9c09640afc60",
+    createdAt: new Date("2022-01-03T05:20:16.550Z"),
+    updatedAt: new Date("2022-12-15T13:25:26.970Z"),
+    name: "Ut unde quia aut vero quo est optio mollitia numquam.",
+    slug: "ut-unde-quia-aut-vero-quo-est-optio-mollitia-numquam",
+  },
+  {
+    id: "5ef7196c-5874-4f3c-9abd-732ce143614e",
+    createdAt: new Date("2022-04-30T02:11:49.144Z"),
+    updatedAt: new Date("2022-12-15T01:48:38.932Z"),
+    name: "Illo accusamus fugiat quia.",
+    slug: "illo-accusamus-fugiat-quia",
+  },
+];
+
 interface CreateFakeProcessArgs {
   id?: string;
   createdAt?: Date;
@@ -173,6 +229,26 @@ export function createFakeProcessRequest(
     fakeProccessRequests[seed % fakeProccessRequests.length];
   return {
     ...processRequest,
+    ...args,
+  };
+}
+
+interface CreateFakeProcessCategoryArgs {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  name?: string;
+  slug?: string;
+}
+
+export function createFakeProcessCategory(
+  args: CreateFakeProcessCategoryArgs,
+  seed: number
+): ProcessCategory {
+  const processCategory =
+    fakeProcessCategories[seed % fakeProcessCategories.length];
+  return {
+    ...processCategory,
     ...args,
   };
 }
