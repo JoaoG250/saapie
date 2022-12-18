@@ -235,3 +235,10 @@ export const CreateProcessCategoryInput = inputObjectType({
     t.string("name");
   },
 });
+
+export const UpdateProcessCategoryInput = inputObjectType({
+  name: "UpdateProcessCategoryInput",
+  definition(t) {
+    t.string("name");
+  },
+});

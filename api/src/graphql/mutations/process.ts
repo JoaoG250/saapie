@@ -18,6 +18,7 @@ import {
   deleteProcessRequestUseCase,
   deleteProcessUseCase,
   removeProcessRequestExtraAttachmentUseCase,
+  updateProcessCategoryUseCase,
   updateProcessRequestStatusUseCase,
   updateProcessRequestUseCase,
   updateProcessUseCase,
@@ -253,6 +254,29 @@ export const ProcessMutations = extendType({
           return await createProcessCategoryUseCase.execute(args.data);
         } catch (err) {
           if (err instanceof ValidationError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof IntegrityError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("updateProcessCategory", {
+      type: "ProcessCategory",
+      args: {
+        id: idArg(),
+        data: arg({ type: "UpdateProcessCategoryInput" }),
+      },
+      async resolve(_root, args) {
+        try {
+          return await updateProcessCategoryUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ValidationError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof ProcessCategoryNotFoundError) {
             throw new UserInputError(err.message);
           }
           if (err instanceof IntegrityError) {

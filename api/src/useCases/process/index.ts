@@ -20,6 +20,7 @@ import { GetProcessRequestUseCase } from "./getProcessRequest/get-process-reques
 import { GetProcessRequestsUseCase } from "./getProcessRequests/get-process-requests.usecase";
 import { RemoveProcessRequestExtraAttachmentUseCase } from "./removeProcessRequestExtraAttachment/remove-process-request-extra-attachment.usecase";
 import { UpdateProcessUseCase } from "./updateProcess/update-process.usecase";
+import { UpdateProcessCategoryUseCase } from "./updateProcessCategory/update-process-category.usecase";
 import { UpdateProcessRequestUseCase } from "./updateProcessRequest/update-process-request.usecase";
 import { UpdateProcessRequestStatusUseCase } from "./updateProcessRequestStatus/update-process-request-status.usecase";
 
@@ -73,6 +74,9 @@ const removeProcessRequestExtraAttachmentUseCase =
 const createProcessCategoryUseCase = new CreateProcessCategoryUseCase(
   processCategoryRepository
 );
+const updateProcessCategoryUseCase = new UpdateProcessCategoryUseCase(
+  processCategoryRepository
+);
 const deleteProcessCategoryUseCase = new DeleteProcessCategoryUseCase(
   processCategoryRepository
 );
@@ -92,5 +96,6 @@ export {
   addProcessRequestExtraAttachmentUseCase,
   removeProcessRequestExtraAttachmentUseCase,
   createProcessCategoryUseCase,
+  updateProcessCategoryUseCase,
   deleteProcessCategoryUseCase,
 };

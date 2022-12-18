@@ -95,6 +95,7 @@ type Mutation {
   signup(email: String!, firstName: String!, lastName: String!, password: String!): Boolean!
   updateGroup(data: UpdateGroupInput!, id: ID!): Group!
   updateProcess(data: UpdateProcessInput!, id: ID!): Process!
+  updateProcessCategory(data: UpdateProcessCategoryInput!, id: ID!): ProcessCategory!
   updateProcessRequest(attachments: [Upload!], data: JSON!, id: ID!): ProcessRequest!
   updateProcessRequestStatus(id: ID!, status: ProcessRequestStatus!): ProcessRequest!
   updateUser(data: UpdateUserInput!, id: ID!): User!
@@ -422,6 +423,10 @@ enum SortOrderInput {
 }
 
 input UpdateGroupInput {
+  name: String!
+}
+
+input UpdateProcessCategoryInput {
   name: String!
 }
 
