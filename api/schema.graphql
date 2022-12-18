@@ -150,6 +150,14 @@ type ProcessCategory {
   updatedAt: DateTime!
 }
 
+type ProcessCategoryEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: ProcessCategory!
+}
+
 type ProcessCategoryWithoutRelations {
   createdAt: DateTime!
   id: ID!
@@ -316,6 +324,20 @@ type Query {
   isEmailAvailable(email: String!): Boolean!
   me: User!
   process(id: ID, slug: String): Process
+  processCategories(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the last n elements from the list."""
+    last: Int
+  ): QueryProcessCategories_Connection!
+  processCategory(id: ID, slug: String): ProcessCategory
   processRequest(id: ID!): ProcessRequest
   processRequests(
     """Returns the elements in the list that come after the specified cursor"""
@@ -370,6 +392,19 @@ type QueryGroups_Connection {
   https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
   """
   edges: [GroupEdge!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryProcessCategories_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ProcessCategoryEdge!]!
 
   """
   https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo

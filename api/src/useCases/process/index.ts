@@ -15,6 +15,8 @@ import { DeleteProcessUseCase } from "./deleteProcess/delete-process.usecase";
 import { DeleteProcessCategoryUseCase } from "./deleteProcessCategory/delete-process-category.usecase";
 import { DeleteProcessRequestUseCase } from "./deleteProcessRequest/delete-process-request";
 import { GetProcessUseCase } from "./getProcess/get-process.usecase";
+import { GetProcessCategoriesUseCase } from "./getProcessCategories/get-process-categories.usecase";
+import { GetProcessCategoryUseCase } from "./getProcessCategory/get-process-category.usecase";
 import { GetProcessesUseCase } from "./getProcesses/get-processes.usecase";
 import { GetProcessRequestUseCase } from "./getProcessRequest/get-process-request.usecase";
 import { GetProcessRequestsUseCase } from "./getProcessRequests/get-process-requests.usecase";
@@ -71,6 +73,12 @@ const removeProcessRequestExtraAttachmentUseCase =
     processRequestRepository,
     processRequestAttachmentRepository
   );
+const getProcessCategoryUseCase = new GetProcessCategoryUseCase(
+  processCategoryRepository
+);
+const getProcessCategoriesUseCase = new GetProcessCategoriesUseCase(
+  processCategoryRepository
+);
 const createProcessCategoryUseCase = new CreateProcessCategoryUseCase(
   processCategoryRepository
 );
@@ -95,6 +103,8 @@ export {
   updateProcessRequestStatusUseCase,
   addProcessRequestExtraAttachmentUseCase,
   removeProcessRequestExtraAttachmentUseCase,
+  getProcessCategoryUseCase,
+  getProcessCategoriesUseCase,
   createProcessCategoryUseCase,
   updateProcessCategoryUseCase,
   deleteProcessCategoryUseCase,

@@ -6,6 +6,8 @@ import {
   getProcessUseCase,
   getProcessRequestUseCase,
   getProcessRequestsUseCase,
+  getProcessCategoryUseCase,
+  getProcessCategoriesUseCase,
 } from "../../useCases/process";
 import {
   parsePaginationArgs,
@@ -185,6 +187,37 @@ export const processQueries = extendType({
           ...pagination,
           where,
           orderBy,
+        });
+      },
+    });
+    t.nullable.field("processCategory", {
+      type: "ProcessCategory",
+      args: {
+        id: nullable(idArg()),
+        slug: nullable(stringArg()),
+      },
+      resolve(_root, args) {
+        if (!args.id && !args.slug) {
+          throw new UserInputError("Must provide an id or slug");
+        }
+        return getProcessCategoryUseCase.execute({
+          id: removeNullability(args.id),
+          slug: removeNullability(args.slug),
+        });
+      },
+    });
+    t.connectionField("processCategories", {
+      type: "ProcessCategory",
+      nodes(_root, args) {
+        const pagination = parsePaginationArgs(args);
+        const orderBy: Prisma.ProcessCategoryOrderByWithRelationInput = {
+          name: "asc",
+        };
+        return getProcessCategoriesUseCase.execute({ ...pagination, orderBy });
+      },
+      extendConnection(t) {
+        t.int("totalCount", {
+          resolve: (_root, _args, ctx) => ctx.prisma.processCategory.count(),
         });
       },
     });
