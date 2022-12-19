@@ -1,3 +1,4 @@
+import { GroupNotFoundError, UserNotFoundError } from "../../../errors";
 import { GroupRepository } from "../../../repositories/group";
 import { UserRepository } from "../../../repositories/user";
 import { createFakeGroup } from "../../../tests/fake/group";
@@ -29,12 +30,12 @@ describe("RemoveUserFromGroupUseCase", () => {
     const { removeUserFromGroupUseCase } = buildSUT();
 
     await expect(removeUserFromGroupUseCase.execute(data)).rejects.toThrow(
-      Error
+      GroupNotFoundError
     );
     prismaMock.group.findUnique.mockResolvedValue(group);
 
     await expect(removeUserFromGroupUseCase.execute(data)).rejects.toThrow(
-      Error
+      UserNotFoundError
     );
     prismaMock.user.findUnique.mockResolvedValue(user);
 

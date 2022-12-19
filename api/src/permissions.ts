@@ -153,6 +153,14 @@ export const permissions = shield(
         isUserInGroup,
         rateLimitRule({ window: "1h", max: 100 })
       ),
+      processCategory: and(
+        isAuthenticated,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
+      processCategories: and(
+        isAuthenticated,
+        rateLimitRule({ window: "1h", max: 100 })
+      ),
     },
     Mutation: {
       signup: rateLimitRule({ window: "5m", max: 3 }),
@@ -243,6 +251,21 @@ export const permissions = shield(
       removeProcessRequestExtraAttachment: and(
         isAuthenticated,
         isFromProcessRequestGroups,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      createProcessCategory: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      updateProcessCategory: and(
+        isAuthenticated,
+        isAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      deleteProcessCategory: and(
+        isAuthenticated,
+        isAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
     },
