@@ -75,6 +75,7 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 type Mutation {
   activateAccount(token: String!): Boolean!
   addProcessRequestExtraAttachment(attachment: Upload!, id: ID!): ProcessRequest!
+  addProcessToCategory(processCategoryId: ID!, processId: ID!): Boolean!
   addUserToGroup(groupId: ID!, userId: ID!): Boolean!
   createGroup(data: CreateGroupInput!): Group!
   createProcess(data: CreateProcessInput!): Process!
@@ -87,6 +88,7 @@ type Mutation {
   deleteProcessRequest(id: ID!): ProcessRequestWithoutRelations!
   deleteUser(id: ID!): UserWithoutRelations!
   refreshTokens(refreshToken: String!): AuthTokens!
+  removeProcessFromCategory(processCategoryId: ID!, processId: ID!): Boolean!
   removeProcessRequestExtraAttachment(id: ID!): ProcessRequest!
   removeUserFromGroup(groupId: ID!, userId: ID!): Boolean!
   resetPassword(password: String!, token: String!): Boolean!

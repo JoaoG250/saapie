@@ -268,6 +268,16 @@ export const permissions = shield(
         isAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
+      addProcessToCategory: and(
+        isAuthenticated,
+        isSuperAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
+      removeProcessFromCategory: and(
+        isAuthenticated,
+        isSuperAdmin,
+        rateLimitRule({ window: "30m", max: 100 })
+      ),
     },
   },
   {

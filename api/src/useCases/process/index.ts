@@ -8,6 +8,7 @@ import {
   userRepository,
 } from "../../repositories";
 import { AddProcessRequestExtraAttachmentUseCase } from "./addProcessRequestExtraAttachment/add-process-request-extra-attachment.usecase";
+import { AddProcessToCategoryUseCase } from "./addProcessToCategory/add-process-to-category.usecase";
 import { CreateProcessUseCase } from "./createProcess/create-process.usecase";
 import { CreateProcessCategoryUseCase } from "./createProcessCategory/create-process-category.usecase";
 import { CreateProcessRequestUseCase } from "./createProcessRequest/create-process-request.usecase";
@@ -20,6 +21,7 @@ import { GetProcessCategoryUseCase } from "./getProcessCategory/get-process-cate
 import { GetProcessesUseCase } from "./getProcesses/get-processes.usecase";
 import { GetProcessRequestUseCase } from "./getProcessRequest/get-process-request.usecase";
 import { GetProcessRequestsUseCase } from "./getProcessRequests/get-process-requests.usecase";
+import { RemoveProcessFromCategoryUseCase } from "./removeProcessFromCategory/remove-process-from-category.usecase";
 import { RemoveProcessRequestExtraAttachmentUseCase } from "./removeProcessRequestExtraAttachment/remove-process-request-extra-attachment.usecase";
 import { UpdateProcessUseCase } from "./updateProcess/update-process.usecase";
 import { UpdateProcessCategoryUseCase } from "./updateProcessCategory/update-process-category.usecase";
@@ -88,6 +90,14 @@ const updateProcessCategoryUseCase = new UpdateProcessCategoryUseCase(
 const deleteProcessCategoryUseCase = new DeleteProcessCategoryUseCase(
   processCategoryRepository
 );
+const addProcessToCategoryUseCase = new AddProcessToCategoryUseCase(
+  processCategoryRepository,
+  processRepository
+);
+const removeProcessFromCategoryUseCase = new RemoveProcessFromCategoryUseCase(
+  processCategoryRepository,
+  processRepository
+);
 
 export {
   getProcessUseCase,
@@ -108,4 +118,6 @@ export {
   createProcessCategoryUseCase,
   updateProcessCategoryUseCase,
   deleteProcessCategoryUseCase,
+  addProcessToCategoryUseCase,
+  removeProcessFromCategoryUseCase,
 };

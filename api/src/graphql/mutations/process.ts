@@ -11,12 +11,14 @@ import {
 } from "../../errors";
 import {
   addProcessRequestExtraAttachmentUseCase,
+  addProcessToCategoryUseCase,
   createProcessCategoryUseCase,
   createProcessRequestUseCase,
   createProcessUseCase,
   deleteProcessCategoryUseCase,
   deleteProcessRequestUseCase,
   deleteProcessUseCase,
+  removeProcessFromCategoryUseCase,
   removeProcessRequestExtraAttachmentUseCase,
   updateProcessCategoryUseCase,
   updateProcessRequestStatusUseCase,
@@ -296,6 +298,46 @@ export const ProcessMutations = extendType({
           return await deleteProcessCategoryUseCase.execute(args);
         } catch (err) {
           if (err instanceof ProcessCategoryNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("addProcessToCategory", {
+      type: "Boolean",
+      args: {
+        processId: idArg(),
+        processCategoryId: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await addProcessToCategoryUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessCategoryNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof ProcessNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          throw err;
+        }
+      },
+    });
+    t.field("removeProcessFromCategory", {
+      type: "Boolean",
+      args: {
+        processId: idArg(),
+        processCategoryId: idArg(),
+      },
+      async resolve(_root, args) {
+        try {
+          return await removeProcessFromCategoryUseCase.execute(args);
+        } catch (err) {
+          if (err instanceof ProcessCategoryNotFoundError) {
+            throw new UserInputError(err.message);
+          }
+          if (err instanceof ProcessNotFoundError) {
             throw new UserInputError(err.message);
           }
           throw err;
