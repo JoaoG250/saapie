@@ -145,6 +145,14 @@ const routes: RouteRecordRaw[] = [
           title: "Administrar Pedidos de abertura de processo",
         },
       },
+      {
+        path: "process-category",
+        name: "admin:process-category",
+        component: () => import("pages/admin/ProcessCategoryAdminPage.vue"),
+        meta: {
+          title: "Administrar Categorias de processos",
+        },
+      },
     ],
     meta: {
       authRequired: true,

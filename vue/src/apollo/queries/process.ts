@@ -540,3 +540,81 @@ export interface ClosedProcessRequestsQueryResult {
 }
 
 export type ClosedProcessRequestsQueryVariables = PaginationArgs;
+
+export const PROCESS_CATEGORY_QUERY = gql`
+  query processCategory($id: ID, $slug: String) {
+    processCategory(id: $id, slug: $slug) {
+      id
+      createdAt
+      updatedAt
+      name
+      slug
+    }
+  }
+`;
+
+export interface ProcessCategoryQueryResult {
+  processCategory?: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface ProcessCategoryQueryVariables {
+  id?: string;
+  slug?: string;
+}
+
+export const PROCESS_CATEGORIES_QUERY = gql`
+  query processCategories(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    processCategories(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          name
+          slug
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
+export interface ProcessCategoriesQueryNode {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface ProcessCategoriesQueryResult {
+  processCategories: {
+    pageInfo: PageInfo;
+    edges: {
+      cursor: string;
+      node: ProcessCategoriesQueryNode;
+    }[];
+    totalCount: number;
+  };
+}
+
+export type ProcessCategoriesQueryVariables = PaginationArgs;

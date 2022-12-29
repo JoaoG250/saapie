@@ -54,3 +54,7 @@ export const processRules = {
   },
   targetGroup: [(value: SelectOption | null) => validateTargetGroup(value)],
 };
+
+export const processCategoryRules = {
+  name: [(value: string) => validateName(value)],
+};

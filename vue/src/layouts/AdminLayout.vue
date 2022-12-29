@@ -25,6 +25,11 @@ const menuList = [
     label: "Pedido de abertura de processo",
     to: { name: "admin:process-request" },
   },
+  {
+    icon: "category",
+    label: "Categoria de processo",
+    to: { name: "admin:process-category" },
+  },
 ];
 
 function toggleMini() {

@@ -1,8 +1,10 @@
 import gql from "graphql-tag";
 import {
+  CreateProcessCategoryInput,
   CreateProcessInput,
   FormKitData,
   ProcessRequestStatus,
+  UpdateProcessCategoryInput,
   UpdateProcessInput,
 } from "src/interfaces";
 
@@ -308,5 +310,72 @@ export interface RemoveProcessRequestExtraAttachmentMutationResult {
 }
 
 export interface RemoveProcessRequestExtraAttachmentMutationVariables {
+  id: string;
+}
+
+export const CREATE_PROCESS_CATEGORY_MUTATION = gql`
+  mutation createProcessCategory($data: CreateProcessCategoryInput!) {
+    createProcessCategory(data: $data) {
+      id
+      name
+      slug
+    }
+  }
+`;
+
+export interface CreateProcessCategoryMutationResult {
+  createProcessCategory: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface CreateProcessCategoryMutationVariables {
+  data: CreateProcessCategoryInput;
+}
+
+export const UPDATE_PROCESS_CATEGORY_MUTATION = gql`
+  mutation updateProcessCategory($id: ID!, $data: UpdateProcessCategoryInput!) {
+    updateProcessCategory(id: $id, data: $data) {
+      id
+      name
+      slug
+    }
+  }
+`;
+
+export interface UpdateProcessCategoryMutationResult {
+  updateProcessCategory: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface UpdateProcessCategoryMutationVariables {
+  id: string;
+  data: UpdateProcessCategoryInput;
+}
+
+export const DELETE_PROCESS_CATEGORY_MUTATION = gql`
+  mutation deleteProcessCategory($id: ID!) {
+    deleteProcessCategory(id: $id) {
+      id
+      name
+      slug
+    }
+  }
+`;
+
+export interface DeleteProcessCategoryMutationResult {
+  deleteProcessCategory: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface DeleteProcessCategoryMutationVariables {
   id: string;
 }

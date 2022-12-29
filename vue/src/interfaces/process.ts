@@ -78,3 +78,15 @@ export interface OnUpdateProcessRequestData {
   status?: ProcessRequestStatus;
   data?: FormKitData;
 }
+
+export interface ProcessCategory {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface CreateProcessCategoryInput {
+  name: string;
+}
+
+export type UpdateProcessCategoryInput = CreateProcessCategoryInput;
