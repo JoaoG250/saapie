@@ -618,3 +618,30 @@ export interface ProcessCategoriesQueryResult {
 }
 
 export type ProcessCategoriesQueryVariables = PaginationArgs;
+
+export const PROCESS_CATEGORY_PROCESSES_QUERY = gql`
+  query processCategoryProcesses($id: ID, $slug: String) {
+    processCategory(id: $id, slug: $slug) {
+      processes {
+        id
+        name
+        slug
+      }
+    }
+  }
+`;
+
+export interface ProcessCategoryProcessesQueryNode {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface ProcessCategoryProcessesQueryResult {
+  processCategory: {
+    processes: ProcessCategoryProcessesQueryNode[];
+  };
+}
+
+export type ProcessCategoryProcessesQueryVariables =
+  ProcessCategoryQueryVariables;

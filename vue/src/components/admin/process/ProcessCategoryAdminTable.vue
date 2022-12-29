@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { QTableProps } from "quasar";
 import { ProcessCategory } from "src/interfaces";
 import { useCrudAdminTable } from "src/composables";
 import { useProcessCategoryStore } from "src/stores/process-category";
 import { processCategoryRules } from "src/validation/process";
+import EditProcessCategories from "./EditProcessCategories.vue";
 
 const itemName = "Categoria de processo";
 const defaultItem: ProcessCategory = {
@@ -29,10 +31,12 @@ const columns: NonNullable<QTableProps["columns"]> = [
   },
 ];
 
+const editProcesses = ref(false);
 const processCategoryStore = useProcessCategoryStore();
 const {
   dialogOpen,
   editedItem,
+  editedIndex,
   itemNameLowerCase,
   formTitle,
   onRequest,
@@ -64,6 +68,17 @@ const {
             v-model="editedItem.name"
             label="Nome"
             :rules="processCategoryRules.name"
+          />
+          <q-btn
+            v-if="editedIndex > -1"
+            class="q-my-sm full-width"
+            color="secondary"
+            label="Editar processos"
+            @click="editProcesses = !editProcesses"
+          />
+          <EditProcessCategories
+            v-if="editedIndex > -1 && editProcesses"
+            :process-category="editedItem"
           />
         </q-card-section>
         <q-separator />

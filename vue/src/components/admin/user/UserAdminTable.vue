@@ -148,7 +148,10 @@ const columns = computed<NonNullable<QTableProps["columns"]>>(() => {
             label="Editar grupos"
             @click="editGroups = !editGroups"
           />
-          <EditUserGroups v-if="editGroups" :user="editedItem" />
+          <EditUserGroups
+            v-if="editedIndex > -1 && editGroups"
+            :user="editedItem"
+          />
         </q-card-section>
         <q-separator />
         <q-card-actions align="right">

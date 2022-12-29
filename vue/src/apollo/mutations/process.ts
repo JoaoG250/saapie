@@ -379,3 +379,39 @@ export interface DeleteProcessCategoryMutationResult {
 export interface DeleteProcessCategoryMutationVariables {
   id: string;
 }
+
+export const ADD_PROCESS_TO_CATEGORY_MUTATION = gql`
+  mutation addProcessToCategory($processId: ID!, $processCategoryId: ID!) {
+    addProcessToCategory(
+      processId: $processId
+      processCategoryId: $processCategoryId
+    )
+  }
+`;
+
+export interface AddProcessToCategoryMutationResult {
+  addProcessToCategory: boolean;
+}
+
+export interface AddProcessToCategoryMutationVariables {
+  processId: string;
+  processCategoryId: string;
+}
+
+export const REMOVE_PROCESS_FROM_CATEGORY_MUTATION = gql`
+  mutation removeProcessFromCategory($processId: ID!, $processCategoryId: ID!) {
+    removeProcessFromCategory(
+      processId: $processId
+      processCategoryId: $processCategoryId
+    )
+  }
+`;
+
+export interface RemoveProcessFromCategoryMutationResult {
+  removeProcessFromCategory: boolean;
+}
+
+export interface RemoveProcessFromCategoryMutationVariables {
+  processId: string;
+  processCategoryId: string;
+}
