@@ -19,7 +19,15 @@ const routes: RouteRecordRaw[] = [
             }
             return { name: "process-request-manage" };
           }
-          return { name: "processes" };
+          return { name: "process-categories" };
+        },
+      },
+      {
+        path: "/process-categories",
+        name: "process-categories",
+        component: () => import("pages/process/ProcessCategoriesPage.vue"),
+        meta: {
+          title: "Categorias de processos",
         },
       },
       {

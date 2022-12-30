@@ -4,6 +4,11 @@ export function useMenuList() {
   const authStore = useAuthStore();
   const menuList = [
     {
+      icon: "category",
+      label: "Categorias",
+      to: { name: "process-categories" },
+    },
+    {
       icon: "account_tree",
       label: "Processos",
       to: { name: "processes" },

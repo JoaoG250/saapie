@@ -37,6 +37,16 @@ function htmlToText(html: string): string {
         </q-card>
       </router-link>
     </div>
+    <div v-if="processes.length === 0" class="col-12">
+      <q-list class="rounded-borders" bordered>
+        <q-item>
+          <q-item-section avatar>
+            <q-icon name="warning" />
+          </q-item-section>
+          <q-item-section> Nenhum processo encontrado </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
   </div>
 </template>
 

@@ -7,16 +7,33 @@ import {
   PROCESSES_QUERY,
 } from "src/apollo/queries";
 import { PageInfo, ProcessWhereInput } from "src/interfaces";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import ProcessList from "src/components/process/ProcessList.vue";
 import { QInfiniteScrollProps } from "quasar";
 import ProcessFilter from "src/components/process/ProcessFilter.vue";
 
+const route = useRoute();
+const router = useRouter();
 const processes = ref<ProcessesQueryNode[]>([]);
 const pageInfo = ref<PageInfo>();
-const variables = ref<ProcessesQueryVariables>({
-  first: 30,
+const variables = computed<ProcessesQueryVariables>(() => {
+  return {
+    first: 30,
+    where: {
+      name: getQueryStringParam("name"),
+      processCategory: getQueryStringParam("processCategory"),
+    },
+  };
 });
+
+function getQueryStringParam(param: string) {
+  const value = route.query[param];
+  if (typeof value === "string") {
+    return value;
+  }
+  return undefined;
+}
 
 const { onResult, fetchMore } = useQuery<
   ProcessesQueryResult,
@@ -60,11 +77,8 @@ const onLoad: QInfiniteScrollProps["onLoad"] = async (_index, done) => {
   done();
 };
 
-function onFilter(filter: ProcessWhereInput) {
-  variables.value = {
-    ...variables.value,
-    where: { ...filter },
-  };
+function onFilter(data: ProcessWhereInput) {
+  router.push({ query: { ...data } });
 }
 </script>
 
