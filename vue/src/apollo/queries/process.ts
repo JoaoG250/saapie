@@ -4,6 +4,7 @@ import {
   FormKitData,
   PageInfo,
   PaginationArgs,
+  ProcessCategoryWhereInput,
   ProcessRequestStatus,
   ProcessRequestWhereInput,
   ProcessWhereInput,
@@ -574,12 +575,14 @@ export const PROCESS_CATEGORIES_QUERY = gql`
     $before: String
     $first: Int
     $last: Int
+    $where: ProcessCategoryWhereInput
   ) {
     processCategories(
       after: $after
       before: $before
       first: $first
       last: $last
+      where: $where
     ) {
       pageInfo {
         startCursor
@@ -617,7 +620,9 @@ export interface ProcessCategoriesQueryResult {
   };
 }
 
-export type ProcessCategoriesQueryVariables = PaginationArgs;
+export interface ProcessCategoriesQueryVariables extends PaginationArgs {
+  where?: ProcessCategoryWhereInput;
+}
 
 export const PROCESS_CATEGORY_PROCESSES_QUERY = gql`
   query processCategoryProcesses($id: ID, $slug: String) {

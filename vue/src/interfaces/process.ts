@@ -71,6 +71,7 @@ export interface ProcessRequestWhereInput {
 
 export interface ProcessWhereInput {
   name?: string;
+  processCategory?: string;
 }
 
 export interface OnUpdateProcessRequestData {
@@ -90,3 +91,7 @@ export interface CreateProcessCategoryInput {
 }
 
 export type UpdateProcessCategoryInput = CreateProcessCategoryInput;
+
+export interface ProcessCategoryWhereInput {
+  name?: string;
+}

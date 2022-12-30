@@ -20,12 +20,10 @@ const model = ref<SelectOption | null>(props.initialSelected || null);
 <template>
   <q-select
     v-model="model"
-    :label="label"
+    v-bind="$props"
     input-debounce="500"
     use-input
     clearable
-    :loading="loading"
-    :options="options"
     :rules="rules"
     @filter="onFilter"
     @update:model-value="onChange"

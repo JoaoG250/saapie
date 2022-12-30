@@ -226,6 +226,7 @@ export const ProcessWhereInput = inputObjectType({
   name: "ProcessWhereInput",
   definition(t) {
     t.nullable.string("name");
+    t.nullable.string("processCategory");
   },
 });
 
@@ -240,5 +241,12 @@ export const UpdateProcessCategoryInput = inputObjectType({
   name: "UpdateProcessCategoryInput",
   definition(t) {
     t.string("name");
+  },
+});
+
+export const ProcessCategoryWhereInput = inputObjectType({
+  name: "ProcessCategoryWhereInput",
+  definition(t) {
+    t.nullable.string("name");
   },
 });

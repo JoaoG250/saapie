@@ -160,6 +160,10 @@ type ProcessCategoryEdge {
   node: ProcessCategory!
 }
 
+input ProcessCategoryWhereInput {
+  name: String
+}
+
 type ProcessCategoryWithoutRelations {
   createdAt: DateTime!
   id: ID!
@@ -253,6 +257,7 @@ type ProcessRequestWithoutRelations {
 
 input ProcessWhereInput {
   name: String
+  processCategory: String
 }
 
 type ProcessWithoutRelations {
@@ -338,6 +343,7 @@ type Query {
 
     """Returns the last n elements from the list."""
     last: Int
+    where: ProcessCategoryWhereInput
   ): QueryProcessCategories_Connection!
   processCategory(id: ID, slug: String): ProcessCategory
   processRequest(id: ID!): ProcessRequest

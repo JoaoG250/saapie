@@ -48,6 +48,9 @@ export const processQueries = extendType({
           if (args.where.name) {
             where.name = { contains: args.where.name, mode: "insensitive" };
           }
+          if (args.where.processCategory) {
+            where.processCategory = { id: args.where.processCategory };
+          }
         }
         let orderBy: Prisma.ProcessOrderByWithRelationInput = {
           createdAt: "desc",
@@ -208,12 +211,26 @@ export const processQueries = extendType({
     });
     t.connectionField("processCategories", {
       type: "ProcessCategory",
+      additionalArgs: {
+        where: nullable(arg({ type: "ProcessCategoryWhereInput" })),
+      },
       nodes(_root, args) {
         const pagination = parsePaginationArgs(args);
+        let where: Prisma.ProcessWhereInput | undefined;
+        if (args.where) {
+          where = {};
+          if (args.where.name) {
+            where.name = { contains: args.where.name, mode: "insensitive" };
+          }
+        }
         const orderBy: Prisma.ProcessCategoryOrderByWithRelationInput = {
           name: "asc",
         };
-        return getProcessCategoriesUseCase.execute({ ...pagination, orderBy });
+        return getProcessCategoriesUseCase.execute({
+          ...pagination,
+          where,
+          orderBy,
+        });
       },
       extendConnection(t) {
         t.int("totalCount", {
