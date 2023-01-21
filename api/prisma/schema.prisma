@@ -63,12 +63,13 @@ model Process {
 }
 
 model ProcessCategory {
-    id        String    @id @default(cuid())
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    name      String    @unique
-    slug      String    @unique
-    processes Process[]
+    id          String    @id @default(cuid())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    name        String    @unique
+    description String?
+    slug        String    @unique
+    processes   Process[]
 }
 
 model ProcessForm {
