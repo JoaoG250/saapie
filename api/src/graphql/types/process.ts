@@ -134,6 +134,7 @@ export const ProcessCategory = objectType({
     t.dateTime("updatedAt");
     t.string("name");
     t.string("slug");
+    t.nullable.string("description");
     t.list.field("processes", {
       type: "Process",
       resolve(root, args, ctx) {
@@ -153,6 +154,7 @@ export const ProcessCategoryWithoutRelations = objectType({
     t.dateTime("updatedAt");
     t.string("name");
     t.string("slug");
+    t.nullable.string("description");
   },
 });
 
@@ -234,6 +236,7 @@ export const CreateProcessCategoryInput = inputObjectType({
   name: "CreateProcessCategoryInput",
   definition(t) {
     t.string("name");
+    t.string("description");
   },
 });
 
@@ -241,6 +244,7 @@ export const UpdateProcessCategoryInput = inputObjectType({
   name: "UpdateProcessCategoryInput",
   definition(t) {
     t.string("name");
+    t.string("description");
   },
 });
 

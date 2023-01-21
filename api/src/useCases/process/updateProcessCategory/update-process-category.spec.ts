@@ -20,6 +20,7 @@ describe("UpdateProcessCategoryUseCase", () => {
   it("should check if all fields are within assigned constraints", async () => {
     const data: UpdateProcessCategoryDto["data"] = {
       name: "Test process category",
+      description: "Test description",
     };
     let testData = { ...data };
     const { updateProcessCategoryUseCase } = buildSUT();
@@ -35,6 +36,12 @@ describe("UpdateProcessCategoryUseCase", () => {
 
     testData = { ...data };
     testData.name = "Te";
+    await expect(
+      updateProcessCategoryUseCase.validateUpdateProcessCategoryData(testData)
+    ).rejects.toThrow(ValidationError);
+
+    testData = { ...data };
+    testData.description = "";
     await expect(
       updateProcessCategoryUseCase.validateUpdateProcessCategoryData(testData)
     ).rejects.toThrow(ValidationError);
@@ -69,6 +76,7 @@ describe("UpdateProcessCategoryUseCase", () => {
     const processCategory = createFakeProcessCategory({ id: "1" }, 1);
     const data: UpdateProcessCategoryDto["data"] = {
       name: "Test process category",
+      description: "Test description",
     };
     const processCategories = [
       createFakeProcessCategory({ name: data.name }, 1),
@@ -99,6 +107,7 @@ describe("UpdateProcessCategoryUseCase", () => {
       id: "1",
       data: {
         name: "Test process category",
+        description: "Test description",
       },
     };
     const processCategory = createFakeProcessCategory({ id: data.id }, 1);

@@ -17,6 +17,7 @@ export class UpdateProcessCategoryUseCase
   ): Promise<UpdateProcessCategoryDto["data"]> {
     const updateProcessCategoryDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
+      description: yup.string().required().max(200).trim(),
     });
     return updateProcessCategoryDataConstraints.validate(data);
   }
@@ -71,7 +72,7 @@ export class UpdateProcessCategoryUseCase
     );
     return this.processCategoryRepository.update(
       { id: processCategory.id },
-      { name: validatedData.name, slug }
+      { ...validatedData, slug }
     );
   }
 }

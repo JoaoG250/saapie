@@ -17,6 +17,7 @@ export class CreateProcessCategoryUseCase
   ): Promise<CreateProcessCategoryDto> {
     const createProcessCategoryDataConstraints = yup.object().shape({
       name: yup.string().required().min(3).max(80).trim(),
+      description: yup.string().required().max(200).trim(),
     });
     return createProcessCategoryDataConstraints.validate(data);
   }
@@ -51,7 +52,7 @@ export class CreateProcessCategoryUseCase
     const slug = this.createSlug(validatedData.name);
     await this.checkProcessCategoryUniqueFields(validatedData, slug);
     return this.processCategoryRepository.create({
-      name: validatedData.name,
+      ...validatedData,
       slug,
     });
   }

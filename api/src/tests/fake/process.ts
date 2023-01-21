@@ -151,6 +151,7 @@ const fakeProcessCategories: ProcessCategory[] = [
     updatedAt: new Date("2022-12-14T14:53:32.304Z"),
     name: "Deserunt porro nulla id vero perspiciatis nulla.",
     slug: "deserunt-porro-nulla-id-vero-perspiciatis-nulla",
+    description: "Nostrum ipsam qui nobis repellendus fugiat velit sit.",
   },
   {
     id: "f2316265-a6e8-4d65-a837-e308ae67862f",
@@ -158,6 +159,7 @@ const fakeProcessCategories: ProcessCategory[] = [
     updatedAt: new Date("2022-12-14T19:41:51.899Z"),
     name: "Repellat quisquam recusandae alias consequuntur corporis.",
     slug: "repellat-quisquam-recusandae-alias-consequuntur-corporis",
+    description: "Placeat fuga doloribus. ",
   },
   {
     id: "765523b9-1474-4a9d-8a27-892bc4d876d2",
@@ -165,6 +167,7 @@ const fakeProcessCategories: ProcessCategory[] = [
     updatedAt: new Date("2022-12-14T15:06:28.681Z"),
     name: "Amet accusantium non unde rerum iusto.",
     slug: "amet-accusantium-non-unde-rerum-iusto",
+    description: "Placeat ullam minima ducimus temporibus modi aut architecto.",
   },
   {
     id: "e6e02033-017b-4027-ba34-5a79e0c8f466",
@@ -172,6 +175,7 @@ const fakeProcessCategories: ProcessCategory[] = [
     updatedAt: new Date("2022-12-15T07:34:27.668Z"),
     name: "Quasi impedit voluptas nostrum quia excepturi similique.",
     slug: "quasi-impedit-voluptas-nostrum-quia-excepturi-similique",
+    description: "Totam voluptates explicabo exercitationem ut quis.",
   },
   {
     id: "2f30b4e6-ac03-49d5-b926-9c09640afc60",
@@ -179,6 +183,7 @@ const fakeProcessCategories: ProcessCategory[] = [
     updatedAt: new Date("2022-12-15T13:25:26.970Z"),
     name: "Ut unde quia aut vero quo est optio mollitia numquam.",
     slug: "ut-unde-quia-aut-vero-quo-est-optio-mollitia-numquam",
+    description: "Magni cupiditate sit.",
   },
   {
     id: "5ef7196c-5874-4f3c-9abd-732ce143614e",
@@ -186,6 +191,7 @@ const fakeProcessCategories: ProcessCategory[] = [
     updatedAt: new Date("2022-12-15T01:48:38.932Z"),
     name: "Illo accusamus fugiat quia.",
     slug: "illo-accusamus-fugiat-quia",
+    description: "Ut ullam quos qui illo error sunt laborum ratione a.",
   },
 ];
 
@@ -239,6 +245,7 @@ interface CreateFakeProcessCategoryArgs {
   updatedAt?: Date;
   name?: string;
   slug?: string;
+  description?: string;
 }
 
 export function createFakeProcessCategory(

@@ -12,6 +12,7 @@ input CreateGroupInput {
 }
 
 input CreateProcessCategoryInput {
+  description: String!
   name: String!
 }
 
@@ -145,6 +146,7 @@ type Process {
 
 type ProcessCategory {
   createdAt: DateTime!
+  description: String
   id: ID!
   name: String!
   processes: [Process!]!
@@ -166,6 +168,7 @@ input ProcessCategoryWhereInput {
 
 type ProcessCategoryWithoutRelations {
   createdAt: DateTime!
+  description: String
   id: ID!
   name: String!
   slug: String!
@@ -470,6 +473,7 @@ input UpdateGroupInput {
 }
 
 input UpdateProcessCategoryInput {
+  description: String!
   name: String!
 }
 

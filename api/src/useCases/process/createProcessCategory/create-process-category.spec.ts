@@ -20,6 +20,7 @@ describe("CreateProcessCategoryUseCase", () => {
   it("should check if all fields are within assigned constraints", async () => {
     const data: CreateProcessCategoryDto = {
       name: "Test process category",
+      description: "Test description",
     };
     let testData = { ...data };
     const { createProcessCategoryUseCase } = buildSUT();
@@ -38,6 +39,12 @@ describe("CreateProcessCategoryUseCase", () => {
     await expect(
       createProcessCategoryUseCase.validateCreateProcessCategoryData(testData)
     ).rejects.toThrow(ValidationError);
+
+    testData = { ...data };
+    testData.description = "";
+    await expect(
+      createProcessCategoryUseCase.validateCreateProcessCategoryData(testData)
+    ).rejects.toThrow(ValidationError);
   });
   it("should create a slug from process category name", () => {
     const processCategoryName = "Test Process";
@@ -50,6 +57,7 @@ describe("CreateProcessCategoryUseCase", () => {
   it("should check if unique fields are not in use", async () => {
     const data: CreateProcessCategoryDto = {
       name: "Test process category",
+      description: "Test description",
     };
     const processCategories = [
       createFakeProcessCategory({ name: data.name }, 1),
@@ -76,12 +84,16 @@ describe("CreateProcessCategoryUseCase", () => {
   it("should create the process category", async () => {
     const data: CreateProcessCategoryDto = {
       name: "Test process category",
+      description: "Test description",
     };
     const { createProcessCategoryUseCase } = buildSUT();
 
     prismaMock.processCategory.findMany.mockResolvedValue([]);
     prismaMock.processCategory.create.mockResolvedValue(
-      createFakeProcessCategory({ name: data.name }, 1)
+      createFakeProcessCategory(
+        { name: data.name, description: data.description },
+        1
+      )
     );
     await expect(
       createProcessCategoryUseCase.execute(data)
