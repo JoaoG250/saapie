@@ -319,6 +319,7 @@ export const CREATE_PROCESS_CATEGORY_MUTATION = gql`
       id
       name
       slug
+      description
     }
   }
 `;
@@ -328,6 +329,7 @@ export interface CreateProcessCategoryMutationResult {
     id: string;
     name: string;
     slug: string;
+    description?: string;
   };
 }
 
@@ -341,6 +343,7 @@ export const UPDATE_PROCESS_CATEGORY_MUTATION = gql`
       id
       name
       slug
+      description
     }
   }
 `;
@@ -350,6 +353,7 @@ export interface UpdateProcessCategoryMutationResult {
     id: string;
     name: string;
     slug: string;
+    description?: string;
   };
 }
 
@@ -364,6 +368,7 @@ export const DELETE_PROCESS_CATEGORY_MUTATION = gql`
       id
       name
       slug
+      description
     }
   }
 `;
@@ -373,6 +378,7 @@ export interface DeleteProcessCategoryMutationResult {
     id: string;
     name: string;
     slug: string;
+    description?: string;
   };
 }
 

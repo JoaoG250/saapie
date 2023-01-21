@@ -84,10 +84,12 @@ export interface ProcessCategory {
   id: string;
   name: string;
   slug: string;
+  description?: string;
 }
 
 export interface CreateProcessCategoryInput {
   name: string;
+  description: string;
 }
 
 export type UpdateProcessCategoryInput = CreateProcessCategoryInput;

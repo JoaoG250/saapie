@@ -550,6 +550,7 @@ export const PROCESS_CATEGORY_QUERY = gql`
       updatedAt
       name
       slug
+      description
     }
   }
 `;
@@ -561,6 +562,7 @@ export interface ProcessCategoryQueryResult {
     updatedAt: string;
     name: string;
     slug: string;
+    description?: string;
   };
 }
 
@@ -596,6 +598,7 @@ export const PROCESS_CATEGORIES_QUERY = gql`
           id
           name
           slug
+          description
         }
       }
       totalCount
@@ -607,6 +610,7 @@ export interface ProcessCategoriesQueryNode {
   id: string;
   name: string;
   slug: string;
+  description?: string;
 }
 
 export interface ProcessCategoriesQueryResult {
@@ -631,6 +635,7 @@ export const PROCESS_CATEGORY_PROCESSES_QUERY = gql`
         id
         name
         slug
+        description
       }
     }
   }
@@ -640,6 +645,7 @@ export interface ProcessCategoryProcessesQueryNode {
   id: string;
   name: string;
   slug: string;
+  description?: string;
 }
 
 export interface ProcessCategoryProcessesQueryResult {

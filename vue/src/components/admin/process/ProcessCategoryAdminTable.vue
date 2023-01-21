@@ -12,6 +12,7 @@ const defaultItem: ProcessCategory = {
   id: "",
   name: "",
   slug: "",
+  description: "",
 };
 const columns: NonNullable<QTableProps["columns"]> = [
   {
@@ -55,7 +56,7 @@ const {
 </script>
 
 <template>
-  <q-dialog v-model="dialogOpen" maximized persistent>
+  <q-dialog v-model="dialogOpen" persistent>
     <q-card>
       <q-form @submit="save">
         <q-card-section class="row items-center q-pb-none">
@@ -68,6 +69,12 @@ const {
             v-model="editedItem.name"
             label="Nome"
             :rules="processCategoryRules.name"
+          />
+          <q-input
+            v-model="editedItem.description"
+            label="Descrição"
+            type="textarea"
+            :rules="processCategoryRules.description"
           />
           <q-btn
             v-if="editedIndex > -1"

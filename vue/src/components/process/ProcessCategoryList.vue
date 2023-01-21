@@ -24,8 +24,11 @@ defineProps<ProcessCategoryListProps>();
       >
         <q-card>
           <q-card-section>
-            <div class="text-h6 process-category-name text-center">
+            <div class="text-h6 process-category-name">
               <span>{{ processCategory.name }}</span>
+            </div>
+            <div class="q-mt-sm process-category-description">
+              <span>{{ processCategory.description }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -43,6 +46,12 @@ defineProps<ProcessCategoryListProps>();
     color: $primary;
     span {
       @include line-clamp(2);
+    }
+  }
+  &-description {
+    height: 100px;
+    span {
+      @include line-clamp(5);
     }
   }
 }

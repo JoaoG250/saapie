@@ -18,7 +18,8 @@ interface AddProcessToCategoryDialogProps {
 const props = defineProps<AddProcessToCategoryDialogProps>();
 const emit = defineEmits<{ (e: "add-process"): void }>();
 const $q = useQuasar();
-const process = ref<Omit<ProcessCategoryProcessesQueryNode, "slug">>();
+const process =
+  ref<Omit<ProcessCategoryProcessesQueryNode, "slug" | "description">>();
 const open = ref(false);
 const loading = ref(false);
 const setProcess: ProcessSelectProps["onChange"] = (option) => {

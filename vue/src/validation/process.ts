@@ -45,6 +45,15 @@ function validateTargetGroup(value: SelectOption | null) {
   return validateRules(rules, value.value);
 }
 
+function validateProcessCategoryDescription(value: string) {
+  const rules = yup
+    .string()
+    .required("Descrição é obrigatória")
+    .max(200, "Descrição deve ter no máximo 200 caracteres")
+    .trim();
+  return validateRules(rules, value);
+}
+
 export const processRules = {
   name: [(value: string) => validateName(value)],
   description: [(value: string) => validateDescription(value)],
@@ -57,4 +66,5 @@ export const processRules = {
 
 export const processCategoryRules = {
   name: [(value: string) => validateName(value)],
+  description: [(value: string) => validateProcessCategoryDescription(value)],
 };
