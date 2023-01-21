@@ -186,17 +186,17 @@ export const permissions = shield(
       ),
       createGroup: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       updateGroup: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       deleteGroup: and(
         isAuthenticated,
-        isAdmin,
+        isSuperAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       addUserToGroup: and(
@@ -270,12 +270,12 @@ export const permissions = shield(
       ),
       addProcessToCategory: and(
         isAuthenticated,
-        isSuperAdmin,
+        isAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
       removeProcessFromCategory: and(
         isAuthenticated,
-        isSuperAdmin,
+        isAdmin,
         rateLimitRule({ window: "30m", max: 100 })
       ),
     },
